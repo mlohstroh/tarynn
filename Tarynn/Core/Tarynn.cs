@@ -18,17 +18,32 @@ namespace Tarynn.Core
             LoadSpecialResponses();
         }
 
+        private void SetInitialGreeting()
+        {
+            SpecialResponse r = new SpecialResponse();
+            r.Key = "greeting";
+            r.Value = "Hello Mark";
+            specialResponses.Add("greeting", r);
+            SpecialResponse.Insert(r);
+        }
+
         private void LoadDatabase()
         {
+            Console.WriteLine("Initializing Database");
             SqlManager.SharedInstance.PerformNecessaryMigrations();
         }
 
         private void LoadSpecialResponses()
         {
+            Console.WriteLine("Loading special responses");
             SpecialResponse[] responses = (SpecialResponse[])SpecialResponse.All();
             foreach(SpecialResponse r in responses)
             {
-                Console.WriteLine("{0} : {1}", r.Key, r.Value);
+                specialResponses.Add(r.Key, r);
+            }
+            if (!specialResponses.ContainsKey("greeting"))
+            {
+                SetInitialGreeting();
             }
         }
     }

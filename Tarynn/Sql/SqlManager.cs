@@ -23,10 +23,12 @@ namespace Tarynn.Sql
 
         public void Open()
         {
+            Console.WriteLine("Checking for database");
             if (!CheckForDatabase())
                 CreateDatabase();
 
-            connection = new SQLiteConnection("database.db");   
+            connection = new SQLiteConnection("database.db");
+            Console.WriteLine("Connected to database");
         }
 
         /// <summary>
@@ -34,6 +36,7 @@ namespace Tarynn.Sql
         /// </summary>
         public void PerformNecessaryMigrations()
         {
+            Console.WriteLine("Checking for new migrations");
             //include every class that needs a migration
             connection.CreateTable<Statement>();
             connection.CreateTable<SpecialResponse>();
@@ -53,6 +56,7 @@ namespace Tarynn.Sql
         /// </summary>
         private void CreateDatabase()
         {
+            Console.WriteLine("Database did not exist. Creating one");
             File.Create("database.db");
         }
 
