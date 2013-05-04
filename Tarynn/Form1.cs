@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tarynn.Core;
 
-
 namespace Tarynn
 {
     public partial class Form1 : Form

@@ -24,5 +24,10 @@ namespace Tarynn.Core
         {
             return null;
         }
+
+        public void Insert(DatabaseTable row)
+        {
+            Sql.SqlManager.SharedInstance.Connection.Insert(row);
+        }
     }
 }

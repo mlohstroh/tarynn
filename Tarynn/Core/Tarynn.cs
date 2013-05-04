@@ -14,12 +14,22 @@ namespace Tarynn.Core
 
         public Tarynn()
         {
-            LoadDatabase();
+            LoadDatabase();         
+            LoadSpecialResponses();
         }
 
         private void LoadDatabase()
         {
             SqlManager.SharedInstance.PerformNecessaryMigrations();
+        }
+
+        private void LoadSpecialResponses()
+        {
+            SpecialResponse[] responses = (SpecialResponse[])SpecialResponse.All();
+            foreach(SpecialResponse r in responses)
+            {
+                Console.WriteLine("{0} : {1}", r.Key, r.Value);
+            }
         }
     }
 }

@@ -56,6 +56,12 @@ namespace Tarynn.Sql
             File.Create("database.db");
         }
 
+
+        public SQLiteConnection Connection
+        {
+            get { return connection; }
+        }
+
         /// <summary>
         /// Singleton for a global instance of sql manager 
         /// </summary>

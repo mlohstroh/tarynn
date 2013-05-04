@@ -16,9 +16,14 @@ namespace Tarynn.Core
         public string Key { get; set; }
         public string Value { get; set; }
 
-        public DatabaseTable[] All()
+        public static DatabaseTable[] All()
         {
-            
+            DatabaseTable[] rows;
+            //query the table
+            TableQuery<SpecialResponse> query = Sql.SqlManager.SharedInstance.Connection.Table<SpecialResponse>();
+            rows = query.ToArray();
+            //return the result
+            return rows;
         }
 
         public DatabaseTable Find(int id)

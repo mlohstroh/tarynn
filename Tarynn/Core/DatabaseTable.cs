@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace Tarynn.Core
 {
-    public interface DatabaseTable
+    public abstract class DatabaseTable
     {
-        DatabaseTable[] All();
-        DatabaseTable Find(int id);
+        public static DatabaseTable[] All() { return null; }
+        public static DatabaseTable Find(int id) { return null; }
+        public static void Insert(DatabaseTable row)
+        {
+            Sql.SqlManager.SharedInstance.Connection.Insert(row);
+        }
     }
 }
