@@ -19,7 +19,6 @@ namespace Tarynn.Core
 
         private void LoadDatabase()
         {
-            SqlManager.SharedInstance.Load();
             SqlManager.SharedInstance.PerformNecessaryMigrations();
         }
     }

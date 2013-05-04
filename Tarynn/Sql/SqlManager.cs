@@ -13,14 +13,15 @@ namespace Tarynn.Sql
     {
         private static SqlManager instance;
 
+        //connection that stays open until the close command
         SQLiteConnection connection;
 
         public SqlManager()
         {
-           
+            Open();
         }
 
-        public void Load()
+        public void Open()
         {
             if (!CheckForDatabase())
                 CreateDatabase();
@@ -28,6 +29,9 @@ namespace Tarynn.Sql
             connection = new SQLiteConnection("database.db");   
         }
 
+        /// <summary>
+        /// A method that includes createTable statements for every database table class
+        /// </summary>
         public void PerformNecessaryMigrations()
         {
             //include every class that needs a migration
@@ -35,16 +39,26 @@ namespace Tarynn.Sql
             connection.CreateTable<SpecialResponse>();
         }
 
+        /// <summary>
+        /// Check to see if the database file exists
+        /// </summary>
+        /// <returns></returns>
         private bool CheckForDatabase()
         {
             return File.Exists("database.db");
         }
 
+        /// <summary>
+        /// Just creates the db file
+        /// </summary>
         private void CreateDatabase()
         {
             File.Create("database.db");
         }
 
+        /// <summary>
+        /// Singleton for a global instance of sql manager 
+        /// </summary>
         public static SqlManager SharedInstance
         {
             get

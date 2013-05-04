@@ -7,12 +7,22 @@ using SQLite;
 
 namespace Tarynn.Core
 {
-    public class Statement
+    public class Statement : DatabaseTable
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
         [Indexed]
         public string FullText { get; set; }
+
+        public DatabaseTable[] All()
+        {
+            return null;
+        }
+
+        public DatabaseTable Find(int id)
+        {
+            return null;
+        }
     }
 }

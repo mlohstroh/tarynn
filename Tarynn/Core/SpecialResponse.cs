@@ -7,7 +7,7 @@ using SQLite;
 
 namespace Tarynn.Core
 {
-    public class SpecialResponse
+    public class SpecialResponse : DatabaseTable
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -15,5 +15,15 @@ namespace Tarynn.Core
         [Indexed]
         public string Key { get; set; }
         public string Value { get; set; }
+
+        public DatabaseTable[] All()
+        {
+            
+        }
+
+        public DatabaseTable Find(int id)
+        {
+            return null;
+        }
     }
 }
