@@ -18,8 +18,14 @@ namespace Tarynn.Core
             LoadSpecialResponses();
         }
 
+        public string SubmitQuery(string queryString)
+        {
+            return "test";
+        }
+
         private void SetInitialGreeting()
         {
+            Console.WriteLine("Setting initial greeting");
             SpecialResponse r = new SpecialResponse();
             r.Key = "greeting";
             r.Value = "Hello Mark";

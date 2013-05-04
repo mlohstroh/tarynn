@@ -51,6 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\DatabaseTable.cs" />
+    <Compile Include="Core\Enums.cs" />
+    <Compile Include="Core\Query.cs" />
+    <Compile Include="Core\Question.cs" />
     <Compile Include="Core\SpecialResponse.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
