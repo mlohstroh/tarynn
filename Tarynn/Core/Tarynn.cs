@@ -11,6 +11,8 @@ namespace Tarynn.Core
     public class Tarynn
     {
         Dictionary<string, SpecialResponse> specialResponses = new Dictionary<string, SpecialResponse>();
+        FastStatement allStatements = new FastStatement();
+
 
         public Tarynn()
         {
