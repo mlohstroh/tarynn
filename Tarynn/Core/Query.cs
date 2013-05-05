@@ -8,8 +8,16 @@ namespace Tarynn.Core
 {
     public class Query
     {
+        public Query(string text)
+        {
+            OriginalText = text;
+            State = QueryState.New;
+        }
+
         public QueryState State { get; set; }
 
-        //public string 
+        public string OriginalText { get; set; }
+
+        public string ResponseText { get; set; }
     }
 }

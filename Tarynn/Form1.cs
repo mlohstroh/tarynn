@@ -23,8 +23,18 @@ namespace Tarynn
         private void button1_Click(object sender, EventArgs e)
         {
             richTextBox1.Text += "Me:" + textBox1.Text + "\n";
-            richTextBox1.Text += "Tarynn:" + t.SubmitQuery(textBox1.Text) + "\n";
+            Query q = t.InitialQuery(textBox1.Text);
+            richTextBox1.Text += "Tarynn:" + q.ResponseText + "\n";
             textBox1.Text = "";
+
+            //switch on the two possible states at this point
+            switch (q.State)
+            {
+                case QueryState.Unrelated:
+                    break;
+                case QueryState.Typeless:
+                    break;
+            }
         }
     }
 }

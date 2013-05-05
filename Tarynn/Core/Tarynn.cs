@@ -18,9 +18,23 @@ namespace Tarynn.Core
             LoadSpecialResponses();
         }
 
-        public string SubmitQuery(string queryString)
+        public Query RelateQuery(Query q)
         {
-            return "test";
+            return null;
+        }
+
+        public Query TypeQuery(Query q)
+        {
+            return null;
+        }
+
+        public Query InitialQuery(string queryString)
+        {
+            Query q = new Query(queryString);
+
+            
+
+            return q;
         }
 
         private void SetInitialGreeting()

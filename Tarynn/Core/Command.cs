@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Tarynn.Core
 {
-    public class Question : Query
+    public class Command : Query
     {
-        public Question(string text)
+        public Command(string text)
             : base(text)
         {
-            
+
         }
     }
 }
