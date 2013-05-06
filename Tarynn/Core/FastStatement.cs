@@ -18,6 +18,14 @@ namespace Tarynn.Core
             LoadDictionaries();
         }
 
+        public void SaveToDatabase()
+        {
+            foreach (Dictionary<string, Statement> d in allStatements.Values)
+            {
+                Sql.SqlManager.SharedInstance.Connection.UpdateAll(d.Values);
+            }
+        }
+
         private void LoadDictionaries()
         {
             Console.WriteLine("Loading statements");
@@ -28,14 +36,23 @@ namespace Tarynn.Core
             foreach (Statement s in statements)
             {
                 char targetChar = s.FullText.ToCharArray()[0];
+                string key = ConvertToMd5(s.FullText);
+                Dictionary<string, Statement> nestedDict;
+
                 if (allStatements.ContainsKey(targetChar))
                 {
-                    string key = ConvertToMd5(s.FullText);
+                    allStatements.TryGetValue(targetChar, out nestedDict);
+                    nestedDict.Add(key, s);
                 }
-
+                else
+                {
+                    nestedDict = new Dictionary<string, Statement>();
+                    allStatements.Add(targetChar, nestedDict);
+                }
+                nestedDict.Add(key, s);
             }
             Console.WriteLine("Loaded all statements");
-            Console.WriteLine("Total Time for {0} elements: {1}", statements.Length, Environment.TickCount - timeLapse);
+            Console.WriteLine("Total Time for {0} elements: {1}ms", statements.Length, Environment.TickCount - timeLapse);
         }
 
 
@@ -45,9 +62,12 @@ namespace Tarynn.Core
             char targetChar = sentence.ToCharArray()[0];
             allStatements.TryGetValue(targetChar, out resultDict);
 
+            string key = ConvertToMd5(sentence);
+            Statement returnStatement;
 
+            resultDict.TryGetValue(key, out returnStatement);
 
-            return null;
+            return returnStatement;
         }
 
         private string ConvertToMd5(string s)
@@ -67,6 +87,11 @@ namespace Tarynn.Core
 
             // Return the hexadecimal string. 
             return sBuilder.ToString();
+        }
+
+        public void InsertStatement(Statement statement)
+        {
+
         }
     }
 }
