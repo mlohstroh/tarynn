@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Sql;
 using Tarynn.Sql;
+using Tarynn.Analytics;
 
 namespace Tarynn.Core
 {
@@ -41,7 +42,7 @@ namespace Tarynn.Core
 
         private void SetInitialGreeting()
         {
-            Console.WriteLine("Setting initial greeting");
+            TConsole.Info("Setting initial greeting");
             SpecialResponse r = new SpecialResponse();
             r.Key = "greeting";
             r.Value = "Hello Mark";
@@ -51,13 +52,13 @@ namespace Tarynn.Core
 
         private void LoadDatabase()
         {
-            Console.WriteLine("Initializing Database");
+            TConsole.Info("Initializing Database");
             SqlManager.SharedInstance.PerformNecessaryMigrations();
         }
 
         private void LoadSpecialResponses()
         {
-            Console.WriteLine("Loading special responses");
+            TConsole.Info("Loading special responses");
             SpecialResponse[] responses = (SpecialResponse[])SpecialResponse.All();
             foreach(SpecialResponse r in responses)
             {

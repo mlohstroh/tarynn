@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SQLite;
 using System.Security.Cryptography;
+using Tarynn.Analytics;
 
 namespace Tarynn.Core
 {
@@ -20,15 +21,17 @@ namespace Tarynn.Core
 
         public void SaveToDatabase()
         {
+            Profiler.SharedInstance.StartProfiling("db_save");
             foreach (Dictionary<string, Statement> d in allStatements.Values)
             {
                 Sql.SqlManager.SharedInstance.Connection.UpdateAll(d.Values);
             }
+            TConsole.Debug(string.Format("Total Time for saving statements: {1}ms", Profiler.SharedInstance.GetTimeForKey("db_save")));
         }
 
         private void LoadDictionaries()
         {
-            Console.WriteLine("Loading statements");
+            TConsole.Info("Loading statements");
             int timeLapse = Environment.TickCount;
             Statement[] statements;
             TableQuery<Statement> query = Sql.SqlManager.SharedInstance.Connection.Table<Statement>();
@@ -51,8 +54,8 @@ namespace Tarynn.Core
                 }
                 nestedDict.Add(key, s);
             }
-            Console.WriteLine("Loaded all statements");
-            Console.WriteLine("Total Time for {0} elements: {1}ms", statements.Length, Environment.TickCount - timeLapse);
+            TConsole.Info("Loaded all statements");
+            TConsole.Debug(string.Format("Total Time for {0} elements: {1}ms", statements.Length, Environment.TickCount - timeLapse));
         }
 
 
@@ -91,7 +94,25 @@ namespace Tarynn.Core
 
         public void InsertStatement(Statement statement)
         {
+            char targetChar = statement.FullText.ToCharArray()[0];
+            if (allStatements.ContainsKey(targetChar))
+            {
+                Dictionary<string, Statement> d;
+                allStatements.TryGetValue(targetChar, out d);
+                string key = ConvertToMd5(statement.FullText);
+                if (!d.ContainsKey(key))
+                {
+                    d.Add(key, statement);
+                }
+                else
+                {
+                    TConsole.Error("Inserting statement that already exists");
+                }
+            }
+            else
+            {
 
+            }
         }
     }
 }

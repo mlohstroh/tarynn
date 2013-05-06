@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SQLite;
 using System.IO;
 using Tarynn.Core;
+using Tarynn.Analytics;
 
 namespace Tarynn.Sql
 {
@@ -23,12 +24,12 @@ namespace Tarynn.Sql
 
         public void Open()
         {
-            Console.WriteLine("Checking for database");
+            TConsole.Info("Checking for database");
             if (!CheckForDatabase())
                 CreateDatabase();
 
             connection = new SQLiteConnection("database.db");
-            Console.WriteLine("Connected to database");
+            TConsole.Info("Connected to database");
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace Tarynn.Sql
         /// </summary>
         public void PerformNecessaryMigrations()
         {
-            Console.WriteLine("Checking for new migrations");
+            TConsole.Info("Checking for new migrations");
             //include every class that needs a migration
             connection.CreateTable<Statement>();
             connection.CreateTable<SpecialResponse>();
@@ -56,7 +57,7 @@ namespace Tarynn.Sql
         /// </summary>
         private void CreateDatabase()
         {
-            Console.WriteLine("Database did not exist. Creating one");
+            TConsole.Info("Database did not exist. Creating one");
             File.Create("database.db");
         }
 

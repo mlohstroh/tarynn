@@ -45,7 +45,7 @@ namespace Tarynn.Analytics
         /// <param name="key">The key to retrieve the time from</param>
         public void StartProfiling(string key)
         {
-
+            timeValues.Add(key, Environment.TickCount);
         }
 
         /// <summary>
@@ -55,7 +55,14 @@ namespace Tarynn.Analytics
         /// <returns></returns>
         public int GetTimeForKey(string key)
         {
-            return -1;
+            int startedTime;
+            if (!timeValues.TryGetValue(key, out startedTime))
+            {
+                return -1;
+            }
+            int lapsedTime = Environment.TickCount - startedTime;
+
+            return lapsedTime;
         }
     }
 }

@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analytics\Profiler.cs" />
+    <Compile Include="Analytics\TConsole.cs" />
     <Compile Include="Core\Command.cs" />
     <Compile Include="Core\DatabaseTable.cs" />
     <Compile Include="Core\Enums.cs" />
