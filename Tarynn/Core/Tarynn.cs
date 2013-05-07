@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Sql;
 using Tarynn.Sql;
-using Tarynn.Analytics;
+using Analytics;
+using TScript;
 
 namespace Tarynn.Core
 {
@@ -38,6 +39,13 @@ namespace Tarynn.Core
             
 
             return q;
+        }
+
+        public string RunScript(string name)
+        {
+            Interpreter i = new Interpreter(name);
+            i.Validate();
+            return i.GetFinalText();
         }
 
         private void SetInitialGreeting()

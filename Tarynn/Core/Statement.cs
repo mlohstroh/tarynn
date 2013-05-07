@@ -15,6 +15,7 @@ namespace Tarynn.Core
         [Indexed]
         public string FullText { get; set; }
         public string ResponseText { get; set; }
+        public string ScriptName { get; set; }
 
         public DatabaseTable[] All()
         {

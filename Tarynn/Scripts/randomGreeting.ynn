@@ -1,0 +1,23 @@
+﻿#This program will use the rand function to select a greeting
+#Name: randomGreeting.ynn
+#Author: Mark Lohstroh
+
+#just like anything, we will declare a type
+new(list, greetings)
+
+insert("Hello", greetings)
+insert("Hi", greetings)
+insert("Wassup?", greetings)
+
+new(integer, index)
+new(integer, randValue)
+#The rand function args look like this, rand(maxNumber, destinationValue)
+rand(100, randValue)
+# mod(valueToMod, modulus, destinationValue)
+mod(randValue, 3, index)
+
+#the exit part of the program
+return valueAt(greeting, greetings)
+
+#nothing after this will get executed
+#valueAt(list, index)

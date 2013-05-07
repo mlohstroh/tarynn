@@ -50,8 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analytics\Profiler.cs" />
-    <Compile Include="Analytics\TConsole.cs" />
     <Compile Include="Core\Command.cs" />
     <Compile Include="Core\DatabaseTable.cs" />
     <Compile Include="Core\Enums.cs" />
@@ -84,6 +82,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="bin\Debug\Scripts\randomGreeting.ynn" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -100,6 +99,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\Debug\sqlite3.dll" />
+    <None Include="Scripts\randomGreeting.ynn" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Analytics\Analytics.csproj">
+      <Project>{834b2c32-13ce-4e59-b50a-9946c0d83bce}</Project>
+      <Name>Analytics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TScript\TScript.csproj">
+      <Project>{ddf795f0-1387-451d-b244-514ee8369592}</Project>
+      <Name>TScript</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

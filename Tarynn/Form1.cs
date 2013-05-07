@@ -22,18 +22,28 @@ namespace Tarynn
 
         private void button1_Click(object sender, EventArgs e)
         {
-            richTextBox1.Text += "Me:" + textBox1.Text + "\n";
-            Query q = t.InitialQuery(textBox1.Text);
-            richTextBox1.Text += "Tarynn:" + q.ResponseText + "\n";
-            textBox1.Text = "";
-
-            //switch on the two possible states at this point
-            switch (q.State)
+            string text = textBox1.Text;
+            if (text.Contains("run"))
             {
-                case QueryState.Unrelated:
-                    break;
-                case QueryState.Typeless:
-                    break;
+                string[] args = text.Split(':');
+                args[1] = args[1].Trim();
+                richTextBox1.Text += "Tarynn: " + t.RunScript(args[1]);
+            }
+            else
+            {
+                richTextBox1.Text += "Me:" + textBox1.Text + "\n";
+                Query q = t.InitialQuery(textBox1.Text);
+                richTextBox1.Text += "Tarynn:" + q.ResponseText + "\n";
+                textBox1.Text = "";
+
+                //switch on the two possible states at this point
+                switch (q.State)
+                {
+                    case QueryState.Unrelated:
+                        break;
+                    case QueryState.Typeless:
+                        break;
+                }
             }
         }
     }

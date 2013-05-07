@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SQLite;
 using System.Security.Cryptography;
-using Tarynn.Analytics;
+using Analytics;
 
 namespace Tarynn.Core
 {
@@ -95,23 +95,24 @@ namespace Tarynn.Core
         public void InsertStatement(Statement statement)
         {
             char targetChar = statement.FullText.ToCharArray()[0];
+            Dictionary<string, Statement> d;
             if (allStatements.ContainsKey(targetChar))
             {
-                Dictionary<string, Statement> d;
-                allStatements.TryGetValue(targetChar, out d);
-                string key = ConvertToMd5(statement.FullText);
-                if (!d.ContainsKey(key))
-                {
-                    d.Add(key, statement);
-                }
-                else
-                {
-                    TConsole.Error("Inserting statement that already exists");
-                }
+                allStatements.TryGetValue(targetChar, out d);   
             }
             else
             {
-
+                d = new Dictionary<string, Statement>();
+                allStatements.Add(targetChar, d);
+            }
+            string key = ConvertToMd5(statement.FullText);
+            if (!d.ContainsKey(key))
+            {
+                d.Add(key, statement);
+            }
+            else
+            {
+                TConsole.Error("Inserting statement that already exists");
             }
         }
     }

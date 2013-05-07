@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SQLite;
 using System.IO;
 using Tarynn.Core;
-using Tarynn.Analytics;
+using Analytics;
 
 namespace Tarynn.Sql
 {
