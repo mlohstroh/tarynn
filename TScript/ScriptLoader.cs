@@ -80,11 +80,19 @@ namespace TScript
                             }
 
                             bool methodExists = false;
-
-                            foreach (MethodPackage p in loadedPackages)
+                            foreach (string s in builtInFunctions)
                             {
-                                if (p.MethodExists(line))
+                                if (s == line)
                                     methodExists = true;
+                            }
+
+                            if (!methodExists)
+                            {
+                                foreach (MethodPackage p in loadedPackages)
+                                {
+                                    if (p.MethodExists(line))
+                                        methodExists = true;
+                                }
                             }
 
                             if (!methodExists)
