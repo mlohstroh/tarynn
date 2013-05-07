@@ -26,7 +26,7 @@ namespace Tarynn.Core
             {
                 Sql.SqlManager.SharedInstance.Connection.UpdateAll(d.Values);
             }
-            TConsole.Debug(string.Format("Total Time for saving statements: {1}ms", Profiler.SharedInstance.GetTimeForKey("db_save")));
+            TConsole.Debug(string.Format("Total Time for saving statements: {0}ms", Profiler.SharedInstance.GetTimeForKey("db_save")));
         }
 
         private void LoadDictionaries()

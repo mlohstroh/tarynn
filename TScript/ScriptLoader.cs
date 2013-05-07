@@ -58,6 +58,7 @@ namespace TScript
                             Type type = Type.GetType(args[0], false);
                             if (type == null)
                             {
+                                this.mInterpreter.AddError("Invalid Package: " + args[0]);
                                 //Not library to load
                                 return false;
                             }
@@ -80,6 +81,7 @@ namespace TScript
                             }
 
                             bool methodExists = false;
+
                             foreach (string s in builtInFunctions)
                             {
                                 if (s == line)
@@ -96,9 +98,10 @@ namespace TScript
                             }
 
                             if (!methodExists)
-                                return false;
-
-                            Console.WriteLine(line);
+                            {
+                                validScript = false;
+                                break;
+                            }
                         }
                     }
                 }
@@ -109,12 +112,26 @@ namespace TScript
             if (!doesEnd)
                 return doesEnd;
 
+            if (validScript)
+            {
+                mReader.Close();
+                mReader = new StreamReader("Scripts\\" + mName);
+            }
+
             return validScript;
         }
 
         public string NextLine()
         {
-            return "";
+            string line = mReader.ReadLine();
+
+            while (line.Contains("#") || line == "")
+            {
+                line = mReader.ReadLine();
+            }
+
+
+            return line;
         }
 
         private string[] GetArgsForMethod(string line)

@@ -37,10 +37,5 @@ namespace TScript.Methods
 
             return newValue;
         }
-
-        private void newType(string[] args)
-        {
-
-        }
     }
 }

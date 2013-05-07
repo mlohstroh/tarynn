@@ -50,6 +50,7 @@ namespace Tarynn.Core
             else
             {
                 TConsole.Error("Script failed validation");
+                return i.GetErrors();
             }
             return i.GetFinalText();
         }

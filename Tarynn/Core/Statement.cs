@@ -17,17 +17,32 @@ namespace Tarynn.Core
         public string ResponseText { get; set; }
         public string ScriptName { get; set; }
 
-        public DatabaseTable[] All()
+        /// <summary>
+        /// Returns all the Statements in the database
+        /// </summary>
+        /// <returns></returns>
+        public new static Statement[] All()
+        {
+            TableQuery<Statement> query = Sql.SqlManager.SharedInstance.Connection.Table<Statement>();
+
+            return query.ToArray();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public new static Statement Find(int id)
         {
             return null;
         }
 
-        public DatabaseTable Find(int id)
-        {
-            return null;
-        }
-
-        public void Insert(DatabaseTable row)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="row"></param>
+        public new void Insert(DatabaseTable row)
         {
             Sql.SqlManager.SharedInstance.Connection.Insert(row);
         }
