@@ -15,7 +15,6 @@ namespace Tarynn.Core
         Dictionary<string, SpecialResponse> specialResponses = new Dictionary<string, SpecialResponse>();
         FastStatement allStatements = new FastStatement();
 
-
         public Tarynn()
         {
             LoadDatabase();         
@@ -44,7 +43,14 @@ namespace Tarynn.Core
         public string RunScript(string name)
         {
             Interpreter i = new Interpreter(name);
-            i.Validate();
+            if (i.Validate())
+            {
+                TConsole.Info("Script was validated properly");
+            }
+            else
+            {
+                TConsole.Error("Script failed validation");
+            }
             return i.GetFinalText();
         }
 
