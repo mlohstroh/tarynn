@@ -39,6 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\FatalException.cs" />
+    <Compile Include="Exceptions\TException.cs" />
+    <Compile Include="Exceptions\UnsupportedType.cs" />
     <Compile Include="Interpreter.cs" />
     <Compile Include="Methods\BasicMethods.cs" />
     <Compile Include="Methods\MethodPackage.cs" />

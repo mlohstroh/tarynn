@@ -34,6 +34,7 @@ namespace TScript
             builtInFunctions.Add("new");
             builtInFunctions.Add("add");
             builtInFunctions.Add("sub");
+            builtInFunctions.Add("return");
         }
 
         public bool Validate()
@@ -74,10 +75,8 @@ namespace TScript
                             //checking for end of program
                             if (line.Contains("return"))
                             {
-                                //get rid of it because this is just validation
-                                line = line.Replace("return ", "");
-                                //a return statement is required
                                 doesEnd = true;
+                                //it should just be a value
                             }
 
                             bool methodExists = false;
@@ -125,11 +124,10 @@ namespace TScript
         {
             string line = mReader.ReadLine();
 
-            while (line.Contains("#") || line == "")
+            while ((line != null) && line.Contains("#") || line == "")
             {
                 line = mReader.ReadLine();
             }
-
 
             return line;
         }
@@ -142,6 +140,11 @@ namespace TScript
             line = line.Trim(para);
 
             return line.Split(',');
+        }
+
+        public List<MethodPackage> RequiredPackages
+        {
+            get { return loadedPackages; }
         }
     }
 }

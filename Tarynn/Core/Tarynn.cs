@@ -7,6 +7,7 @@ using System.Data.Sql;
 using Tarynn.Sql;
 using Analytics;
 using TScript;
+using TScript.Exceptions;
 
 namespace Tarynn.Core
 {
@@ -42,17 +43,24 @@ namespace Tarynn.Core
 
         public string RunScript(string name)
         {
-            Interpreter i = new Interpreter(name);
-            if (i.Validate())
+            try
             {
-                TConsole.Info("Script was validated properly");
+                Interpreter i = new Interpreter(name);
+                if (i.Validate())
+                {
+                    TConsole.Info("Script was validated properly");
+                }
+                else
+                {
+                    TConsole.Error("Script failed validation");
+                    return i.GetErrors();
+                }
+                return i.GetFinalText();
             }
-            else
+            catch (TException ex)
             {
-                TConsole.Error("Script failed validation");
-                return i.GetErrors();
+                return "Error: " + ex.Message;
             }
-            return i.GetFinalText();
         }
 
         private void SetInitialGreeting()

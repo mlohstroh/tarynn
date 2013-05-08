@@ -30,6 +30,19 @@ namespace TScript.Methods
         /// <param name="method">The method name</param>
         /// <param name="args">The arguments for the method</param>
         /// <returns>The variable name and the new value for it</returns>
-        public abstract string GetResultForMethod(string method, string[] args);
+        public abstract TObjectChange GetResultForMethod(string method, object[] args);
+
+        /// <summary>
+        /// Returns a new TObject with the initial values and names stored
+        /// </summary>
+        /// <param name="type">The type of object</param>
+        /// <param name="name">The name of the object</param>
+        /// <returns></returns>
+        public abstract TObject GetNewObjectForType(string type, string name);
+
+        public bool SupportsType(string type)
+        {
+            return supportedTypes.Contains(type);
+        }
     }
 }

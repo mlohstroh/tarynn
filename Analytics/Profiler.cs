@@ -45,6 +45,9 @@ namespace Analytics
         /// <param name="key">The key to retrieve the time from</param>
         public void StartProfiling(string key)
         {
+            if (timeValues.ContainsKey(key))
+                timeValues.Remove(key);
+
             timeValues.Add(key, Environment.TickCount);
         }
 
@@ -60,6 +63,7 @@ namespace Analytics
             {
                 return -1;
             }
+
             int lapsedTime = Environment.TickCount - startedTime;
 
             return lapsedTime;
