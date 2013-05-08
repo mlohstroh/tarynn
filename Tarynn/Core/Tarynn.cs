@@ -34,9 +34,17 @@ namespace Tarynn.Core
 
         public Query InitialQuery(string queryString)
         {
-            Query q = new Query(queryString);
+            Query q = new Query(queryString.ToLower());
 
-            
+            Statement statement = allStatements.GetStatement(q.OriginalText);
+            if (statement == null)
+            {
+                //whoops, no such statement found
+            }
+            else
+            {
+                q.State = QueryState.Typeless;
+            }
 
             return q;
         }

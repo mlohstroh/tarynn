@@ -41,7 +41,7 @@ namespace TScript
         {
             this.requiredPackages = loader.RequiredPackages;
             string line;
-            string value = "";
+            string finalValue = "";
             bool programDone = false;
             while ((line = loader.NextLine()) != null && !programDone)
             {
@@ -62,7 +62,7 @@ namespace TScript
                     case "return":
                         TObject obj;
                         this.scriptObjects.TryGetValue(argNames[0], out obj);
-                        value = obj.Value.ToString();
+                        finalValue = obj.Value.ToString();
                         programDone = true;
                         break;
                     default:
@@ -73,7 +73,7 @@ namespace TScript
                         break;
                 }
             }
-            return value;
+            return finalValue;
         }
 
         /// <summary>
@@ -157,6 +157,7 @@ namespace TScript
 
         private bool VerifyRequest(TObjectChange request)
         {
+            //so hacky, but whatever 
             return request.objectOne.Name == request.objectTwo.Name && request.objectOne.InnerType == request.objectTwo.InnerType;
         }
 
