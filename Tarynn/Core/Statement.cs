@@ -42,7 +42,7 @@ namespace Tarynn.Core
         /// 
         /// </summary>
         /// <param name="row"></param>
-        public new void Insert(DatabaseTable row)
+        public new static void Insert(DatabaseTable row)
         {
             Sql.SqlManager.SharedInstance.Connection.Insert(row);
         }

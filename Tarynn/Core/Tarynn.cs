@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Sql;
 using Tarynn.Sql;
+using Tarynn.Dialogs;
 using Analytics;
 using TScript;
 using TScript.Exceptions;
@@ -16,6 +17,9 @@ namespace Tarynn.Core
         Dictionary<string, SpecialResponse> specialResponses = new Dictionary<string, SpecialResponse>();
         FastStatement allStatements = new FastStatement();
 
+        public delegate void Echo(object sender, TarynnEchoEventArgs e);
+        public event Echo EchoEvent;
+
         public Tarynn()
         {
             LoadDatabase();         
@@ -24,12 +28,17 @@ namespace Tarynn.Core
 
         public Query RelateQuery(Query q)
         {
-            return null;
+            TarynnEchoEventArgs e = new TarynnEchoEventArgs("What do you mean when you say, '" + q.OriginalText + "' ?");
+            OnTarynnEcho(e);
+
+            //RelateQueryDialog d = new RelateQueryDialog(q, );
+
+            return q;
         }
 
         public Query TypeQuery(Query q)
         {
-            return null;
+            return q;
         }
 
         public Query InitialQuery(string queryString)
@@ -40,6 +49,7 @@ namespace Tarynn.Core
             if (statement == null)
             {
                 //whoops, no such statement found
+                q.State = QueryState.Unrelated;
             }
             else
             {
@@ -98,6 +108,15 @@ namespace Tarynn.Core
             if (!specialResponses.ContainsKey("greeting"))
             {
                 SetInitialGreeting();
+            }
+        }
+
+        private void OnTarynnEcho(TarynnEchoEventArgs e)
+        {
+            Echo newEcho = EchoEvent;
+            if (newEcho != null)
+            {
+                newEcho(this, e);
             }
         }
     }

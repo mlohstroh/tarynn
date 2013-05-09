@@ -67,8 +67,14 @@ namespace Tarynn.Core
 
             string key = ConvertToMd5(sentence);
             Statement returnStatement;
-
-            resultDict.TryGetValue(key, out returnStatement);
+            if (resultDict == null)
+            {
+                returnStatement = null;
+            }
+            else
+            {
+                resultDict.TryGetValue(key, out returnStatement);
+            }
 
             return returnStatement;
         }
@@ -92,6 +98,10 @@ namespace Tarynn.Core
             return sBuilder.ToString();
         }
 
+        /// <summary>
+        /// Inserts the statement into 
+        /// </summary>
+        /// <param name="statement"></param>
         public void InsertStatement(Statement statement)
         {
             char targetChar = statement.FullText.ToCharArray()[0];
@@ -109,6 +119,8 @@ namespace Tarynn.Core
             if (!d.ContainsKey(key))
             {
                 d.Add(key, statement);
+                //then insert it into the datebase
+                DatabaseTable.Insert(statement);
             }
             else
             {

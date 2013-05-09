@@ -18,6 +18,6 @@ namespace Tarynn.Core
 
         public string OriginalText { get; set; }
 
-        public string ResponseText { get; set; }
+        public Statement AttachedStatement { get; set; }
     }
 }

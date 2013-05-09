@@ -18,6 +18,12 @@ namespace Tarynn
         public Form1()
         {
             InitializeComponent();
+            t.EchoEvent += t_EchoEvent;
+        }
+
+        void t_EchoEvent(object sender, TarynnEchoEventArgs e)
+        {
+            richTextBox1.Text += "Tarynn: " + e.Echo;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -33,15 +39,15 @@ namespace Tarynn
             {
                 richTextBox1.Text += "Me:" + textBox1.Text + "\n";
                 Query q = t.InitialQuery(textBox1.Text);
-                richTextBox1.Text += "Tarynn:" + q.ResponseText + "\n";
-                textBox1.Text = "";
 
                 //switch on the two possible states at this point
                 switch (q.State)
                 {
                     case QueryState.Unrelated:
+                        q = t.RelateQuery(q);
                         break;
                     case QueryState.Typeless:
+                        q = t.TypeQuery(q);
                         break;
                 }
             }

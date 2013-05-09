@@ -42,18 +42,21 @@
     <Compile Include="Exceptions\FatalException.cs" />
     <Compile Include="Exceptions\TException.cs" />
     <Compile Include="Exceptions\UnsupportedType.cs" />
-    <Compile Include="Interpreter.cs" />
+    <Compile Include="Core\Interpreter.cs" />
     <Compile Include="Methods\BasicMethods.cs" />
     <Compile Include="Methods\MethodPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScriptLoader.cs" />
-    <Compile Include="TObject.cs" />
+    <Compile Include="Core\ScriptLoader.cs" />
+    <Compile Include="Core\TObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Analytics\Analytics.csproj">
       <Project>{834b2c32-13ce-4e59-b50a-9946c0d83bce}</Project>
       <Name>Analytics</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dialogs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

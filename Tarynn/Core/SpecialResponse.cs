@@ -16,7 +16,7 @@ namespace Tarynn.Core
         public string Key { get; set; }
         public string Value { get; set; }
 
-        public static DatabaseTable[] All()
+        public new static DatabaseTable[] All()
         {
             DatabaseTable[] rows;
             //query the table
@@ -26,7 +26,7 @@ namespace Tarynn.Core
             return rows;
         }
 
-        public DatabaseTable Find(int id)
+        public new static DatabaseTable Find(int id)
         {
             return null;
         }
