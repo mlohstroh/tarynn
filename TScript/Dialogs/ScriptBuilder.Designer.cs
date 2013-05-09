@@ -91,6 +91,7 @@
             this.rchScript.Size = new System.Drawing.Size(456, 310);
             this.rchScript.TabIndex = 1;
             this.rchScript.Text = "";
+            this.rchScript.TextChanged += new System.EventHandler(this.rchScript_TextChanged);
             // 
             // txtArgs
             // 
