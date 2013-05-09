@@ -48,11 +48,38 @@ namespace Tarynn.Dialogs
             finalStatement.FullText = FinalQuery.OriginalText;
             //just set the static text
             finalStatement.ResponseText = staticText;
-            //nothing
-            finalStatement.ScriptName = "";
             FinalQuery.AttachedStatement = finalStatement;
+        }
 
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
+        private void btnExistingStatement_Click(object sender, EventArgs e)
+        {
+            finalStatement = new Statement();
+            Statement selectedStatement = allStatements[lstStatements.SelectedIndex];
+            finalStatement.RelatedId = selectedStatement.Id;
+            FinalQuery.AttachedStatement = finalStatement;
+        }
+
+        private void btnExistingScript_Click(object sender, EventArgs e)
+        {
+            dlgChoose.ShowDialog();
+            dlgChoose.FileOk += dlgChoose_FileOk;
+        }
+
+        void dlgChoose_FileOk(object sender, CancelEventArgs e)
+        {
+            if (dlgChoose.FileName != "")
+            {
+                finalStatement = new Statement();
+                finalStatement.ScriptName = dlgChoose.FileName;
+                FinalQuery.AttachedStatement = finalStatement;
+                lblSelectedScript.Text = "Selected Script: " + dlgChoose.FileName;
+            }
+        }
+
+        private void btnOk_Click(object sender, EventArgs e)
+        {
+            if (FinalQuery.AttachedStatement != null)
+                this.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Close();
         }
     }

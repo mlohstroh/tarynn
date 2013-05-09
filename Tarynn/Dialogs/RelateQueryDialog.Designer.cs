@@ -39,6 +39,8 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lstStatements = new System.Windows.Forms.ListBox();
             this.btnExistingStatement = new System.Windows.Forms.Button();
+            this.dlgChoose = new System.Windows.Forms.OpenFileDialog();
+            this.btnOk = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -120,6 +122,7 @@
             this.btnExistingScript.TabIndex = 0;
             this.btnExistingScript.Text = "Choose Existing Script";
             this.btnExistingScript.UseVisualStyleBackColor = true;
+            this.btnExistingScript.Click += new System.EventHandler(this.btnExistingScript_Click);
             // 
             // groupBox3
             // 
@@ -142,18 +145,37 @@
             // 
             // btnExistingStatement
             // 
-            this.btnExistingStatement.Location = new System.Drawing.Point(248, 109);
+            this.btnExistingStatement.Location = new System.Drawing.Point(248, 19);
             this.btnExistingStatement.Name = "btnExistingStatement";
             this.btnExistingStatement.Size = new System.Drawing.Size(145, 44);
             this.btnExistingStatement.TabIndex = 0;
             this.btnExistingStatement.Text = "Relate To Existing Statement";
             this.btnExistingStatement.UseVisualStyleBackColor = true;
+            this.btnExistingStatement.Click += new System.EventHandler(this.btnExistingStatement_Click);
+            // 
+            // dlgChoose
+            // 
+            this.dlgChoose.FileName = "openFileDialog1";
+            this.dlgChoose.Filter = "Tarynn Scripts|*.ynn";
+            this.dlgChoose.InitialDirectory = ".";
+            this.dlgChoose.Title = "Select Script";
+            // 
+            // btnOk
+            // 
+            this.btnOk.Location = new System.Drawing.Point(261, 375);
+            this.btnOk.Name = "btnOk";
+            this.btnOk.Size = new System.Drawing.Size(145, 23);
+            this.btnOk.TabIndex = 3;
+            this.btnOk.Text = "OK";
+            this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
             // RelateQueryDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(424, 381);
+            this.ClientSize = new System.Drawing.Size(424, 403);
+            this.Controls.Add(this.btnOk);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -184,6 +206,8 @@
         private System.Windows.Forms.Button btnExistingStatement;
         private System.Windows.Forms.Label lblSelectedScript;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.OpenFileDialog dlgChoose;
+        private System.Windows.Forms.Button btnOk;
 
     }
 }

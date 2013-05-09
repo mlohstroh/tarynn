@@ -16,6 +16,7 @@ namespace Tarynn.Core
         public string FullText { get; set; }
         public string ResponseText { get; set; }
         public string ScriptName { get; set; }
+        public int RelatedId { get; set; }
 
         /// <summary>
         /// Returns all the Statements in the database
