@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tarynn.Core;
 using Tarynn.Helpers;
+using TScript.Dialogs;
 
 namespace Tarynn.Dialogs
 {
@@ -30,6 +31,8 @@ namespace Tarynn.Dialogs
             {
                 lstStatements.Items.Add(allStatements[i].FullText);
             }
+
+            dlgChoose.FileOk += dlgChoose_FileOk;
         }
 
         public Query FinalQuery { get; set; }
@@ -61,8 +64,7 @@ namespace Tarynn.Dialogs
 
         private void btnExistingScript_Click(object sender, EventArgs e)
         {
-            dlgChoose.ShowDialog();
-            dlgChoose.FileOk += dlgChoose_FileOk;
+            dlgChoose.ShowDialog();            
         }
 
         void dlgChoose_FileOk(object sender, CancelEventArgs e)
@@ -81,6 +83,17 @@ namespace Tarynn.Dialogs
             if (FinalQuery.AttachedStatement != null)
                 this.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Close();
+        }
+
+        private void btnNewScript_Click(object sender, EventArgs e)
+        {
+            ScriptBuilder builder = new ScriptBuilder();
+            if (builder.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                lblSelectedScript.Text = "Selected Script: " + builder.FileName;
+            }
+            finalStatement = new Statement();
+            finalStatement.ScriptName = builder.FileName;
         }
     }
 }

@@ -29,23 +29,23 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lblStatus = new System.Windows.Forms.Label();
-            this.btnVerify = new System.Windows.Forms.Button();
-            this.rchScript = new System.Windows.Forms.RichTextBox();
-            this.txtArgs = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.btnRun = new System.Windows.Forms.Button();
             this.lblOutput = new System.Windows.Forms.Label();
+            this.btnRun = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtArgs = new System.Windows.Forms.TextBox();
+            this.btnVerify = new System.Windows.Forms.Button();
+            this.lblStatus = new System.Windows.Forms.Label();
+            this.rchScript = new System.Windows.Forms.RichTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.dlgOpen = new System.Windows.Forms.OpenFileDialog();
-            this.dlgSave = new System.Windows.Forms.SaveFileDialog();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verifyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.dlgOpen = new System.Windows.Forms.OpenFileDialog();
+            this.dlgSave = new System.Windows.Forms.SaveFileDialog();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -65,49 +65,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Info";
             // 
-            // lblStatus
+            // lblOutput
             // 
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(7, 20);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(40, 13);
-            this.lblStatus.TabIndex = 0;
-            this.lblStatus.Text = "Status:";
-            // 
-            // btnVerify
-            // 
-            this.btnVerify.Location = new System.Drawing.Point(10, 54);
-            this.btnVerify.Name = "btnVerify";
-            this.btnVerify.Size = new System.Drawing.Size(75, 23);
-            this.btnVerify.TabIndex = 1;
-            this.btnVerify.Text = "Verify";
-            this.btnVerify.UseVisualStyleBackColor = true;
-            this.btnVerify.Click += new System.EventHandler(this.btnVerify_Click);
-            // 
-            // rchScript
-            // 
-            this.rchScript.Location = new System.Drawing.Point(12, 143);
-            this.rchScript.Name = "rchScript";
-            this.rchScript.Size = new System.Drawing.Size(456, 310);
-            this.rchScript.TabIndex = 1;
-            this.rchScript.Text = "";
-            this.rchScript.TextChanged += new System.EventHandler(this.rchScript_TextChanged);
-            // 
-            // txtArgs
-            // 
-            this.txtArgs.Location = new System.Drawing.Point(230, 17);
-            this.txtArgs.Name = "txtArgs";
-            this.txtArgs.Size = new System.Drawing.Size(220, 20);
-            this.txtArgs.TabIndex = 2;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(167, 20);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Arguments";
+            this.lblOutput.AutoSize = true;
+            this.lblOutput.Location = new System.Drawing.Point(7, 80);
+            this.lblOutput.Name = "lblOutput";
+            this.lblOutput.Size = new System.Drawing.Size(42, 13);
+            this.lblOutput.TabIndex = 5;
+            this.lblOutput.Text = "Output:";
             // 
             // btnRun
             // 
@@ -119,14 +84,51 @@
             this.btnRun.UseVisualStyleBackColor = true;
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
-            // lblOutput
+            // label2
             // 
-            this.lblOutput.AutoSize = true;
-            this.lblOutput.Location = new System.Drawing.Point(7, 80);
-            this.lblOutput.Name = "lblOutput";
-            this.lblOutput.Size = new System.Drawing.Size(42, 13);
-            this.lblOutput.TabIndex = 5;
-            this.lblOutput.Text = "Output:";
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(167, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(57, 13);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Arguments";
+            // 
+            // txtArgs
+            // 
+            this.txtArgs.Location = new System.Drawing.Point(230, 17);
+            this.txtArgs.Name = "txtArgs";
+            this.txtArgs.Size = new System.Drawing.Size(220, 20);
+            this.txtArgs.TabIndex = 2;
+            // 
+            // btnVerify
+            // 
+            this.btnVerify.Location = new System.Drawing.Point(10, 54);
+            this.btnVerify.Name = "btnVerify";
+            this.btnVerify.Size = new System.Drawing.Size(75, 23);
+            this.btnVerify.TabIndex = 1;
+            this.btnVerify.Text = "Verify";
+            this.btnVerify.UseVisualStyleBackColor = true;
+            this.btnVerify.Click += new System.EventHandler(this.btnVerify_Click);
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(7, 20);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(40, 13);
+            this.lblStatus.TabIndex = 0;
+            this.lblStatus.Text = "Status:";
+            // 
+            // rchScript
+            // 
+            this.rchScript.DetectUrls = false;
+            this.rchScript.Location = new System.Drawing.Point(12, 143);
+            this.rchScript.Name = "rchScript";
+            this.rchScript.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.rchScript.Size = new System.Drawing.Size(456, 310);
+            this.rchScript.TabIndex = 1;
+            this.rchScript.Text = "";
+            this.rchScript.TextChanged += new System.EventHandler(this.rchScript_TextChanged);
             // 
             // menuStrip1
             // 
@@ -149,22 +151,25 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
             // 
-            // exitToolStripMenuItem
+            // toolStripMenuItem2
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exitToolStripMenuItem.Text = "E&xit";
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(103, 22);
+            this.toolStripMenuItem2.Text = "&Open";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(103, 22);
             this.toolStripMenuItem1.Text = "&Save";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
-            // dlgOpen
+            // exitToolStripMenuItem
             // 
-            this.dlgOpen.FileName = "openFileDialog1";
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.exitToolStripMenuItem.Text = "E&xit";
             // 
             // scriptToolStripMenuItem
             // 
@@ -178,23 +183,20 @@
             // verifyToolStripMenuItem1
             // 
             this.verifyToolStripMenuItem1.Name = "verifyToolStripMenuItem1";
-            this.verifyToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.verifyToolStripMenuItem1.Size = new System.Drawing.Size(104, 22);
             this.verifyToolStripMenuItem1.Text = "&Verify";
             this.verifyToolStripMenuItem1.Click += new System.EventHandler(this.verifyToolStripMenuItem1_Click);
             // 
             // runToolStripMenuItem
             // 
             this.runToolStripMenuItem.Name = "runToolStripMenuItem";
-            this.runToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.runToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
             this.runToolStripMenuItem.Text = "&Run";
             this.runToolStripMenuItem.Click += new System.EventHandler(this.runToolStripMenuItem_Click_1);
             // 
-            // toolStripMenuItem2
+            // dlgOpen
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItem2.Text = "&Open";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            this.dlgOpen.FileName = "openFileDialog1";
             // 
             // ScriptBuilder
             // 
@@ -210,6 +212,7 @@
             this.MinimizeBox = false;
             this.Name = "ScriptBuilder";
             this.Text = "Script Builder";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ScriptBuilder_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);

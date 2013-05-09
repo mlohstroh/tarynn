@@ -31,7 +31,8 @@ namespace Tarynn.Core
             TarynnEchoEventArgs e = new TarynnEchoEventArgs("What do you mean when you say, '" + q.OriginalText + "' ?");
             OnTarynnEcho(e);
 
-            //RelateQueryDialog d = new RelateQueryDialog(q, );
+            RelateQueryDialog d = new RelateQueryDialog(q);
+            d.ShowDialog();
 
             return q;
         }

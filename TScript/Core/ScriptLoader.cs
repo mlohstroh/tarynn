@@ -30,7 +30,7 @@ namespace TScript
         {
             mInterpreter = i;
             mName = name;
-            mReader = new StreamReader("Scripts\\" + name);
+            mReader = new StreamReader(name);
             builtInFunctions.Add("new");
             builtInFunctions.Add("add");
             builtInFunctions.Add("sub");
@@ -111,13 +111,11 @@ namespace TScript
                 TConsole.Debug("Elapsed time for script validation: " + Profiler.SharedInstance.GetTimeForKey("script_validate"));
 
                 if (!doesEnd)
-                    return doesEnd;
-
-                if (validScript)
                 {
-                    mReader.Close();
-                    mReader = new StreamReader("Scripts\\" + mName);
+                    this.mInterpreter.AddError("Script does not end!");
+                    return doesEnd;
                 }
+
                 return validScript;
             }
             catch (Exception ex)
@@ -125,6 +123,15 @@ namespace TScript
                 TConsole.Error(ex.Message);
                 return false;
             }
+            finally
+            {
+                mReader.Close();
+            }
+        }
+
+        public void OpenStream()
+        {
+            mReader = new StreamReader(mName);
         }
 
         public string NextLine()
@@ -152,6 +159,11 @@ namespace TScript
         public List<MethodPackage> RequiredPackages
         {
             get { return loadedPackages; }
+        }
+
+        public void CloseStream()
+        {
+            mReader.Close();
         }
     }
 }

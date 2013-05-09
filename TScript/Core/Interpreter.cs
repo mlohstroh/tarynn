@@ -39,6 +39,9 @@ namespace TScript
         /// <returns>The final output value of the script</returns>
         public string GetFinalText()
         {
+            //this is required so we can start reading
+            loader.OpenStream();
+
             this.requiredPackages = loader.RequiredPackages;
             string line;
             string finalValue = "";
@@ -60,9 +63,7 @@ namespace TScript
                     case "sub":
                         break;
                     case "return":
-                        TObject obj;
-                        this.scriptObjects.TryGetValue(argNames[0], out obj);
-                        finalValue = obj.Value.ToString();
+                        finalValue = HandleReturnStatement(argNames);
                         programDone = true;
                         break;
                     default:
@@ -73,6 +74,10 @@ namespace TScript
                         break;
                 }
             }
+
+            //close the stream when done
+            loader.CloseStream();
+            //give whoever wants the result back
             return finalValue;
         }
 
@@ -197,6 +202,23 @@ namespace TScript
             TObject obj = package.GetNewObjectForType(argNames[0], argNames[1]);
             //then add the object in to our list
             this.scriptObjects.Add(argNames[1], obj);
+        }
+
+        private string HandleReturnStatement(string[] argNames)
+        {
+            string finalValue = "";
+            
+            if (scriptObjects.ContainsKey(argNames[0]))
+            {
+                TObject obj;
+                this.scriptObjects.TryGetValue(argNames[0], out obj);
+                finalValue = obj.Value.ToString();
+            }
+            else
+            {
+                finalValue = argNames[0];    
+            }
+            return finalValue;
         }
     }
 }

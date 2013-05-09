@@ -113,6 +113,7 @@
             this.btnNewScript.TabIndex = 1;
             this.btnNewScript.Text = "Write New Script";
             this.btnNewScript.UseVisualStyleBackColor = true;
+            this.btnNewScript.Click += new System.EventHandler(this.btnNewScript_Click);
             // 
             // btnExistingScript
             // 

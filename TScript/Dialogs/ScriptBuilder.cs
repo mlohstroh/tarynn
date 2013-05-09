@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TScript;
 using System.IO;
+using Analytics;
 
 namespace TScript.Dialogs
 {
@@ -16,6 +17,7 @@ namespace TScript.Dialogs
     {
         bool scriptVerified = false;
         bool latestSaved;
+        public string FileName { get; set; }
 
         Interpreter main;
 
@@ -26,9 +28,12 @@ namespace TScript.Dialogs
             dlgSave.FileOk += dlgSave_FileOk;
         }
 
-        void dlgSave_FileOk(object sender, CancelEventArgs e)
+
+
+        private void dlgSave_FileOk(object sender, CancelEventArgs e)
         {
-            rchScript.SaveFile(dlgSave.FileName);
+            FileName = dlgSave.FileName;
+            File.WriteAllText(FileName, rchScript.Text);
         }
 
         private void btnVerify_Click(object sender, EventArgs e)
@@ -43,12 +48,30 @@ namespace TScript.Dialogs
 
         private void Verify()
         {
-
+            Save();
+            main = new Interpreter(FileName);
+            if (!main.Validate())
+            {
+                MessageBox.Show("Script Failed Validation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                lblStatus.ForeColor = Color.Red;
+                lblStatus.Text = "Status: Failed";
+            }
+            else
+            {
+                MessageBox.Show("Script Passed Validation", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                lblStatus.ForeColor = Color.Green;
+                lblStatus.Text = "Status: Passed";
+                scriptVerified = true;
+            }
         }
 
         private void Run()
         {
-
+            if (!scriptVerified)
+            {
+                Verify();
+            }
+            lblOutput.Text = "Output: " + main.GetFinalText();
         }
 
         //save
@@ -69,8 +92,18 @@ namespace TScript.Dialogs
 
         private void Save()
         {
-            latestSaved = true;
-            dlgSave.ShowDialog();
+            try
+            {
+                latestSaved = true;
+                if (FileName != null)
+                    File.WriteAllText(FileName, rchScript.Text);
+                else
+                    dlgSave.ShowDialog();
+            }
+            catch(IOException ex)
+            {
+                TConsole.Error(ex.Message);
+            }
         }
 
         //open
@@ -95,12 +128,22 @@ namespace TScript.Dialogs
 
         private void dlgOpen_FileOk(object sender, CancelEventArgs e)
         {
-            rchScript.LoadFile(dlgOpen.FileName);
+            FileName = dlgOpen.FileName;
+            rchScript.Text = File.ReadAllText(FileName);
         }
 
         private void rchScript_TextChanged(object sender, EventArgs e)
         {
             latestSaved = false;
+            scriptVerified = false;
+        }
+
+        private void ScriptBuilder_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (scriptVerified && latestSaved)
+                this.DialogResult = System.Windows.Forms.DialogResult.OK;
+            else
+                this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
         }
     }
 }
