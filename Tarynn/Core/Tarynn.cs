@@ -34,6 +34,10 @@ namespace Tarynn.Core
             RelateQueryDialog d = new RelateQueryDialog(q);
             d.ShowDialog();
 
+            q = d.FinalQuery;
+            //attach
+            allStatements.InsertStatement(q.AttachedStatement);
+
             return q;
         }
 

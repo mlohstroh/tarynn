@@ -50,12 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Command.cs" />
     <Compile Include="Core\DatabaseTable.cs" />
     <Compile Include="Core\Enums.cs" />
     <Compile Include="Core\FastStatement.cs" />
     <Compile Include="Core\Query.cs" />
-    <Compile Include="Core\Question.cs" />
     <Compile Include="Core\SpecialResponse.cs" />
     <Compile Include="Core\TarynnEcho.cs" />
     <Compile Include="Dialogs\RelateQueryDialog.cs">

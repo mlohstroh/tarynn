@@ -19,5 +19,11 @@ namespace Tarynn.Core
         public string OriginalText { get; set; }
 
         public Statement AttachedStatement { get; set; }
+        public string Respond()
+        {
+            return "";
+        }
+
+
     }
 }

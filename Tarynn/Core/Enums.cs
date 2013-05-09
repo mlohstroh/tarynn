@@ -5,8 +5,6 @@
         New = 0,
         Unrelated,
         Related,
-        Typeless,
-        Typed,
         Solved,
     }
 }

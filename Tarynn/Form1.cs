@@ -40,15 +40,13 @@ namespace Tarynn
                 richTextBox1.Text += "Me:" + textBox1.Text + "\n";
                 Query q = t.InitialQuery(textBox1.Text);
 
-                //switch on the two possible states at this point
-                switch (q.State)
+                if (q.State == QueryState.Unrelated)
                 {
-                    case QueryState.Unrelated:
-                        q = t.RelateQuery(q);
-                        break;
-                    case QueryState.Typeless:
-                        q = t.TypeQuery(q);
-                        break;
+                    q = t.RelateQuery(q);
+                }
+                else
+                {
+
                 }
             }
         }
