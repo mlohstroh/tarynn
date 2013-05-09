@@ -39,85 +39,92 @@ namespace TScript
 
         public bool Validate()
         {
-            bool validScript = true;
-            Profiler.SharedInstance.StartProfiling("script_validate");
-            TConsole.Info("Validating Script");
-            string line;
-            bool doesEnd = false;
-            
-            while ((line = mReader.ReadLine()) != null)
+            try
             {
-                //skip the line completely if it's comment
-                if (!line.Contains('#'))
+                bool validScript = true;
+                Profiler.SharedInstance.StartProfiling("script_validate");
+                TConsole.Info("Validating Script");
+                string line;
+                bool doesEnd = false;
+
+                while ((line = mReader.ReadLine()) != null)
                 {
-                    if (line.Length != 0)
+                    //skip the line completely if it's comment
+                    if (!line.Contains('#'))
                     {
-                        //they are wanting to load a package here
-                        if (line.StartsWith("use"))
+                        if (line.Length != 0)
                         {
-                            string[] args = GetArgsForMethod(line);
-                            Type type = Type.GetType(args[0], false);
-                            if (type == null)
+                            //they are wanting to load a package here
+                            if (line.StartsWith("use"))
                             {
-                                this.mInterpreter.AddError("Invalid Package: " + args[0]);
-                                //Not library to load
-                                return false;
-                            }
-                            //dynamically create an instance of the specified method package
-                            MethodPackage newLib = (MethodPackage)Activator.CreateInstance(type);
-                            loadedPackages.Add(newLib);
-                        }
-                        else
-                        {
-                            //make sure that all whitespace is gone for simplicity
-                            line = line.Substring(0, line.IndexOf('('));
-
-                            //checking for end of program
-                            if (line.Contains("return"))
-                            {
-                                doesEnd = true;
-                                //it should just be a value
-                            }
-
-                            bool methodExists = false;
-
-                            foreach (string s in builtInFunctions)
-                            {
-                                if (s == line)
-                                    methodExists = true;
-                            }
-
-                            if (!methodExists)
-                            {
-                                foreach (MethodPackage p in loadedPackages)
+                                string[] args = GetArgsForMethod(line);
+                                Type type = Type.GetType(args[0], false);
+                                if (type == null)
                                 {
-                                    if (p.MethodExists(line))
+                                    this.mInterpreter.AddError("Invalid Package: " + args[0]);
+                                    //Not library to load
+                                    return false;
+                                }
+                                //dynamically create an instance of the specified method package
+                                MethodPackage newLib = (MethodPackage)Activator.CreateInstance(type);
+                                loadedPackages.Add(newLib);
+                            }
+                            else
+                            {
+                                //make sure that all whitespace is gone for simplicity
+                                line = line.Substring(0, line.IndexOf('('));
+
+                                //checking for end of program
+                                if (line.Contains("return"))
+                                {
+                                    doesEnd = true;
+                                    //it should just be a value
+                                }
+
+                                bool methodExists = false;
+
+                                foreach (string s in builtInFunctions)
+                                {
+                                    if (s == line)
                                         methodExists = true;
                                 }
-                            }
 
-                            if (!methodExists)
-                            {
-                                validScript = false;
-                                break;
+                                if (!methodExists)
+                                {
+                                    foreach (MethodPackage p in loadedPackages)
+                                    {
+                                        if (p.MethodExists(line))
+                                            methodExists = true;
+                                    }
+                                }
+
+                                if (!methodExists)
+                                {
+                                    validScript = false;
+                                    break;
+                                }
                             }
                         }
                     }
                 }
+                TConsole.Info("Done validating script");
+                TConsole.Debug("Elapsed time for script validation: " + Profiler.SharedInstance.GetTimeForKey("script_validate"));
+
+                if (!doesEnd)
+                    return doesEnd;
+
+                if (validScript)
+                {
+                    mReader.Close();
+                    mReader = new StreamReader("Scripts\\" + mName);
+                }
+                return validScript;
             }
-            TConsole.Info("Done validating script");
-            TConsole.Debug("Elapsed time for script validation: " + Profiler.SharedInstance.GetTimeForKey("script_validate"));
-
-            if (!doesEnd)
-                return doesEnd;
-
-            if (validScript)
+            catch (Exception ex)
             {
-                mReader.Close();
-                mReader = new StreamReader("Scripts\\" + mName);
+                TConsole.Error(ex.Message);
+                return false;
             }
-
-            return validScript;
         }
 
         public string NextLine()

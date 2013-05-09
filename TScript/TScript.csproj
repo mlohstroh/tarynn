@@ -32,6 +32,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -39,6 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dialogs\ScriptBuilder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\ScriptBuilder.Designer.cs">
+      <DependentUpon>ScriptBuilder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Exceptions\FatalException.cs" />
     <Compile Include="Exceptions\TException.cs" />
     <Compile Include="Exceptions\UnsupportedType.cs" />
@@ -55,8 +63,11 @@
       <Name>Analytics</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Dialogs\" />
+    <EmbeddedResource Include="Dialogs\ScriptBuilder.resx">
+      <DependentUpon>ScriptBuilder.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
