@@ -56,10 +56,6 @@ namespace Tarynn.Core
                 //whoops, no such statement found
                 q.State = QueryState.Unrelated;
             }
-            else
-            {
-                q.State = QueryState.Typeless;
-            }
 
             return q;
         }
