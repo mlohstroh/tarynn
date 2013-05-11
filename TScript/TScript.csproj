@@ -52,7 +52,9 @@
     <Compile Include="Exceptions\UnsupportedType.cs" />
     <Compile Include="Core\Interpreter.cs" />
     <Compile Include="Methods\BasicMethods.cs" />
+    <Compile Include="Methods\FileMethods.cs" />
     <Compile Include="Methods\MethodPackage.cs" />
+    <Compile Include="Methods\StructureMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\ScriptLoader.cs" />
     <Compile Include="Core\TObject.cs" />

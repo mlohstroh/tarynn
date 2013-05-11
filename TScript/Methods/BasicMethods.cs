@@ -74,9 +74,16 @@ namespace TScript.Methods
                     change = GetTime((TObject)args[0]);
                     break;
                 case "append":
-
+                    string valueToAppend = Host.GetObjectValue(Host.GetRawTextFromArgIndex(0)).ToString();
+                    string firstValue = Host.GetObjectValue(args[1]).ToString();
+                    string appendResult = firstValue + valueToAppend;
+                    change = Host.MakeChange((TObject)args[1], appendResult);
                     break;
                 case "prepend":
+                    string valueToPrepend = Host.GetObjectValue(Host.GetRawTextFromArgIndex(0)).ToString();
+                    string otherValue = Host.GetObjectValue(args[1]).ToString();
+                    string result = valueToPrepend + otherValue;
+                    change = Host.MakeChange((TObject)args[1], result);
                     break;
             }
 

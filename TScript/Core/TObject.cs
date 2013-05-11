@@ -21,6 +21,16 @@ namespace TScript
             this.Name = n;
             this.Value = v;
         }
+
+        public static TObject Empty()
+        {
+            return new TObject(null, null, null);
+        }
+
+        public bool IsEmpty()
+        {
+            return this.InnerType == null && this.Name == null && this.Value == null;
+        }
     }
 
     /// <summary>
@@ -35,6 +45,16 @@ namespace TScript
         {
             this.objectOne = one;
             this.objectTwo = two;
+        }
+
+        public static TObjectChange Empty()
+        {
+            return new TObjectChange(TObject.Empty(), TObject.Empty());
+        }
+
+        public bool IsEmpty()
+        {
+            return this.objectOne.IsEmpty() && this.objectTwo.IsEmpty();
         }
     }
 }

@@ -16,6 +16,8 @@ namespace TScript
         private Dictionary<string, TObject> scriptObjects = new Dictionary<string, TObject>(20);
         private List<MethodPackage> requiredPackages;
 
+        private string currentLine;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -50,13 +52,12 @@ namespace TScript
             loader.OpenStream();
 
             this.requiredPackages = loader.RequiredPackages;
-            string line;
             string finalValue = "";
             bool programDone = false;
-            while ((line = loader.NextLine()) != null && !programDone)
+            while ((currentLine = loader.NextLine()) != null && !programDone)
             {
-                string method = StripMethodFromLine(line);
-                string[] argNames = GetArgsFromLine(line);
+                string method = StripMethodFromLine(currentLine);
+                string[] argNames = GetArgsFromLine(currentLine);
 
                 switch (method)
                 {
@@ -81,7 +82,10 @@ namespace TScript
                         //search for package to pass info on to
                         MethodPackage p = this.GetPackageFromMethod(method);
                         TObjectChange request = p.GetResultForMethod(method, GetValuesForArgNames(argNames));
-                        HandleObjectChangeRequest(request);
+                        if (!request.IsEmpty())
+                        {
+                            HandleObjectChangeRequest(request);
+                        }
                         break;
                 }
             }
@@ -159,6 +163,15 @@ namespace TScript
             }
 
             return trimmedArgs;
+        }
+
+        public string GetRawTextFromArgIndex(int index)
+        {
+            char[] para = new char[] { '(', ')' };
+            string line = currentLine.Remove(0, currentLine.IndexOf('('));
+            line = line.Trim(para);
+            string[] raw = line.Split(',');
+            return raw[index];
         }
 
         private void HandleObjectChangeRequest(TObjectChange request)
@@ -291,6 +304,22 @@ namespace TScript
             scriptObjects.Remove(argNames[2]);
             destination.Value = first - second;
             scriptObjects.Add(argNames[2], destination);
+        }
+
+        public object GetObjectValue(object obj)
+        {
+            object value;
+
+            if (obj.GetType() == typeof(TObject))
+            {
+                TObject tObj = (TObject)obj;
+                value = tObj.Value;
+            }
+            else
+            {
+                value = obj;
+            }
+            return value;
         }
 
         public object GetObjectValue(string name)
