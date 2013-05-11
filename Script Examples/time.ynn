@@ -1,0 +1,9 @@
+﻿use(TScript.Methods.BasicMethods)
+
+
+new(string, time)
+
+
+time(time)
+prepend(The time is , time)
+return(time)

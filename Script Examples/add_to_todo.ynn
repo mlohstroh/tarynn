@@ -1,0 +1,23 @@
+﻿use(TScript.Methods.FileMethods)
+
+use(TScript.Methods.StructureMethods)
+
+
+use(TScript.Methods.BasicMethods)
+new(string, input)
+
+get_input(input)
+
+new(dict, dict)
+#this is a test
+
+set_item(test, input, dict)
+
+new(string, csv)
+
+dict_to_csv(dict, csv)
+
+write_csv(test.csv, csv)
+
+
+return(Added item to the todo list)
