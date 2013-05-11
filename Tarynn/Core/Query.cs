@@ -24,6 +24,15 @@ namespace Tarynn.Core
             return "";
         }
 
+        private void HandleStatement()
+        {
+            Statement current = AttachedStatement;
 
+            while (current.RelatedId != 0)
+            {
+                current = Statement.Find(current.RelatedId);
+            }
+
+        }
     }
 }

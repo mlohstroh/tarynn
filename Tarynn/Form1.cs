@@ -21,7 +21,7 @@ namespace Tarynn
             t.EchoEvent += t_EchoEvent;
         }
 
-        void t_EchoEvent(object sender, TarynnEchoEventArgs e)
+        private void t_EchoEvent(object sender, TarynnEchoEventArgs e)
         {
             richTextBox1.Text += "Tarynn: " + e.Echo;
         }
@@ -44,10 +44,7 @@ namespace Tarynn
                 {
                     q = t.RelateQuery(q);
                 }
-                else
-                {
-
-                }
+                richTextBox1.Text += "Tarynn: " + q.Respond() + "\n";
             }
         }
     }

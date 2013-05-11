@@ -36,7 +36,8 @@ namespace Tarynn.Core
         /// <returns></returns>
         public new static Statement Find(int id)
         {
-            return null;
+            var query = Sql.SqlManager.SharedInstance.Connection.Table<Statement>().Where(v => v.Id == id);
+            return (Statement)query.Single();
         }
 
         /// <summary>
