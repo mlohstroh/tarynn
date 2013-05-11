@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TScript", "TScript\TScript.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analytics", "Analytics\Analytics.csproj", "{834B2C32-13CE-4E59-B50A-9946C0D83BCE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libspotify-sharp", "..\..\..\libspotify-sharp\libspotify-sharp\libspotify-sharp.csproj", "{33ECCB93-27D8-40DB-82E8-B47AAE19AA9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{834B2C32-13CE-4E59-B50A-9946C0D83BCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{834B2C32-13CE-4E59-B50A-9946C0D83BCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{834B2C32-13CE-4E59-B50A-9946C0D83BCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33ECCB93-27D8-40DB-82E8-B47AAE19AA9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33ECCB93-27D8-40DB-82E8-B47AAE19AA9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33ECCB93-27D8-40DB-82E8-B47AAE19AA9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33ECCB93-27D8-40DB-82E8-B47AAE19AA9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

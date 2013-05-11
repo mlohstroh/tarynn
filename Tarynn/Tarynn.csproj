@@ -107,6 +107,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Debug\libspotify.dll" />
     <Content Include="bin\Debug\sqlite3.dll" />
     <None Include="Scripts\randomGreeting.ynn" />
   </ItemGroup>
