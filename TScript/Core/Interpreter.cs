@@ -81,7 +81,9 @@ namespace TScript
                     default:
                         //search for package to pass info on to
                         MethodPackage p = this.GetPackageFromMethod(method);
+                        //get the official request from 
                         TObjectChange request = p.GetResultForMethod(method, GetValuesForArgNames(argNames));
+                        //if there is an actual request, then we handle it, if not, we don't care
                         if (!request.IsEmpty())
                         {
                             HandleObjectChangeRequest(request);
