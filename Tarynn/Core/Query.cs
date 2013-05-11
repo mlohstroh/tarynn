@@ -8,10 +8,13 @@ namespace Tarynn.Core
 {
     public class Query
     {
-        public Query(string text)
+        private Tarynn instance;
+
+        public Query(string text, Tarynn t)
         {
             OriginalText = text;
             State = QueryState.New;
+            instance = t;
         }
 
         public QueryState State { get; set; }
@@ -19,12 +22,8 @@ namespace Tarynn.Core
         public string OriginalText { get; set; }
 
         public Statement AttachedStatement { get; set; }
-        public string Respond()
-        {
-            return "";
-        }
 
-        private void HandleStatement()
+        public string Respond()
         {
             Statement current = AttachedStatement;
 
@@ -33,6 +32,15 @@ namespace Tarynn.Core
                 current = Statement.Find(current.RelatedId);
             }
 
+            if (current.ResponseText != null)
+            {
+                return current.ResponseText;
+            }
+            if (current.ScriptName != null)
+            {
+                return instance.RunScript(current.ScriptName);
+            }
+            return "I don't have a response for that";
         }
     }
 }

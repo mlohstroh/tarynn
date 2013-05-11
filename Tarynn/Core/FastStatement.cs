@@ -105,6 +105,7 @@ namespace Tarynn.Core
         public void InsertStatement(Statement statement)
         {
             char targetChar = statement.FullText.ToCharArray()[0];
+
             Dictionary<string, Statement> d;
             if (allStatements.ContainsKey(targetChar))
             {

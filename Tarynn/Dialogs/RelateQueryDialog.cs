@@ -59,6 +59,7 @@ namespace Tarynn.Dialogs
             finalStatement = new Statement();
             Statement selectedStatement = allStatements[lstStatements.SelectedIndex];
             finalStatement.RelatedId = selectedStatement.Id;
+            finalStatement.FullText = FinalQuery.OriginalText;
             FinalQuery.AttachedStatement = finalStatement;
         }
 
@@ -72,6 +73,7 @@ namespace Tarynn.Dialogs
             if (dlgChoose.FileName != "")
             {
                 finalStatement = new Statement();
+                finalStatement.FullText = FinalQuery.OriginalText;
                 finalStatement.ScriptName = dlgChoose.FileName;
                 FinalQuery.AttachedStatement = finalStatement;
                 lblSelectedScript.Text = "Selected Script: " + dlgChoose.FileName;
@@ -93,7 +95,9 @@ namespace Tarynn.Dialogs
                 lblSelectedScript.Text = "Selected Script: " + builder.FileName;
             }
             finalStatement = new Statement();
+            finalStatement.FullText = FinalQuery.OriginalText;
             finalStatement.ScriptName = builder.FileName;
+            FinalQuery.AttachedStatement = finalStatement;
         }
     }
 }

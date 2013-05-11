@@ -20,6 +20,8 @@ namespace Tarynn.Core
         public delegate void Echo(object sender, TarynnEchoEventArgs e);
         public event Echo EchoEvent;
 
+        Interpreter mInterpreter;
+
         public Tarynn()
         {
             LoadDatabase();         
@@ -28,13 +30,16 @@ namespace Tarynn.Core
 
         public Query RelateQuery(Query q)
         {
-            TarynnEchoEventArgs e = new TarynnEchoEventArgs("What do you mean when you say, '" + q.OriginalText + "' ?");
+            TConsole.Info("Relaing Query");
+            TarynnEchoEventArgs e = new TarynnEchoEventArgs("What do you mean when you say, '" + q.OriginalText + "' ?\n");
             OnTarynnEcho(e);
 
             RelateQueryDialog d = new RelateQueryDialog(q);
             d.ShowDialog();
 
             q = d.FinalQuery;
+
+            TConsole.Info("Inserting new statement");
             //attach
             allStatements.InsertStatement(q.AttachedStatement);
 
@@ -48,13 +53,17 @@ namespace Tarynn.Core
 
         public Query InitialQuery(string queryString)
         {
-            Query q = new Query(queryString.ToLower());
+            Query q = new Query(queryString.ToLower(), this);
 
             Statement statement = allStatements.GetStatement(q.OriginalText);
             if (statement == null)
             {
                 //whoops, no such statement found
                 q.State = QueryState.Unrelated;
+            }
+            else
+            {
+                q.AttachedStatement = statement;
             }
 
             return q;
@@ -64,17 +73,17 @@ namespace Tarynn.Core
         {
             try
             {
-                Interpreter i = new Interpreter(name);
-                if (i.Validate())
+                mInterpreter = new Interpreter(name);
+                if (mInterpreter.Validate())
                 {
                     TConsole.Info("Script was validated properly");
                 }
                 else
                 {
                     TConsole.Error("Script failed validation");
-                    return i.GetErrors();
+                    return mInterpreter.GetErrors();
                 }
-                return i.GetFinalText();
+                return mInterpreter.GetFinalText();
             }
             catch (TException ex)
             {
@@ -114,6 +123,7 @@ namespace Tarynn.Core
 
         private void OnTarynnEcho(TarynnEchoEventArgs e)
         {
+            TConsole.Info("Echoing back to client");
             Echo newEcho = EchoEvent;
             if (newEcho != null)
             {
