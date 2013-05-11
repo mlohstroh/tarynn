@@ -48,6 +48,9 @@ namespace TScript.Methods
                 case "dict_to_csv":
                     change = HandleDictToCsv(args);
                     break;
+                case "set_item":
+                    change = HandleSetItem(args);
+                    break;
             }
             return change;
         }
@@ -94,6 +97,21 @@ namespace TScript.Methods
             }
 
             return Host.MakeChange((TObject)args[1], builder.ToString());
+        }
+
+        private TObjectChange HandleSetItem(object[] args)
+        {
+            Dictionary<string, string> dict = (Dictionary<string, string>)Host.GetObjectValue(args[2]);
+
+            string key = Host.GetObjectValue(args[0]).ToString();
+            string value = Host.GetObjectValue(args[1]).ToString();
+            if (dict.ContainsKey(key))
+            {
+                dict.Remove(key);
+            }
+            dict.Add(key, value);
+
+            return Host.MakeChange((TObject)args[2], dict);
         }
     }
 }
