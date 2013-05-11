@@ -44,5 +44,7 @@ namespace TScript.Methods
         {
             return supportedTypes.Contains(type);
         }
+
+        public Interpreter Host { get; set; }
     }
 }

@@ -45,7 +45,6 @@ namespace Tarynn.Core
                 if (allStatements.ContainsKey(targetChar))
                 {
                     allStatements.TryGetValue(targetChar, out nestedDict);
-                    nestedDict.Add(key, s);
                 }
                 else
                 {

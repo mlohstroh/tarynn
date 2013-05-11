@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TScript.Methods;
 using TScript.Exceptions;
+using Analytics;
 
 namespace TScript
 {
@@ -39,6 +40,12 @@ namespace TScript
         /// <returns>The final output value of the script</returns>
         public string GetFinalText()
         {
+            //clear objects before running more
+            scriptObjects.Clear();
+            TConsole.Info("Running script");
+
+            TConsole.Debug("Starting time");
+            Profiler.SharedInstance.StartProfiling("script_run");
             //this is required so we can start reading
             loader.OpenStream();
 
@@ -54,13 +61,17 @@ namespace TScript
                 switch (method)
                 {
                     case "use":
+                        //absoutely nothing
+                        TConsole.Debug("Using lib " + argNames[0]);
                         break;
                     case "new":
                         HandleMethodNew(argNames);
                         break;
-                    case "add": 
+                    case "add":
+                        HandleAddMethod(argNames);
                         break;
                     case "sub":
+                        HandleSubMethod(argNames);
                         break;
                     case "return":
                         finalValue = HandleReturnStatement(argNames);
@@ -78,6 +89,9 @@ namespace TScript
             //close the stream when done
             loader.CloseStream();
             //give whoever wants the result back
+            int time = Profiler.SharedInstance.GetTimeForKey("script_run");
+            TConsole.Debug("Time for running script was: " + time.ToString() + " ms");
+
             return finalValue;
         }
 
@@ -219,6 +233,88 @@ namespace TScript
                 finalValue = argNames[0];    
             }
             return finalValue;
+        }
+
+        private void HandleAddMethod(string[] argNames)
+        {
+            int first;
+            if (!scriptObjects.ContainsKey(argNames[0]))
+            {
+                first = int.Parse(argNames[0]);
+            }
+            else
+            {
+                first = (int)GetObjectValue(argNames[0]);
+            }
+
+            int second;
+            if(!scriptObjects.ContainsKey(argNames[1]))
+            {
+                second = int.Parse(argNames[1]);
+            }
+            else
+            {
+                second = (int)GetObjectValue(argNames[1]);
+            }
+
+            TObject destination;
+            scriptObjects.TryGetValue(argNames[2], out destination);
+            scriptObjects.Remove(argNames[2]);
+            destination.Value = first + second;
+            scriptObjects.Add(argNames[2], destination);
+        }
+
+        private void HandleSubMethod(string[] argNames)
+        {
+            int first;
+            if (!scriptObjects.ContainsKey(argNames[0]))
+            {
+                first = int.Parse(argNames[0]);
+            }
+            else
+            {
+                first = (int)GetObjectValue(argNames[0]);
+            }
+
+            int second;
+            if (!scriptObjects.ContainsKey(argNames[1]))
+            {
+                second = int.Parse(argNames[1]);
+            }
+            else
+            {
+                second = (int)GetObjectValue(argNames[1]);
+            }
+
+            TObject destination;
+            scriptObjects.TryGetValue(argNames[2], out destination);
+            scriptObjects.Remove(argNames[2]);
+            destination.Value = first - second;
+            scriptObjects.Add(argNames[2], destination);
+        }
+
+        public object GetObjectValue(string name)
+        {
+            object obj;
+
+            if (scriptObjects.ContainsKey(name))
+            {
+                TObject tObj;
+                scriptObjects.TryGetValue(name, out tObj);
+                obj = tObj.Value;
+            }
+            else
+            {
+                obj = name;
+            }
+
+            return obj;
+        }
+
+        public TObjectChange MakeChange(TObject obj, object newValue)
+        {
+            TObject newObj = new TObject(obj.InnerType, newValue, obj.Name);
+            return new TObjectChange(obj, newObj);
         }
     }
 }

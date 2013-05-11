@@ -67,6 +67,7 @@ namespace TScript
                                 }
                                 //dynamically create an instance of the specified method package
                                 MethodPackage newLib = (MethodPackage)Activator.CreateInstance(type);
+                                newLib.Host = this.mInterpreter;
                                 loadedPackages.Add(newLib);
                             }
                             else

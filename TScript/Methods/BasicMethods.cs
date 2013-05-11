@@ -15,6 +15,9 @@ namespace TScript.Methods
             this.methodNames.Add("insert");
             this.methodNames.Add("mod");
             this.methodNames.Add("valueAt");
+            this.methodNames.Add("time");
+            this.methodNames.Add("append");
+            this.methodNames.Add("prepend");
             this.supportedTypes.Add("integer");
             this.supportedTypes.Add("string");
             this.supportedTypes.Add("list");
@@ -37,7 +40,7 @@ namespace TScript.Methods
                     TObject list = (TObject)args[1];
                     List<object> innerList = (List<object>)list.Value;
                     innerList.Add(args[0]);
-                    change = MakeChange(list, innerList);
+                    change = Host.MakeChange(list, innerList);
                     break;
                 case "mod":
                     int big = -1;
@@ -52,7 +55,7 @@ namespace TScript.Methods
  
                     int small = int.Parse((string)args[1]);
                     int mod = big % small;
-                    change = MakeChange((TObject)args[2], mod);
+                    change = Host.MakeChange((TObject)args[2], mod);
                     break;
                 case "valueAt":
                     int index;
@@ -65,11 +68,26 @@ namespace TScript.Methods
                         index = int.Parse((string)args[0]);
                     }
                     object valueAt = ((List<object>)((TObject)args[1]).Value).ElementAt(index);
-                    change = MakeChange((TObject)args[2], valueAt);
+                    change = Host.MakeChange((TObject)args[2], valueAt);
+                    break;
+                case "time":
+                    change = GetTime((TObject)args[0]);
+                    break;
+                case "append":
+
+                    break;
+                case "prepend":
                     break;
             }
 
             return change;
+        }
+
+        private TObjectChange GetTime(TObject obj)
+        {
+            string value = DateTime.Now.TimeOfDay.ToString();
+
+            return Host.MakeChange(obj, value);
         }
 
         public override TObject GetNewObjectForType(string type, string name)
@@ -94,10 +112,6 @@ namespace TScript.Methods
             return obj;
         }
 
-        private TObjectChange MakeChange(TObject obj, object newValue)
-        {
-            TObject newObj = new TObject(obj.InnerType, newValue, obj.Name);
-            return new TObjectChange(obj, newObj);
-        }
+
     }
 }
