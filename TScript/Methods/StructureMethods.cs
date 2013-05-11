@@ -14,6 +14,7 @@ namespace TScript.Methods
             this.methodNames.Add("csv_to_dict");
             this.methodNames.Add("dict_to_csv");
             this.methodNames.Add("get_item");
+            this.methodNames.Add("set_item");
             this.supportedTypes.Add("dict");
         }
 
@@ -64,14 +65,35 @@ namespace TScript.Methods
 
         private TObjectChange HandleCsvToDict(object[] args)
         {
+            Dictionary<string, string> dict = (Dictionary<string, string>)Host.GetObjectValue(args[1]);
 
-            return Host.MakeChange((TObject)args[1], null);
+            string fullBlob = Host.GetObjectValue(args[0]).ToString();
+
+            string[] lines = fullBlob.Split(';');
+            for(int i = 0; i < lines.Length - 1; i++)
+            {
+                string[] splitLine = lines[i].Split(',');
+                dict.Add(splitLine[0], splitLine[1]);
+            }
+
+            return Host.MakeChange((TObject)args[1], dict);
         }
 
         private TObjectChange HandleDictToCsv(object[] args)
         {
+            Dictionary<string, string> dict = (Dictionary<string, string>)Host.GetObjectValue(args[0]);
 
-            return Host.MakeChange((TObject)args[1], null);
+            StringBuilder builder = new StringBuilder();
+
+            foreach (string key in dict.Keys)
+            {
+                string value;
+                dict.TryGetValue(key, out value);
+
+                builder.Append(key + "," + value + ";");
+            }
+
+            return Host.MakeChange((TObject)args[1], builder.ToString());
         }
     }
 }
