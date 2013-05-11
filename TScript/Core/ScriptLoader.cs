@@ -34,6 +34,7 @@ namespace TScript
             builtInFunctions.Add("new");
             builtInFunctions.Add("add");
             builtInFunctions.Add("sub");
+            builtInFunctions.Add("get_input");
             builtInFunctions.Add("return");
         }
 

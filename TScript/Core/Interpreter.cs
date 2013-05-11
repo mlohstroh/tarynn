@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TScript.Methods;
 using TScript.Exceptions;
+using TScript.Dialogs;
 using Analytics;
 
 namespace TScript
@@ -73,6 +74,9 @@ namespace TScript
                         break;
                     case "sub":
                         HandleSubMethod(argNames);
+                        break;
+                    case "get_input":
+                        HandleGetInput(argNames);
                         break;
                     case "return":
                         finalValue = HandleReturnStatement(argNames);
@@ -306,6 +310,27 @@ namespace TScript
             scriptObjects.Remove(argNames[2]);
             destination.Value = first - second;
             scriptObjects.Add(argNames[2], destination);
+        }
+
+        private void HandleGetInput(string[] argNames)
+        {
+            InputForm input = new InputForm();
+            input.ShowDialog();
+
+            if (input.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                TObject obj;
+                scriptObjects.TryGetValue(argNames[0], out obj);
+                scriptObjects.Remove(argNames[0]);
+                //grab the input result and put it in the object
+                obj.Value = input.Result;
+
+                scriptObjects.Add(argNames[0], obj);
+            }
+            else
+            {
+                throw new FatalException("Input never came, aborting script!");
+            }
         }
 
         public object GetObjectValue(object obj)

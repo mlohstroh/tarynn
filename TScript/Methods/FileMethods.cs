@@ -14,8 +14,6 @@ namespace TScript.Methods
         {
             this.methodNames.Add("read_csv");
             this.methodNames.Add("write_csv");
-
-            this.supportedTypes.Add("file");
         }
 
         public override TObject GetNewObjectForType(string type, string name)

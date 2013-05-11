@@ -41,6 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dialogs\InputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\InputForm.Designer.cs">
+      <DependentUpon>InputForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ScriptBuilder.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,6 +73,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <EmbeddedResource Include="Dialogs\InputForm.resx">
+      <DependentUpon>InputForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\ScriptBuilder.resx">
       <DependentUpon>ScriptBuilder.cs</DependentUpon>
     </EmbeddedResource>

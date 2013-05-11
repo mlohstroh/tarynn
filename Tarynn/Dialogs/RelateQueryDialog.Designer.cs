@@ -41,6 +41,7 @@
             this.btnExistingStatement = new System.Windows.Forms.Button();
             this.dlgChoose = new System.Windows.Forms.OpenFileDialog();
             this.btnOk = new System.Windows.Forms.Button();
+            this.lblStatus = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -171,11 +172,21 @@
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
+            // lblStatus
+            // 
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(13, 378);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(40, 13);
+            this.lblStatus.TabIndex = 4;
+            this.lblStatus.Text = "Status:";
+            // 
             // RelateQueryDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(424, 403);
+            this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -191,6 +202,7 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -209,6 +221,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.OpenFileDialog dlgChoose;
         private System.Windows.Forms.Button btnOk;
+        private System.Windows.Forms.Label lblStatus;
 
     }
 }

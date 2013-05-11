@@ -29,6 +29,9 @@ namespace Tarynn
         private void button1_Click(object sender, EventArgs e)
         {
             string text = textBox1.Text;
+            if (text == "")
+                return;
+
             if (text.Contains("run"))
             {
                 string[] args = text.Split(':');

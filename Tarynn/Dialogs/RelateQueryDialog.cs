@@ -52,6 +52,7 @@ namespace Tarynn.Dialogs
             //just set the static text
             finalStatement.ResponseText = staticText;
             FinalQuery.AttachedStatement = finalStatement;
+            lblStatus.Text = "Status: Static Response";
         }
 
         private void btnExistingStatement_Click(object sender, EventArgs e)
@@ -61,6 +62,7 @@ namespace Tarynn.Dialogs
             finalStatement.RelatedId = selectedStatement.Id;
             finalStatement.FullText = FinalQuery.OriginalText;
             FinalQuery.AttachedStatement = finalStatement;
+            lblStatus.Text = "Status: Existing Statement";
         }
 
         private void btnExistingScript_Click(object sender, EventArgs e)
@@ -77,6 +79,7 @@ namespace Tarynn.Dialogs
                 finalStatement.ScriptName = dlgChoose.FileName;
                 FinalQuery.AttachedStatement = finalStatement;
                 lblSelectedScript.Text = "Selected Script: " + dlgChoose.FileName;
+                lblStatus.Text = "Status: Using script";
             }
         }
 
@@ -98,6 +101,7 @@ namespace Tarynn.Dialogs
             finalStatement.FullText = FinalQuery.OriginalText;
             finalStatement.ScriptName = builder.FileName;
             FinalQuery.AttachedStatement = finalStatement;
+            lblStatus.Text = "Status: Using script";
         }
     }
 }

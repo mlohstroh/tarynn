@@ -49,6 +49,9 @@ namespace TScript.Dialogs
         private void Verify()
         {
             Save();
+            if (FileName == null)
+                return;
+
             main = new Interpreter(FileName);
             if (!main.Validate())
             {
