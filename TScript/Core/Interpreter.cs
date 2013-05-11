@@ -229,6 +229,7 @@ namespace TScript
             {
                 //we have an error
                 AddError("Unsupported Type: " + argNames[0]);
+                loader.CloseStream();
                 throw new UnsupportedType();
             }
             //make the package make the object

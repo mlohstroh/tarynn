@@ -49,6 +49,7 @@ namespace Tarynn
                 }
                 richTextBox1.Text += "Tarynn: " + q.Respond() + "\n";
             }
+            textBox1.Text = "";
         }
     }
 }
