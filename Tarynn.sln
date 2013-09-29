@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analytics", "Analytics\Anal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libspotify-sharp", "..\..\..\libspotify-sharp\libspotify-sharp\libspotify-sharp.csproj", "{33ECCB93-27D8-40DB-82E8-B47AAE19AA9C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TModules", "TModules\TModules.csproj", "{C5BAD697-6792-4DA4-ADBF-734AF9B63F27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{33ECCB93-27D8-40DB-82E8-B47AAE19AA9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33ECCB93-27D8-40DB-82E8-B47AAE19AA9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33ECCB93-27D8-40DB-82E8-B47AAE19AA9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5BAD697-6792-4DA4-ADBF-734AF9B63F27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5BAD697-6792-4DA4-ADBF-734AF9B63F27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5BAD697-6792-4DA4-ADBF-734AF9B63F27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5BAD697-6792-4DA4-ADBF-734AF9B63F27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,6 +12,10 @@ namespace TScript.Methods
         public SpotifyMethods() 
             : base("Spotify Methods")
         {
+            this.methodNames.Add("spotify_play");
+            this.methodNames.Add("spotify_pause");
+            this.methodNames.Add("spotify_list_playlists");
+            this.methodNames.Add("spotify_select_playlist");
         }
 
         public override TObject GetNewObjectForType(string type, string name)
