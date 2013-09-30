@@ -65,7 +65,7 @@ namespace TModules
         /// </summary>
         public void InterruptSpeech()
         {
-
+            mSpeechHandler.StopSpeaking();
         }
     }
 }
