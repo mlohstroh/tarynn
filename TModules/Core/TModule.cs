@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Speech.Synthesis;
 
-namespace TModules
+namespace TModules.Core
 {
     public abstract class TModule
     {
@@ -16,8 +17,11 @@ namespace TModules
         public string ModuleName { get; private set; }
         public ModuleManager Host;
 
+        private SpeechHandler mSpeechHandler = new SpeechHandler();
+
         public TModule(string name, ModuleManager host)
         {
+            this.Host = host;
             this.ModuleName = name;
         }
 
@@ -43,6 +47,11 @@ namespace TModules
                     return;
                 }
             }
+        }
+
+        public void Speak(string message)
+        {
+            
         }
     }
 }

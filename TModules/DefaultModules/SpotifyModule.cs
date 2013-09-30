@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TModules;
+using TModules.Core;
 using System.Text.RegularExpressions;
 using SpotiFire;
 using Analytics;
@@ -47,7 +47,12 @@ namespace TModules.DefaultModules
             : base("Spotify", manager)
         {
             _allCallbacks.Add("spotify play", PlaySpotify);
-            Host = manager;
+            _allCallbacks.Add("spotify list playlists", ListPlaylists);
+            _allCallbacks.Add("stop", (Match message) =>
+            {
+                Host.InterruptSpeech();
+            });
+
 
             SetupSpotify().Wait();
         }
@@ -96,6 +101,14 @@ namespace TModules.DefaultModules
             else
             {
                 e.ConsumedFrames = 0;
+            }
+        }
+
+        private void ListPlaylists(Match message)
+        {
+            foreach (Playlist p in mCurrentSession.PlaylistContainer.Playlists)
+            {
+                Host.SpeakEventually(p.Name);
             }
         }
 
