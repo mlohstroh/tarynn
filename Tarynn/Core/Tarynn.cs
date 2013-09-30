@@ -9,23 +9,37 @@ using Tarynn.Dialogs;
 using Analytics;
 using TScript;
 using TScript.Exceptions;
+using TModules;
 
 namespace Tarynn.Core
 {
     public class Tarynn
     {
         Dictionary<string, SpecialResponse> specialResponses = new Dictionary<string, SpecialResponse>();
-        FastStatement allStatements = new FastStatement();
+        FastStatement allStatements;
 
         public delegate void Echo(object sender, TarynnEchoEventArgs e);
         public event Echo EchoEvent;
 
         Interpreter mInterpreter;
+        ModuleManager mManager;
 
         public Tarynn()
         {
-            LoadDatabase();         
-            LoadSpecialResponses();
+            
+        //    LoadDatabase();         
+          //  LoadSpecialResponses();
+            LoadManger();
+        }
+
+        private void LoadManger()
+        {
+            mManager = new ModuleManager();
+        }
+
+        public string RespondTo(string message)
+        {
+            return mManager.RespondTo(message);
         }
 
         public Query RelateQuery(Query q)

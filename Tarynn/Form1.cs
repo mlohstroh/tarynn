@@ -15,6 +15,8 @@ namespace Tarynn
     {
         Tarynn.Core.Tarynn t = new Tarynn.Core.Tarynn();
 
+        private bool UseManager = true;
+
         public Form1()
         {
             InitializeComponent();
@@ -31,25 +33,36 @@ namespace Tarynn
             string text = textBox1.Text;
             if (text == "")
                 return;
-
-            if (text.Contains("run"))
+            if (!UseManager)
             {
-                string[] args = text.Split(':');
-                args[1] = args[1].Trim();
-                richTextBox1.Text += "Tarynn: " + t.RunScript(args[1]);
+                if (text.Contains("run"))
+                {
+                    string[] args = text.Split(':');
+                    args[1] = args[1].Trim();
+                    richTextBox1.Text += "Tarynn: " + t.RunScript(args[1]);
+                }
+                else
+                {
+                    richTextBox1.Text += "Me:" + textBox1.Text + "\n";
+                    Query q = t.InitialQuery(textBox1.Text);
+
+                    if (q.State == QueryState.Unrelated)
+                    {
+                        q = t.RelateQuery(q);
+                    }
+                    richTextBox1.Text += "Tarynn: " + q.Respond() + "\n";
+                }
+                textBox1.Text = "";
             }
             else
             {
-                richTextBox1.Text += "Me:" + textBox1.Text + "\n";
-                Query q = t.InitialQuery(textBox1.Text);
-
-                if (q.State == QueryState.Unrelated)
-                {
-                    q = t.RelateQuery(q);
-                }
-                richTextBox1.Text += "Tarynn: " + q.Respond() + "\n";
+                SendToManager(textBox1.Text);
             }
-            textBox1.Text = "";
+        }
+
+        private void SendToManager(string message)
+        {
+            t.RespondTo(message);
         }
     }
 }

@@ -1,5 +1,0 @@
-C:\Users\Mark\Documents\Visual Studio 2012\Projects\Tarynn\TModules\obj\Debug\TModules.csprojResolveAssemblyReference.cache
-C:\Users\Mark\Documents\Visual Studio 2012\Projects\Tarynn\TModules\bin\Debug\TModules.dll
-C:\Users\Mark\Documents\Visual Studio 2012\Projects\Tarynn\TModules\bin\Debug\TModules.pdb
-C:\Users\Mark\Documents\Visual Studio 2012\Projects\Tarynn\TModules\obj\Debug\TModules.dll
-C:\Users\Mark\Documents\Visual Studio 2012\Projects\Tarynn\TModules\obj\Debug\TModules.pdb

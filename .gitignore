@@ -5,3 +5,5 @@ TScript/bin/*
 TScript/obj/*
 Analytics/obj/*
 Analytics/bin/*
+*/bin*
+*/obj*
