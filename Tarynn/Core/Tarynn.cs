@@ -39,6 +39,7 @@ namespace Tarynn.Core
         private void LoadJsonDocuments()
         {
             mJson = new DocumentHandler();
+            mJson.LoadCollections(new string[] { "Conversation" });
         }
 
         private void LoadManger()

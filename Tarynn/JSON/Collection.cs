@@ -49,12 +49,17 @@ namespace Tarynn.JSON
 
         private string CollectionPath()
         {
-            return _handler.RootPath + "\\" + Name;
+            return _handler.RootPath + "\\Tarynn\\" + Name;
         }
 
-        public string GetFileName(Document doc)
+        public string GetFileName()
         {
-            return ++FileCounter + ".json";
+            return CollectionPath() + "\\" + ++FileCounter + ".json";
+        }
+
+        public void SaveDocument(Dictionary<string, Object> dict)
+        {
+
         }
     }
 }

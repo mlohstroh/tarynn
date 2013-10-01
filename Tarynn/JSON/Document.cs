@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Tarynn.JSON
 {
@@ -25,11 +27,37 @@ namespace Tarynn.JSON
             this.Contents = contents;
         }
 
+        public string DictToJson()
+        {
+            StringBuilder sb = new StringBuilder();
+            StringWriter  sw = new StringWriter(sb);
+
+            using (JsonWriter jw = new JsonTextWriter(sw))
+            {
+                jw.WriteStartObject();
+                foreach (string key in Contents.Keys)
+                {
+                    object outObject;
+                    Contents.TryGetValue(key, out outObject);
+
+                    if (outObject.GetType() == typeof(Array))
+                    {
+
+                    }
+                    jw.WritePropertyName(key);
+                    jw.WriteValue(outObject.ToString());
+                }
+                jw.WriteEnd();
+                jw.WriteEndObject();
+                return jw.ToString();
+            }
+        }
+
         public void Save()
         {
             if (IsNew())
             {
-                
+                File.Create(Collection.GetFileName());
             }
         }
 

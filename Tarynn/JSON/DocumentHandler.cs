@@ -26,7 +26,8 @@ namespace Tarynn.JSON
         {
             for (int i = 0; i < collections.Length; i++)
             {
-                
+                Collection col = new Collection(collections[i], this, true);
+                loadedCollections.Add(col);
             }
         }
     }
