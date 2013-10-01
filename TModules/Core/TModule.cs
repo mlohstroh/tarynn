@@ -48,10 +48,5 @@ namespace TModules.Core
                 }
             }
         }
-
-        public void Speak(string message)
-        {
-            
-        }
     }
 }

@@ -48,11 +48,6 @@ namespace TModules.DefaultModules
         {
             _allCallbacks.Add("spotify play", PlaySpotify);
             _allCallbacks.Add("spotify list playlists", ListPlaylists);
-            _allCallbacks.Add("stop", (Match message) =>
-            {
-                Host.InterruptSpeech();
-            });
-
 
             SetupSpotify().Wait();
         }
