@@ -33,6 +33,7 @@ namespace Tarynn.Core
         //    LoadDatabase();         
           //  LoadSpecialResponses();
             LoadManger();
+            LoadJsonDocuments();
         }
 
         private void LoadJsonDocuments()

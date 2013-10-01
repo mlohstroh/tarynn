@@ -8,18 +8,26 @@ namespace Tarynn.JSON
 {
     public class DocumentHandler
     {
-        private string _rootPath;
-        //private List<
+        public string RootPath { get; private set; }
+        private List<Collection> loadedCollections = new List<Collection>();
 
 
         public DocumentHandler()
         {
-            _rootPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
+            RootPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
         }
-
+        
         public void LoadCollections()
         {
+            //detect off of folder names
+        }
 
+        public void LoadCollections(string[] collections)
+        {
+            for (int i = 0; i < collections.Length; i++)
+            {
+                
+            }
         }
     }
 }

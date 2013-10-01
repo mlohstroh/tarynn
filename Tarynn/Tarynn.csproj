@@ -89,6 +89,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Toolbox.cs" />
+    <Compile Include="JSON\Collection.cs" />
     <Compile Include="JSON\Document.cs" />
     <Compile Include="JSON\DocumentHandler.cs" />
     <Compile Include="Program.cs" />
