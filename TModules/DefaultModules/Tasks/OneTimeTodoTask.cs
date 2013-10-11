@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TModules.DefaultModules
+namespace TModules.DefaultModules.Tasks
 {
-    class Todo
+    class OneTimeTodoTask : TodoTask
     {
+        public DateTime Deadline { get; set; } 
     }
 }

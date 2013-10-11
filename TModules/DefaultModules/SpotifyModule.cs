@@ -49,7 +49,7 @@ namespace TModules.DefaultModules
             _allCallbacks.Add("spotify play", PlaySpotify);
             _allCallbacks.Add("spotify list playlists", ListPlaylists);
 
-            SetupSpotify().Wait();
+            SetupSpotify();
         }
 
         async Task SetupSpotify()

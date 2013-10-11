@@ -115,7 +115,7 @@ namespace SharpCouch
         public void CreateDatabase(string server, string db)
         {
             string result = DoRequest(server + "/" + db, "PUT");
-            if (result != "{\"ok\":true}")
+            if (result != "{\"ok\":true}\n")
                 throw new ApplicationException("Failed to create database: " + result);
         }
 
