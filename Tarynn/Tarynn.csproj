@@ -52,14 +52,15 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="LitJson">
+      <HintPath>..\..\..\..\..\Downloads\litjson-0.7.0\litjson-0.7.0\bin\LitJson.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite">
       <HintPath>..\..\..\..\..\..\..\Program Files\System.Data.SQLite\2012\bin\System.Data.SQLite.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -89,9 +90,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Toolbox.cs" />
-    <Compile Include="JSON\Collection.cs" />
-    <Compile Include="JSON\Document.cs" />
-    <Compile Include="JSON\DocumentHandler.cs" />
+    <Compile Include="JSON\SharpCouch.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Statement.cs" />

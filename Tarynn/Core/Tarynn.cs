@@ -10,7 +10,6 @@ using Analytics;
 using TScript;
 using TScript.Exceptions;
 using TModules;
-using Tarynn.JSON;
 
 namespace Tarynn.Core
 {
@@ -25,21 +24,12 @@ namespace Tarynn.Core
         Interpreter mInterpreter;
         ModuleManager mManager;
 
-        DocumentHandler mJson;
-
         public Tarynn()
         {
             
         //    LoadDatabase();         
           //  LoadSpecialResponses();
             LoadManger();
-            LoadJsonDocuments();
-        }
-
-        private void LoadJsonDocuments()
-        {
-            mJson = new DocumentHandler();
-            mJson.LoadCollections(new string[] { "Conversation" });
         }
 
         private void LoadManger()
