@@ -38,7 +38,9 @@ namespace TModules.DefaultModules
             //most of these regexes were taken from here
             //https://github.com/github/hubot-scripts/blob/master/src/scripts/remind.coffee
             AddCallback("remind me in ((?:(?:\\d+) (?:weeks?|days?|hours?|hrs?|minutes?|mins?|seconds?|secs?)[ ,]*(?:and)? +)+)to (.*)", Remind);
+            AddCallback("what do I need to do today?", DueToday);
         }
+
 
         private void LoadDocs(DocInfo[] docs)
         {
@@ -48,6 +50,27 @@ namespace TModules.DefaultModules
                 JsonData data = JsonMapper.ToObject(json);
                 _allTasks.Add(TodoTask.BuildTask(data));
             }
+        }
+
+        #region Callbacks
+
+        private void DueToday(Match message)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            foreach (TodoTask t in _allTasks)
+            {
+                if (t.Type == "one_time")
+                {
+                    OneTimeTodoTask one = (OneTimeTodoTask)t;
+                    if (DateTime.Now.DayOfYear == one.Deadline.DayOfYear)
+                    {
+                        builder.Append(one.Title + ",");
+                    }
+                }
+            }
+
+            Host.SpeakEventually(builder.ToString().TrimEnd(builder.ToString()[builder.Length - 1]));
         }
 
         private void Remind(Match message)
@@ -83,9 +106,12 @@ namespace TModules.DefaultModules
                 }
 
                 couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(t));
+                _allTasks.Add(t);
                 Host.SpeakEventually("I will remind you to " + action + " in " + time);
             });
         }
+
+        #endregion
 
         private DateTime BuildTime(string time)
         {
