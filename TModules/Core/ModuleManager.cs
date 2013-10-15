@@ -19,14 +19,19 @@ namespace TModules
         {
             RegisterModule(new SpotifyModule(this));
             RegisterModule(new TaskModule(this));
+            RegisterModule(new UtilityModule(this));
         }
 
         public string RespondTo(string message)
         {
             foreach (TModule module in registeredModules)
             {
-                module.RespondTo(message);
+                if (module.RespondTo(message))
+                {
+                    return "";
+                }
             }
+            SpeakEventually("I'm sorry, I don't know what you mean");
             return "";
         }
 

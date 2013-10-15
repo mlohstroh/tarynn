@@ -46,8 +46,8 @@ namespace TModules.DefaultModules
         public SpotifyModule(ModuleManager manager)
             : base("Spotify", manager)
         {
-            _allCallbacks.Add("spotify play", PlaySpotify);
-            _allCallbacks.Add("spotify list playlists", ListPlaylists);
+            AddCallback("spotify play", PlaySpotify);
+            AddCallback("spotify list playlists", ListPlaylists);
 
             SetupSpotify();
         }

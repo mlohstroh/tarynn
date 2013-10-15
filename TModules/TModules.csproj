@@ -79,6 +79,7 @@
     <Compile Include="DefaultModules\TaskModule.cs" />
     <Compile Include="DefaultModules\Tasks\OneTimeTodoTask.cs" />
     <Compile Include="DefaultModules\Tasks\TodoTask.cs" />
+    <Compile Include="DefaultModules\UtilityModule.cs" />
     <Compile Include="JSON\SharpCouch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

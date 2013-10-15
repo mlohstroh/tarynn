@@ -34,7 +34,7 @@ namespace TModules.DefaultModules
 
             //most of these regexes were taken from here
             //https://github.com/github/hubot-scripts/blob/master/src/scripts/remind.coffee
-            _allCallbacks.Add("remind me in ((?:(?:\\d+) (?:weeks?|days?|hours?|hrs?|minutes?|mins?|seconds?|secs?)[ ,]*(?:and)? +)+)to (.*)", Remind);
+            AddCallback("remind me in ((?:(?:\\d+) (?:weeks?|days?|hours?|hrs?|minutes?|mins?|seconds?|secs?)[ ,]*(?:and)? +)+)to (.*)", Remind);
         }
 
         private void LoadDocs(DocInfo[] docs)
@@ -56,7 +56,31 @@ namespace TModules.DefaultModules
             t.Deadline = new DateTime(DateTime.UtcNow.Ticks + 1000);
             t.Title = action;
             t.Type = "one_time";
-            couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(t));
+           
+            Host.SpeakEventually("What would you rate this? None, one, two, or three?");
+            AddFollowup("(none|one|two|three|\\d)", (Match followUpMessage) =>
+            {
+                switch (followUpMessage.Groups[1].Value)
+                {
+                    case "none":
+                        t.Size = 0;
+                        break;
+                    case "one":
+                        t.Size = 1;
+                        break;
+                    case "two":
+                        t.Size = 2;
+                        break;
+                    case "three":
+                        t.Size = 3;
+                        break;
+                    default:
+                        t.Size = int.Parse(followUpMessage.Groups[1].Value);
+                        break;
+                }
+
+                couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(t));
+            });
         }
 
         private bool DBExists(string name)

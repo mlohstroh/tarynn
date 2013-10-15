@@ -12,7 +12,8 @@ namespace TModules.Core
     {
         public delegate void Heard(Match message);
 
-        protected Dictionary<string, Heard> _allCallbacks = new Dictionary<string, Heard>();
+        private Dictionary<string, Heard> _allCallbacks = new Dictionary<string, Heard>();
+        private Dictionary<string, Heard> _followUps = new Dictionary<string, Heard>();
 
         public string ModuleName { get; private set; }
         public ModuleManager Host;
@@ -30,11 +31,16 @@ namespace TModules.Core
             _allCallbacks.Add(pattern, callback);
         }
 
+        protected void AddFollowup(string pattern, Heard callback)
+        {
+            _followUps.Add(pattern, callback);
+        }
+
         /// <summary>
         /// Called by the Manager to see if this module responds to a certain message
         /// </summary>
         /// <param name="message">The message typed in</param>
-        public void RespondTo(string message)
+        public bool RespondTo(string message)
         {
             foreach (string pattern in _allCallbacks.Keys)
             {
@@ -44,9 +50,23 @@ namespace TModules.Core
                     Heard callback;
                     _allCallbacks.TryGetValue(pattern, out callback);
                     callback(match);
-                    return;
+                    return true;
                 }
             }
+            foreach (string pattern in _followUps.Keys)
+            {
+                Match match = Regex.Match(message, pattern, RegexOptions.IgnoreCase);
+                if (match.Success)
+                {
+                    Heard callback;
+                    _followUps.TryGetValue(pattern, out callback);
+                    callback(match);
+                    //followups are temporary
+                    _followUps.Remove(pattern);
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
