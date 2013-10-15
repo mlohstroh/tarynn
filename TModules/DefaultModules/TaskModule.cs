@@ -20,6 +20,9 @@ namespace TModules.DefaultModules
 
         private List<TodoTask> _allTasks = new List<TodoTask>();
 
+        const string TIME_REGEX = "((?:(?:\\d+) (?:weeks?|days?|hours?|minutes?|seconds?)))";
+        const string BROKEN_TIME_REGEX = "(?:(?:(\\d+)) ((?:weeks?|days?|hours?|hrs?|minutes?|mins?|seconds?|secs?)))";
+
         public TaskModule(ModuleManager manager)
             : base("Tasks", manager)
         {
@@ -53,10 +56,10 @@ namespace TModules.DefaultModules
             string action = message.Groups[2].Value;
 
             OneTimeTodoTask t = new OneTimeTodoTask();
-            t.Deadline = new DateTime(DateTime.UtcNow.Ticks + 1000);
+            t.Deadline = BuildTime(time);
             t.Title = action;
             t.Type = "one_time";
-           
+
             Host.SpeakEventually("What would you rate this? None, one, two, or three?");
             AddFollowup("(none|one|two|three|\\d)", (Match followUpMessage) =>
             {
@@ -80,7 +83,42 @@ namespace TModules.DefaultModules
                 }
 
                 couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(t));
+                Host.SpeakEventually("I will remind you to " + action + " in " + time);
             });
+        }
+
+        private DateTime BuildTime(string time)
+        {
+            DateTime datetime = DateTime.Now;
+            Match regex = Regex.Match(time, TIME_REGEX);
+
+            for(int i = 1; i < regex.Groups.Count; i++)   
+            {
+                string currentTime = regex.Groups[i].Value;
+
+                Match smallRegex = Regex.Match(currentTime, BROKEN_TIME_REGEX);
+                int duration = int.Parse(smallRegex.Groups[1].Value);
+                switch (smallRegex.Groups[2].Value)
+                {
+                    case "weeks":
+                        datetime = datetime.AddDays(7 * duration);
+                        break;
+                    case "days":
+                        datetime = datetime.AddDays(duration);
+                        break;
+                    case "hours":
+                        datetime = datetime.AddHours(duration);
+                        break;
+                    case "minutes":
+                        datetime = datetime.AddMinutes(duration);
+                        break;
+                    case "seconds":
+                        datetime = datetime.AddSeconds(duration);
+                        break;
+                }
+            }
+
+            return datetime;
         }
 
         private bool DBExists(string name)
