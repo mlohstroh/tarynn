@@ -20,17 +20,12 @@ namespace TModules.DefaultModules.Tasks
             switch (data["Type"].ToString())
             {
                 case "one_time":
-                    t = new OneTimeTodoTask();
-                    ((OneTimeTodoTask)t).Deadline = DateTime.Parse(data["Deadline"].ToString());
+                    t = JsonMapper.ToObject<OneTimeTodoTask>(data.ToJson());
+                    break;
+                case "reoccurring":
+                    t = JsonMapper.ToObject<ReoccurringTask>(data.ToJson());
                     break;
             }
-            if(data["Description"] != null)
-                t.Description = data["Description"].ToString();
-            t.Type = data["Type"].ToString();
-            if (data["Size"] != null)
-                t.Size = int.Parse(data["Size"].ToString());
-            if (data["Title"] != null)
-                t.Title = data["Title"].ToString();
 
             return t;
         }
