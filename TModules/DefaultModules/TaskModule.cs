@@ -18,7 +18,8 @@ namespace TModules.DefaultModules
         const string SERVER_ADDRESS = "http://127.0.0.1:5984";
         const string DB_NAME = "tarynn-tasks";
 
-        private List<TodoTask> _allTasks = new List<TodoTask>();
+        private Dictionary<string, TodoTask> _allTasks = new Dictionary<string, TodoTask>();
+        private Dictionary<string, TodoTask> _todaysTasks;
 
         const string REOCCURRING_REGEX = "remind me every ((?:(?:monday?|tuesday?|wednesday?|thursday?|friday?|saturday?|sunday?)[ ,]*(?:and)? +)+)to (.*)";
         const string DAY_REGEX = "((?:(?:monday?|tuesday?|wednesday?|thursday?|friday?|saturday?|sunday?)[ ,]*))";
@@ -35,24 +36,28 @@ namespace TModules.DefaultModules
                 couch.CreateDatabase(SERVER_ADDRESS, DB_NAME);
             }
 
-            DocInfo[] docs = couch.GetAllDocuments(SERVER_ADDRESS, DB_NAME);
-
-            LoadDocs(docs);
+            LoadDocs();
 
             //most of these regexes were taken from here
             //https://github.com/github/hubot-scripts/blob/master/src/scripts/remind.coffee
             AddCallback("remind me in ((?:(?:\\d+) (?:weeks?|days?|hours?|hrs?|minutes?|mins?|seconds?|secs?)[ ,]*(?:and)? +)+)to (.*)", Remind);
             AddCallback("what do I need to do today?", DueToday);
             AddCallback(REOCCURRING_REGEX, MakeReoccurringTask);
+            AddCallback("mark (\\d) complete", MarkComplete);
         }
 
-        private void LoadDocs(DocInfo[] docs)
+        private void LoadDocs()
         {
+            _allTasks.Clear();
+            if(_todaysTasks != null)
+                _todaysTasks.Clear();
+            DocInfo[] docs = couch.GetAllDocuments(SERVER_ADDRESS, DB_NAME);
+
             foreach (DocInfo doc in docs)
             {
                 string json = couch.GetDocument(SERVER_ADDRESS, DB_NAME, doc.ID);
                 JsonData data = JsonMapper.ToObject(json);
-                _allTasks.Add(TodoTask.BuildTask(data));
+                _allTasks.Add(doc.ID, TodoTask.BuildTask(data));
             }
         }
 
@@ -92,6 +97,32 @@ namespace TModules.DefaultModules
 
         #region Callbacks
 
+        private void MarkComplete(Match message)
+        {
+            if(_todaysTasks == null)
+                LoadToday();
+
+            int index = int.Parse(message.Groups[1].Value) - 1;
+            if (_todaysTasks.Count <= index)
+            {
+                Host.SpeakEventually("I do not have a today for " + index);
+            }
+            else
+            {
+                string key = _todaysTasks.Keys.ToArray()[index];
+                TodoTask t;
+                _todaysTasks.TryGetValue(key, out t);
+                t.Done = true;
+                //save off 
+                if (t.Type == "one_time")
+                {
+                    //couch.DeleteDocument(SERVER_ADDRESS, DB_NAME,);
+                    couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(t));
+                }
+                Host.SpeakEventually(t.Title + " is marked as done");
+            }
+        }
+
         private void MakeReoccurringTask(Match message)
         {
             string time = message.Groups[1].Value;
@@ -124,39 +155,55 @@ namespace TModules.DefaultModules
                 }
 
                 couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(t));
-                _allTasks.Add(t);
+                //yeup.... :(
+                LoadDocs();
                 Host.SpeakEventually("I will remind you to " + action + " in " + time);
             });
         }
 
         private void DueToday(Match message)
         {
-            StringBuilder builder = new StringBuilder();
+            Host.SpeakEventually(LoadToday());
+        }
 
-            foreach (TodoTask t in _allTasks)
+        public string LoadToday()
+        {
+            StringBuilder builder = new StringBuilder();
+            int counter = 1;
+
+            _todaysTasks = new Dictionary<string, TodoTask>();
+
+            foreach (string s in _allTasks.Keys)
             {
-                switch(t.Type)
+                TodoTask t;
+                _allTasks.TryGetValue(s, out t);
+                switch (t.Type)
                 {
-                    case "one_time":    
+                    case "one_time":
                         OneTimeTodoTask one = (OneTimeTodoTask)t;
-                        if (DateTime.Now.DayOfYear == one.Deadline.DayOfYear)
+                        if (DateTime.Now.DayOfYear == one.Deadline.DayOfYear && !t.Done)
                         {
-                            builder.Append(one.Title + ",");
+                            builder.Append(counter++ + " " + one.Title + ",");
+                            _todaysTasks.Add(s, one);
                         }
+
                         break;
                     case "reoccurring":
                         ReoccurringTask re = (ReoccurringTask)t;
                         if (re.DaysToRepeat == null)    //bad fix
                             re.DaysToRepeat = new List<int>();
-                        if (re.DaysToRepeat.IndexOf((int)DateTime.Now.DayOfWeek) != -1)
+                        if (re.DaysToRepeat.IndexOf((int)DateTime.Now.DayOfWeek) != -1 && !t.Done)
                         {
-                            builder.Append(re.Title + ",");
+                            builder.Append(counter++ + " " + re.Title + ",");
+                            _todaysTasks.Add(s, re);
                         }
                         break;
                 }
             }
-
-            Host.SpeakEventually(builder.ToString().TrimEnd(builder.ToString()[builder.Length - 1]));
+            if (builder.Length > 0)
+                return builder.ToString().TrimEnd(builder.ToString()[builder.Length - 1]);
+            else
+                return "You have nothing for today";
         }
 
         private void Remind(Match message)
@@ -168,6 +215,7 @@ namespace TModules.DefaultModules
             t.Deadline = BuildTime(time);
             t.Title = action;
             t.Type = "one_time";
+            t.Done = false;
 
             Host.SpeakEventually("What would you rate this? None, one, two, or three?");
             AddFollowup("(none|one|two|three|\\d)", (Match followUpMessage) =>
@@ -190,9 +238,8 @@ namespace TModules.DefaultModules
                         t.Size = int.Parse(followUpMessage.Groups[1].Value);
                         break;
                 }
-
                 couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(t));
-                _allTasks.Add(t);
+                LoadDocs();
                 Host.SpeakEventually("I will remind you to " + action + " in " + time);
             });
         }
