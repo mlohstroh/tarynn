@@ -9,7 +9,7 @@ using SharpCouch;
 using LitJson;
 using TModules.DefaultModules.Events;
 
-namespace TModules.DefaultModules.Tasks
+namespace TModules.DefaultModules
 {
     public class EventModule : TModule
     {
@@ -41,6 +41,8 @@ namespace TModules.DefaultModules.Tasks
 
         private void LoadDocs()
         {
+            _allEvents.Clear();
+
             DocInfo[] docs = _couch.GetAllDocuments(SERVER_ADDRESS, DB_NAME);
 
             foreach (DocInfo doc in docs)

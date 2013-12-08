@@ -221,7 +221,10 @@ namespace SharpCouch
         /// <param name="docid">The document ID.</param>
         public void DeleteDocument(string server, string db, string docid)
         {
-            DoRequest(server + "/" + db + "/" + docid, "DELETE");
+            JsonData data = JsonMapper.ToObject(GetDocument(server, db, docid));
+            data["_deleted"] = true;
+
+            DoRequest(server + "/" + db + "/" + docid, "PUT", data.ToJson(), "application/json");
         }
 
         /// <summary>

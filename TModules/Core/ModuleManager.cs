@@ -17,9 +17,10 @@ namespace TModules
 
         public ModuleManager()
         {
-            RegisterModule(new SpotifyModule(this));
+            //RegisterModule(new SpotifyModule(this));
             RegisterModule(new TaskModule(this));
             RegisterModule(new UtilityModule(this));
+            RegisterModule(new EventModule(this));
         }
 
         public string RespondTo(string message)
