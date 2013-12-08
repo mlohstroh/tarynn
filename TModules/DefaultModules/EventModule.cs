@@ -80,7 +80,33 @@ namespace TModules.DefaultModules.Tasks
 
         private void CountEvents(Match message)
         {
+            string searchTerm = message.Groups[1].Value;
+            List<Event> matchedEvents = new List<Event>();
 
+            var keys = _allEvents.Keys;
+            foreach (string s in keys)
+            {
+                Match m = Regex.Match(s, searchTerm);
+                if (m.Success)
+                {
+                    Dictionary<string, Event> result;
+                    _allEvents.TryGetValue(s, out result);
+                    var pair = result.First();
+                    matchedEvents.Add(pair.Value);
+                }
+            }
+
+            if (matchedEvents.Count > 0)
+            {
+                foreach (Event e in matchedEvents)
+                {
+                    Host.SpeakEventually(e.Name + " has happened " + e.Count + " times");
+                }
+            }
+            else
+            {
+                Host.SpeakEventually("No matching events were found");
+            }
         }
 
         private bool DBExists(string name)
