@@ -12,7 +12,7 @@ namespace TModules.Users
 
         public User(string name)
         {
-
+            Name = name;
         }
     }
 }

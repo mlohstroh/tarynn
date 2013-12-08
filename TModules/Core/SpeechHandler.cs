@@ -22,6 +22,7 @@ namespace TModules.Core
 
         public SpeechHandler()
         {
+            mSynth.SelectVoiceByHints(VoiceGender.Female);
             mSynth.SpeakCompleted += mSynth_SpeakCompleted;
         }
 

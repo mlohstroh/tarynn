@@ -16,7 +16,7 @@ namespace TModules.Users
         private DB _couch = new DB();
 
         const string SERVER_ADDRESS = "http://127.0.0.1:5984";
-        const string DB_NAME = "tarynn-events";
+        const string DB_NAME = "tarynn-users";
 
         private Dictionary<string, User> _allUsers = new Dictionary<string, User>();
 
@@ -25,7 +25,7 @@ namespace TModules.Users
         {
             InitDatabase();
 
-            AddCallback("hello this is (.*)", SignInUser); 
+            AddCallback("hello this is (.*)", SignInUser);
         }
 
         private void InitDatabase()
@@ -59,6 +59,7 @@ namespace TModules.Users
         {
             User u = new User(name);
             _couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(u));
+            SignedInUser = u;
         }
 
         public User SignedInUser { get; private set; }
@@ -76,7 +77,7 @@ namespace TModules.Users
                     return;
                 }
             }
-            Host.SpeakEventually("Hello " + name + ". I haven't seen you before so I just created a profile for you");
+            Host.SpeakEventually("Hello " + name + ". I haven't seen you before, so I just created a profile for you");
             CreateUser(name);
         }
 

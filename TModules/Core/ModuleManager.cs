@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TModules.Core;
 using TModules.DefaultModules;
 using System.IO;
+using TModules.Users;
 
 namespace TModules
 {
@@ -21,6 +22,7 @@ namespace TModules
             RegisterModule(new TaskModule(this));
             RegisterModule(new UtilityModule(this));
             RegisterModule(new EventModule(this));
+            RegisterModule(new UserManagement(this));
         }
 
         public string RespondTo(string message)
