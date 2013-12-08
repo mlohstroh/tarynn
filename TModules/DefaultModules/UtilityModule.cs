@@ -26,12 +26,20 @@ namespace TModules.DefaultModules
             {
                 Host.InterruptSpeech();
             });
+            AddCallback("(\\d) (plus|\\+|minus|-|times|\\*|over|\\/) (\\d)", Calculate);
         }
 
         private void StartTimer(Match message)
         {
             _startTime = DateTime.Now;
             Host.SpeakEventually("Timer started!");
+        }
+
+        private void Calculate(Match message)
+        {
+            int valueOne = int.Parse(message.Groups[1].Value);
+            string action = message.Groups[2].Value;
+            int valueTwo = int.Parse(message.Groups[3].Value);
         }
 
         private void SpeakLastTime(Match message)

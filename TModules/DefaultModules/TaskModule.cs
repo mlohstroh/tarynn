@@ -22,7 +22,7 @@ namespace TModules.DefaultModules
         private Dictionary<string, TodoTask> _todaysTasks;
 
         const string REOCCURRING_REGEX = "remind me every ((?:(?:monday?|tuesday?|wednesday?|thursday?|friday?|saturday?|sunday?)[ ,]*(?:and)? +)+)to (.*)";
-        const string DAY_REGEX = "((?:(?:monday?|tuesday?|wednesday?|thursday?|friday?|saturday?|sunday?)[ ,]*))";
+        const string DAY_REGEX = "(?:(?:monday?|tuesday?|wednesday?|thursday?|friday?|saturday?|sunday?)+)";
 
 
         const string TIME_REGEX = "((?:(?:\\d+) (?:weeks?|days?|hours?|minutes?|seconds?)))";
@@ -63,7 +63,7 @@ namespace TModules.DefaultModules
 
         private void BuildReoccurringTime(string message, ref ReoccurringTask t)
         {
-            Match regex = Regex.Match(message, DAY_REGEX);
+            Match regex = Regex.Match(message, DAY_REGEX, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
             t.DaysToRepeat = new List<int>();
             for (int i = 1; i < regex.Groups.Count; i++)
             {
