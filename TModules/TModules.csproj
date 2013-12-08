@@ -75,8 +75,10 @@
     <Compile Include="Core\ModuleManager.cs" />
     <Compile Include="Core\SpeechHandler.cs" />
     <Compile Include="Core\TModule.cs" />
+    <Compile Include="DefaultModules\Events\Event.cs" />
     <Compile Include="DefaultModules\SpotifyModule.cs" />
     <Compile Include="DefaultModules\TaskModule.cs" />
+    <Compile Include="DefaultModules\EventModule.cs" />
     <Compile Include="DefaultModules\Tasks\OneTimeTodoTask.cs" />
     <Compile Include="DefaultModules\Tasks\ReoccurringTask.cs" />
     <Compile Include="DefaultModules\Tasks\TodoTask.cs" />
@@ -98,6 +100,7 @@
       <Name>Analytics</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
