@@ -26,6 +26,7 @@ namespace TModules.Users
             InitDatabase();
 
             AddCallback("hello this is (.*)", SignInUser);
+            AddCallback("when did I last sign in", LastSignInForUser);
         }
 
         private void InitDatabase()
@@ -64,21 +65,41 @@ namespace TModules.Users
 
         public User SignedInUser { get; private set; }
 
+        private void LastSignInForUser(Match message)
+        {
+            if (SignedInUser == null)
+            {
+                Host.SpeakEventually("There is no signed in user. Please Sign in.");
+                return;
+            }
+            Host.SpeakEventually("Your last sign in was " + SignedInUser.LastSignIn.ToString("MM/dd/yyyy hh:mm"));
+        }
+
         public void SignInUser(Match message)
         {
             string name = message.Groups[1].Value;
 
-            foreach (User u in _allUsers.Values)
+            foreach (var pair in _allUsers)
             {
+                User u = pair.Value;
                 if (u.Name == name)
                 {
+                    u.LastSignIn = DateTime.Now;
                     SignedInUser = u;
                     Host.SpeakEventually("Hello " + name +". Welcome back");
+                    UpdateUser(pair.Key, u);
                     return;
                 }
             }
             Host.SpeakEventually("Hello " + name + ". I haven't seen you before, so I just created a profile for you");
             CreateUser(name.ToLower());
+        }
+
+        private void UpdateUser(string key, User u)
+        {
+            _couch.DeleteDocument(SERVER_ADDRESS, DB_NAME, key);
+            _couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(u));
+            LoadDocs();
         }
 
         public List<User> UserList

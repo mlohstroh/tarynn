@@ -47,6 +47,17 @@ namespace SharpCouch
         {
         }
 
+        public bool DBExists(string server, string name)
+        {
+            string[] dbNames = this.GetDatabases(server);
+            foreach (string s in dbNames)
+            {
+                if (s == name)
+                    return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Get a list of database on the server.
         /// </summary>

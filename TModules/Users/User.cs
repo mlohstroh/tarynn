@@ -9,10 +9,12 @@ namespace TModules.Users
     public class User
     {
         public string Name { get; set; }
+        public DateTime LastSignIn { get; set; }
 
         public User(string name)
         {
             Name = name;
+            LastSignIn = DateTime.Now;
         }
     }
 }

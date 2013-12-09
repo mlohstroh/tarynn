@@ -121,7 +121,7 @@ namespace TModules.DefaultModules
             }
         }
 
-        private bool DBExists(string name)
+        public bool DBExists(string name)
         {
             string[] dbNames = _couch.GetDatabases(SERVER_ADDRESS);
             foreach (string s in dbNames)
