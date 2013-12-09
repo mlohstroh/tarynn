@@ -8,13 +8,15 @@ namespace TModules.DefaultModules.Events
 {
     public class Event
     {
-        public string Name;
-        public int Count;
+        public string Name { get; set; }
+        public int Count { get; set; }
+        public List<EventInstance> Instances { get; set; }
 
         public Event(string name, int count)
         {
             this.Name = name;
             this.Count = count;
+            Instances = new List<EventInstance>();
         }
     }
 }

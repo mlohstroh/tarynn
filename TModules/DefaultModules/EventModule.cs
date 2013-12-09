@@ -75,6 +75,7 @@ namespace TModules.DefaultModules
             {
                 e = new Event(name, 1);
             }
+            e.Instances.Add(new EventInstance(DateTime.Now));
             _couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(e));
 
             LoadDocs();
@@ -102,12 +103,21 @@ namespace TModules.DefaultModules
             {
                 foreach (Event e in matchedEvents)
                 {
-                    Host.SpeakEventually(e.Name + " has happened " + e.Count + " times");
+                    string endingPhrase = "";
+                    if (e.Count > 1)
+                    {
+                        endingPhrase = " times.";
+                    }
+                    else
+                    {
+                        endingPhrase = " time.";
+                    }
+                    Host.SpeakEventually(e.Name + " has happened " + e.Count + endingPhrase);
                 }
             }
             else
             {
-                Host.SpeakEventually("No matching events were found");
+                Host.SpeakEventually("No matching events were found.");
             }
         }
 

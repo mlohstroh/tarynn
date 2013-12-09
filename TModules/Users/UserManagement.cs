@@ -73,12 +73,12 @@ namespace TModules.Users
                 if (u.Name == name)
                 {
                     SignedInUser = u;
-                    Host.SpeakEventually("Hello " + name);
+                    Host.SpeakEventually("Hello " + name +". Welcome back");
                     return;
                 }
             }
             Host.SpeakEventually("Hello " + name + ". I haven't seen you before, so I just created a profile for you");
-            CreateUser(name);
+            CreateUser(name.ToLower());
         }
 
         public List<User> UserList

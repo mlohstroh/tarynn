@@ -76,6 +76,7 @@
     <Compile Include="Core\SpeechHandler.cs" />
     <Compile Include="Core\TModule.cs" />
     <Compile Include="DefaultModules\Events\Event.cs" />
+    <Compile Include="DefaultModules\Events\EventInstance.cs" />
     <Compile Include="DefaultModules\SpotifyModule.cs" />
     <Compile Include="DefaultModules\TaskModule.cs" />
     <Compile Include="DefaultModules\EventModule.cs" />
