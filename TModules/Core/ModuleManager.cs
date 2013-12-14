@@ -23,6 +23,8 @@ namespace TModules
             RegisterModule(new UtilityModule(this));
             RegisterModule(new EventModule(this));
             RegisterModule(new UserManagement(this));
+            RegisterModule(new ConfigModule(this));
+            RegisterModule(new StorageModule(this));
         }
 
         public string RespondTo(string message)
@@ -75,6 +77,17 @@ namespace TModules
         public void InterruptSpeech()
         {
             mSpeechHandler.StopSpeaking();
+        }
+
+        public TModule GetModuleByName(string name)
+        {
+            foreach (TModule m in registeredModules)
+            {
+                if (m.ModuleName == name)
+                    return m;
+            }
+
+            return null;
         }
     }
 }

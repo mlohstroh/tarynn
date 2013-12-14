@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using SharpCouch;
 using TModules.DefaultModules.Tasks;
 using LitJson;
+using Analytics;
 
 namespace TModules.DefaultModules
 {
@@ -44,6 +45,29 @@ namespace TModules.DefaultModules
             AddCallback("what do I need to do today?", DueToday);
             AddCallback(REOCCURRING_REGEX, MakeReoccurringTask);
             AddCallback("mark (\\d) complete", MarkComplete);
+
+
+            Task t = Task.Run( () =>
+            {
+                while (true)
+                {
+                    TConsole.Info("Checking for tasks");
+
+                    var filtered = _allTasks.Where(x => x.Value.Done == false && x.Value.Type != "reoccurring").Where(x => x.Value.TimeToNotify < DateTime.Now);
+
+                    TConsole.Debug(filtered.Count().ToString());
+
+                    foreach (var task in filtered)
+                    {
+                        if(task.Value.Title != null)
+                            Host.SpeakEventually("I'm supposed to remind you to " +  task.Value.Title);
+                    }
+
+                    //* 60
+                    Task.Delay(1000).Wait();
+                }
+            });
+
         }
 
         private void LoadDocs()

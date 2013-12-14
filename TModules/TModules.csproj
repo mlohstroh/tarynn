@@ -51,6 +51,9 @@
     <Reference Include="LitJson">
       <HintPath>..\..\..\..\..\Downloads\litjson-0.7.0\litjson-0.7.0\bin\LitJson.dll</HintPath>
     </Reference>
+    <Reference Include="Matrix">
+      <HintPath>..\packages\MatriX.1.5.4.4\lib\net45\Matrix.dll</HintPath>
+    </Reference>
     <Reference Include="NAudio">
       <HintPath>..\packages\NAudio.1.6\lib\net20\NAudio.dll</HintPath>
     </Reference>
@@ -75,6 +78,7 @@
     <Compile Include="Core\ModuleManager.cs" />
     <Compile Include="Core\SpeechHandler.cs" />
     <Compile Include="Core\TModule.cs" />
+    <Compile Include="DefaultModules\ConfigModule.cs" />
     <Compile Include="DefaultModules\Events\Event.cs" />
     <Compile Include="DefaultModules\Events\EventInstance.cs" />
     <Compile Include="DefaultModules\SpotifyModule.cs" />
@@ -90,6 +94,7 @@
     <Compile Include="Users\UserManagement.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultModules\StorageModule.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
