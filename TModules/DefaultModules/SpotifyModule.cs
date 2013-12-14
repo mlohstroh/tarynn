@@ -49,7 +49,6 @@ namespace TModules.DefaultModules
             AddCallback("spotify play", PlaySpotify);
             AddCallback("spotify list playlists", ListPlaylists);
 
-            SetupSpotify();
         }
 
         async Task SetupSpotify()

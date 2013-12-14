@@ -18,8 +18,6 @@ namespace TModules.Core
         public string ModuleName { get; private set; }
         public ModuleManager Host;
 
-        private SpeechHandler mSpeechHandler = new SpeechHandler();
-
         public TModule(string name, ModuleManager host)
         {
             this.Host = host;

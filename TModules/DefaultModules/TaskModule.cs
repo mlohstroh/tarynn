@@ -44,7 +44,7 @@ namespace TModules.DefaultModules
             AddCallback("remind me in ((?:(?:\\d+) (?:weeks?|days?|hours?|hrs?|minutes?|mins?|seconds?|secs?)[ ,]*(?:and)? +)+)to (.*)", Remind);
             AddCallback("what do I need to do today?", DueToday);
             AddCallback(REOCCURRING_REGEX, MakeReoccurringTask);
-            AddCallback("mark (\\d) complete", MarkComplete);
+            AddCallback("mark (.*) complete", MarkComplete);
 
 
             Task t = Task.Run( () =>
@@ -64,7 +64,7 @@ namespace TModules.DefaultModules
                     }
 
                     //* 60
-                    Task.Delay(1000).Wait();
+                    Task.Delay(1000 * 60).Wait();
                 }
             });
 
@@ -123,28 +123,46 @@ namespace TModules.DefaultModules
 
         private void MarkComplete(Match message)
         {
-            if(_todaysTasks == null)
-                LoadToday();
+            string searchTerm = message.Groups[1].Value;
 
-            int index = int.Parse(message.Groups[1].Value) - 1;
-            if (_todaysTasks.Count <= index)
+            foreach (var pair in _allTasks)
             {
-                Host.SpeakEventually("I do not have a today for " + index);
-            }
-            else
-            {
-                string key = _todaysTasks.Keys.ToArray()[index];
-                TodoTask t;
-                _todaysTasks.TryGetValue(key, out t);
-                t.Done = true;
-                //save off 
-                if (t.Type == "one_time")
+                Match m = Regex.Match(pair.Value.Title, searchTerm);
+                if (m.Success)
                 {
-                    //couch.DeleteDocument(SERVER_ADDRESS, DB_NAME,);
-                    couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(t));
+                    if (pair.Value.Type == "one_time")
+                    {
+                        Host.SpeakEventually("Marking " + pair.Value.Title + " complete");
+                        pair.Value.Done = true;
+                        couch.DeleteDocument(SERVER_ADDRESS, DB_NAME, pair.Key);
+                        couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(pair.Value));
+                    }
+
                 }
-                Host.SpeakEventually(t.Title + " is marked as done");
             }
+
+            //if(_todaysTasks == null)
+            //    LoadToday();
+
+            //int index = int.Parse(message.Groups[1].Value) - 1;
+            //if (_todaysTasks.Count <= index)
+            //{
+            //    Host.SpeakEventually("I do not have a today for " + index);
+            //}
+            //else
+            //{
+            //    string key = _todaysTasks.Keys.ToArray()[index];
+            //    TodoTask t;
+            //    _todaysTasks.TryGetValue(key, out t);
+            //    t.Done = true;
+            //    //save off 
+            //    if (t.Type == "one_time")
+            //    {
+            //        //couch.DeleteDocument(SERVER_ADDRESS, DB_NAME,);
+            //        couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(t));
+            //    }
+            //    Host.SpeakEventually(t.Title + " is marked as done");
+            //}
         }
 
         private void MakeReoccurringTask(Match message)
@@ -156,33 +174,33 @@ namespace TModules.DefaultModules
             BuildReoccurringTime(time, ref t);
             t.Title = action;
             t.Type = "reoccurring";
-            Host.SpeakEventually("What would you rate this? None, one, two, or three?");
-            AddFollowup("(none|one|two|three|\\d)", (Match followUpMessage) =>
-            {
-                switch (followUpMessage.Groups[1].Value)
-                {
-                    case "none":
-                        t.Size = 0;
-                        break;
-                    case "one":
-                        t.Size = 1;
-                        break;
-                    case "two":
-                        t.Size = 2;
-                        break;
-                    case "three":
-                        t.Size = 3;
-                        break;
-                    default:
-                        t.Size = int.Parse(followUpMessage.Groups[1].Value);
-                        break;
-                }
+            //Host.SpeakEventually("What would you rate this? None, one, two, or three?");
+            //AddFollowup("(none|one|two|three|\\d)", (Match followUpMessage) =>
+            //{
+            //    switch (followUpMessage.Groups[1].Value)
+            //    {
+            //        case "none":
+            //            t.Size = 0;
+            //            break;
+            //        case "one":
+            //            t.Size = 1;
+            //            break;
+            //        case "two":
+            //            t.Size = 2;
+            //            break;
+            //        case "three":
+            //            t.Size = 3;
+            //            break;
+            //        default:
+            //            t.Size = int.Parse(followUpMessage.Groups[1].Value);
+            //            break;
+            //    }
 
-                couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(t));
-                //yeup.... :(
-                LoadDocs();
-                Host.SpeakEventually("I will remind you to " + action + " in " + time);
-            });
+            couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(t));
+            //yeup.... :(
+            LoadDocs();
+            Host.SpeakEventually("I will remind you to " + action + " in " + time);
+            //});
         }
 
         private void DueToday(Match message)
@@ -241,31 +259,31 @@ namespace TModules.DefaultModules
             t.Type = "one_time";
             t.Done = false;
 
-            Host.SpeakEventually("What would you rate this? None, one, two, or three?");
-            AddFollowup("(none|one|two|three|\\d)", (Match followUpMessage) =>
-            {
-                switch (followUpMessage.Groups[1].Value)
-                {
-                    case "none":
-                        t.Size = 0;
-                        break;
-                    case "one":
-                        t.Size = 1;
-                        break;
-                    case "two":
-                        t.Size = 2;
-                        break;
-                    case "three":
-                        t.Size = 3;
-                        break;
-                    default:
-                        t.Size = int.Parse(followUpMessage.Groups[1].Value);
-                        break;
-                }
-                couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(t));
-                LoadDocs();
-                Host.SpeakEventually("I will remind you to " + action + " in " + time);
-            });
+            //Host.SpeakEventually("What would you rate this? None, one, two, or three?");
+            //AddFollowup("(none|one|two|three|\\d)", (Match followUpMessage) =>
+            //{
+            //    switch (followUpMessage.Groups[1].Value)
+            //    {
+            //        case "none":
+            //            t.Size = 0;
+            //            break;
+            //        case "one":
+            //            t.Size = 1;
+            //            break;
+            //        case "two":
+            //            t.Size = 2;
+            //            break;
+            //        case "three":
+            //            t.Size = 3;
+            //            break;
+            //        default:
+            //            t.Size = int.Parse(followUpMessage.Groups[1].Value);
+            //            break;
+            //    }
+            couch.CreateDocument(SERVER_ADDRESS, DB_NAME, JsonMapper.ToJson(t));
+            LoadDocs();
+            Host.SpeakEventually("I will remind you to " + action + " in " + time);
+            //});
         }
 
         #endregion
@@ -310,6 +328,16 @@ namespace TModules.DefaultModules
             foreach (string s in dbNames)
             {
                 if (s == name)
+                    return true;
+            }
+            return false;
+        }
+
+        private bool TaskExists(string action)
+        {
+            foreach (var pair in this._allTasks)
+            {
+                if (pair.Value.Title == action)
                     return true;
             }
             return false;

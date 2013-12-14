@@ -27,6 +27,7 @@ namespace TModules.DefaultModules
 
             AddCallback("I just (.*)", EventHappened);
             AddCallback("Count of events with the phrase (.*)", CountEvents);
+            AddCallback("How many times did (.*) happen?", CountEvents);
         }
 
         private void InitDatabase()

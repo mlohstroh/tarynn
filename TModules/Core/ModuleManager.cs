@@ -7,6 +7,7 @@ using TModules.Core;
 using TModules.DefaultModules;
 using System.IO;
 using TModules.Users;
+using System.Diagnostics;
 
 namespace TModules
 {
@@ -29,14 +30,28 @@ namespace TModules
 
         public string RespondTo(string message)
         {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+
             foreach (TModule module in registeredModules)
             {
                 if (module.RespondTo(message))
                 {
-                    return "";
+                    break;
                 }
             }
-            SpeakEventually("I'm sorry, I don't know what you mean");
+
+            watch.Stop();
+            TimeSpan ts = watch.Elapsed;
+
+            // Format and display the TimeSpan value. 
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+
+            Console.WriteLine("Module Reponse Time: " + elapsedTime);
+
+            //SpeakEventually("I'm sorry, I don't know what you mean");
             return "";
         }
 
