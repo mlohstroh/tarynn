@@ -16,7 +16,9 @@ namespace TModules.DefaultModules
         const string SERVER_ADDRESS = "http://127.0.0.1:5984";
         const string DB_NAME = "tarynn-storage";
 
-        private Dictionary<string, string> storageValues = new Dictionary<string, string>();
+        private Dictionary<string, Dictionary<string, string>> storageValues = new Dictionary<string, Dictionary<string, string>>();
+
+        public string LastUpdatedValue { get; private set; }
 
         public StorageModule(ModuleManager host)
             : base("Storage", host)
@@ -45,18 +47,41 @@ namespace TModules.DefaultModules
                 string json = _couch.GetDocument(SERVER_ADDRESS, DB_NAME, doc.ID);
                 JsonData data = JsonMapper.ToObject(json);
 
-                storageValues[data["key"].ToString()] = data["value"].ToString();
+                Dictionary<string, string> dict = new Dictionary<string,string>();
+                dict["key"] = data["value"].ToString();
+
+                storageValues[doc.ID] = dict;
             }
         }
 
         public string JSONForKey(string key)
         {
-            return storageValues[key];
+            foreach(var pair in storageValues)
+            {
+                if(pair.Value.ContainsKey(key))
+                {
+                    return pair.Value[key];
+                }
+            }
+            return null;
         }
 
         public void PutData(string key, string value)
         {
-            storageValues[key] = value;
+            string id = null;
+
+            foreach(var pair in storageValues)
+            {
+                if(pair.Value.ContainsKey(key))
+                {
+                    id = pair.Key;
+                }
+            }
+
+            if(id != null)
+            {
+                _couch.DeleteDocument(SERVER_ADDRESS, DB_NAME, id);
+            }
 
             JsonData data = new JsonData();
             data["key"] = key;

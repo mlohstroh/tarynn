@@ -18,13 +18,13 @@ namespace TModules
 
         public ModuleManager()
         {
+            RegisterModule(new ConfigModule(this));
+            RegisterModule(new StorageModule(this));
             //RegisterModule(new SpotifyModule(this));
             RegisterModule(new TaskModule(this));
             RegisterModule(new UtilityModule(this));
             RegisterModule(new EventModule(this));
             RegisterModule(new UserManagement(this));
-            RegisterModule(new ConfigModule(this));
-            RegisterModule(new StorageModule(this));
         }
 
         public string RespondTo(string message)

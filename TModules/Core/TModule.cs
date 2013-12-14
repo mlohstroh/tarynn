@@ -42,17 +42,6 @@ namespace TModules.Core
         /// <param name="message">The message typed in</param>
         public bool RespondTo(string message)
         {
-            foreach (string pattern in _allCallbacks.Keys)
-            {
-                Match match = Regex.Match(message, pattern, RegexOptions.IgnoreCase);
-                if(match.Success)
-                {
-                    Heard callback;
-                    _allCallbacks.TryGetValue(pattern, out callback);
-                    callback(match);
-                    return true;
-                }
-            }
             foreach (string pattern in _followUps.Keys)
             {
                 Match match = Regex.Match(message, pattern, RegexOptions.IgnoreCase);
@@ -66,6 +55,19 @@ namespace TModules.Core
                     return true;
                 }
             }
+
+            foreach (string pattern in _allCallbacks.Keys)
+            {
+                Match match = Regex.Match(message, pattern, RegexOptions.IgnoreCase);
+                if(match.Success)
+                {
+                    Heard callback;
+                    _allCallbacks.TryGetValue(pattern, out callback);
+                    callback(match);
+                    return true;
+                }
+            }
+            
             return false;
         }
     }
