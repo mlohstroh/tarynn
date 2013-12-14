@@ -48,6 +48,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LitJson">
+      <HintPath>..\..\..\..\..\Downloads\litjson-0.7.0\litjson-0.7.0\bin\LitJson.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -77,6 +80,7 @@
     <Compile Include="Core\Interpreter.cs" />
     <Compile Include="Methods\BasicMethods.cs" />
     <Compile Include="Methods\FileMethods.cs" />
+    <Compile Include="Methods\JsonMethods.cs" />
     <Compile Include="Methods\MethodPackage.cs" />
     <Compile Include="Methods\SpotifyMethods.cs" />
     <Compile Include="Methods\StructureMethods.cs" />
