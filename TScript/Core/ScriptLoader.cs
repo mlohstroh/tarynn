@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,8 @@ namespace TScript
         private List<MethodPackage> loadedPackages = new List<MethodPackage>();
         private Interpreter mInterpreter;
         private List<string> builtInFunctions = new List<string>();
+        public ArrayList Lines { get; private set; }
+        public Dictionary<string, int> Branches { get; private set; }
 
         /// <summary>
         /// Constructor
@@ -28,6 +31,8 @@ namespace TScript
         /// <param name="name">The name of the script</param>
         public ScriptLoader(string name, Interpreter i)
         {
+            Lines = new ArrayList();
+            Branches = new Dictionary<string, int>();
             mInterpreter = i;
             mName = name;
             mReader = new StreamReader(name);
@@ -46,6 +51,7 @@ namespace TScript
                 Profiler.SharedInstance.StartProfiling("script_validate");
                 TConsole.Info("Validating Script");
                 string line;
+                int lineNumber = 0;
                 bool doesEnd = false;
 
                 while ((line = mReader.ReadLine()) != null)
@@ -70,6 +76,11 @@ namespace TScript
                                 MethodPackage newLib = (MethodPackage)Activator.CreateInstance(type);
                                 newLib.Host = this.mInterpreter;
                                 loadedPackages.Add(newLib);
+                            }
+                            else if (line.StartsWith("branch"))
+                            {
+                                string[] args = GetArgsForMethod(line);
+                                Branches.Add(args[0], lineNumber);
                             }
                             else
                             {
@@ -108,6 +119,8 @@ namespace TScript
                             }
                         }
                     }
+                    Lines.Add(line);
+                    lineNumber++;
                 }
                 TConsole.Info("Done validating script");
                 TConsole.Debug("Elapsed time for script validation: " + Profiler.SharedInstance.GetTimeForKey("script_validate"));

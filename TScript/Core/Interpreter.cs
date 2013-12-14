@@ -55,7 +55,9 @@ namespace TScript
             this.requiredPackages = loader.RequiredPackages;
             string finalValue = "";
             bool programDone = false;
-            while ((currentLine = loader.NextLine()) != null && !programDone)
+            int lineNumber = 0;
+
+            while ((currentLine = loader.Lines[lineNumber++].ToString()) != null && !programDone)
             {
                 string method = StripMethodFromLine(currentLine);
                 string[] argNames = GetArgsFromLine(currentLine);
@@ -82,6 +84,18 @@ namespace TScript
                         finalValue = HandleReturnStatement(argNames);
                         programDone = true;
                         break;
+                    case "beq":
+                        HandleBranch(method, argNames, lineNumber);
+                        break;
+                    case "bne":
+                        HandleBranch(method, argNames, lineNumber);
+                        break;
+                    case "bgt":
+                        HandleBranch(method, argNames, lineNumber);
+                        break;
+                    case "blt":
+                        HandleBranch(method, argNames, lineNumber);
+                        break;
                     default:
                         //search for package to pass info on to
                         MethodPackage p = this.GetPackageFromMethod(method);
@@ -103,6 +117,77 @@ namespace TScript
             TConsole.Debug("Time for running script was: " + time.ToString() + " ms");
 
             return finalValue;
+        }
+
+        private int HandleBranch(string branchFunc, string[] args, int line)
+        {
+            object[] values = GetValuesForArgNames(args);
+            object val1;
+            object val2;
+            if (values[0].GetType() == typeof(TObject))
+                val1 = (TObject)values[0];
+            else
+                val1 = values[0];
+            if (values[1].GetType() == typeof(TObject))
+                val2 = (TObject)values[1];
+            else
+                val2 = values[1];
+            int lineNumber = loader.Branches[args[2]];
+             
+            switch (branchFunc)
+            {
+                case "beq":
+                    if (val1 == val2)
+                        return lineNumber;
+                    break;
+                case "bne":
+                    if (val1 != val2)
+                        return lineNumber;
+                    break;
+                case "bgt":
+                    int intVal1;
+                    if (val1.GetType() == typeof(TObject))
+                    {
+                        intVal1 = (int)((TObject)val1).Value;
+                    }
+                    else
+                    {
+                        intVal1 = int.Parse(args[0]);
+                    }
+                    int intVal2;
+                    if (val2.GetType() == typeof(TObject))
+                    {
+                        intVal2 = (int)((TObject)val2).Value;
+                    }
+                    else
+                    {
+                        intVal2 = int.Parse(args[0]);
+                    }
+                    if (intVal1 > intVal2)
+                        return lineNumber;
+                    break;
+                case "blt":
+                    if (val1.GetType() == typeof(TObject))
+                    {
+                        intVal1 = (int)((TObject)val1).Value;
+                    }
+                    else
+                    {
+                        intVal1 = int.Parse(args[0]);
+                    }
+                    if (val2.GetType() == typeof(TObject))
+                    {
+                        intVal2 = (int)((TObject)val2).Value;
+                    }
+                    else
+                    {
+                        intVal2 = int.Parse(args[0]);
+                    }
+                    if (intVal1 > intVal2)
+                        return lineNumber;
+                    break;
+            }
+            return line;
         }
 
         /// <summary>

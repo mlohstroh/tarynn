@@ -31,6 +31,16 @@ namespace TScript
         {
             return this.InnerType == null && this.Name == null && this.Value == null;
         }
+
+        public static bool operator ==(TObject one, TObject two)
+        {
+            return one.Value == two.Value;
+        }
+
+        public static bool operator !=(TObject one, TObject two)
+        {
+            return one.Value != two.Value;
+        }
     }
 
     /// <summary>
