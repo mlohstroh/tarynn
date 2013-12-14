@@ -53,5 +53,18 @@ namespace TModules.DefaultModules
         {
             return storageValues[key];
         }
+
+        public void PutData(string key, string value)
+        {
+            storageValues[key] = value;
+
+            JsonData data = new JsonData();
+            data["key"] = key;
+            data["value"] = value;
+
+            _couch.CreateDocument(SERVER_ADDRESS, DB_NAME, data.ToJson());
+
+            LoadDocs();
+        }
     }
 }
