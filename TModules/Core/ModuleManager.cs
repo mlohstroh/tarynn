@@ -17,6 +17,8 @@ namespace TModules
 
         private SpeechHandler mSpeechHandler = new SpeechHandler();
 
+       
+
         public ModuleManager()
         {
             RegisterModule(new ConfigModule(this));
@@ -80,6 +82,11 @@ namespace TModules
         }
 
         #endregion
+
+        public void PushPacket(string jsonPacket)
+        {
+
+        }
 
         public void SpeakEventually(string message)
         {

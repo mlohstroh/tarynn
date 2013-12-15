@@ -254,7 +254,7 @@ namespace TModules.DefaultModules
             string action = message.Groups[2].Value;
 
             OneTimeTodoTask t = new OneTimeTodoTask();
-            t.Deadline = BuildTime(time);
+            t.TimeToNotify = BuildTime(time);
             t.Title = action;
             t.Type = "one_time";
             t.Done = false;
@@ -304,16 +304,31 @@ namespace TModules.DefaultModules
                     case "weeks":
                         datetime = datetime.AddDays(7 * duration);
                         break;
+                    case "week":
+                        datetime = datetime.AddDays(7 * duration);
+                        break;
                     case "days":
+                        datetime = datetime.AddDays(duration);
+                        break;
+                    case "day":
                         datetime = datetime.AddDays(duration);
                         break;
                     case "hours":
                         datetime = datetime.AddHours(duration);
                         break;
+                    case "hour":
+                        datetime = datetime.AddHours(duration);
+                        break;
                     case "minutes":
                         datetime = datetime.AddMinutes(duration);
                         break;
+                    case "minute":
+                        datetime = datetime.AddMinutes(duration);
+                        break;
                     case "seconds":
+                        datetime = datetime.AddSeconds(duration);
+                        break;
+                    case "second":
                         datetime = datetime.AddSeconds(duration);
                         break;
                 }
