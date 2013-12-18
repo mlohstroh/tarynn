@@ -8,8 +8,9 @@ using TModules.DefaultModules;
 using System.IO;
 using TModules.Users;
 using System.Diagnostics;
+using LitJson;
 
-namespace TModules
+namespace TModules.Core
 {
     public class ModuleManager
     {
@@ -17,10 +18,10 @@ namespace TModules
 
         private SpeechHandler mSpeechHandler = new SpeechHandler();
 
-       
-
         public ModuleManager()
         {
+            PacketManager p = new PacketManager();
+
             RegisterModule(new ConfigModule(this));
             RegisterModule(new StorageModule(this));
             //RegisterModule(new SpotifyModule(this));
@@ -83,9 +84,13 @@ namespace TModules
 
         #endregion
 
-        public void PushPacket(string jsonPacket)
+        public void PushPacket(string moduleName, string jsonPacket)
         {
+            JsonData packet = new JsonData();
+            
+            JsonData data = JsonMapper.ToObject(jsonPacket);
 
+            //PacketManager.SharedInstance.PushPacket(moduleName, 
         }
 
         public void SpeakEventually(string message)

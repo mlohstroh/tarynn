@@ -130,7 +130,7 @@ namespace TModules.DefaultModules
                 Match m = Regex.Match(pair.Value.Title, searchTerm);
                 if (m.Success)
                 {
-                    if (pair.Value.Type == "one_time")
+                    if (pair.Value.Type == "one_time" && !pair.Value.Done)
                     {
                         Host.SpeakEventually("Marking " + pair.Value.Title + " complete");
                         pair.Value.Done = true;

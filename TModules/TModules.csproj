@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ModuleManager.cs" />
+    <Compile Include="Core\PacketManager.cs" />
     <Compile Include="Core\SpeechHandler.cs" />
     <Compile Include="Core\TModule.cs" />
     <Compile Include="DefaultModules\ConfigModule.cs" />

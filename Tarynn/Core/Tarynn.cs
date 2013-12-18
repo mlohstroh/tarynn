@@ -9,7 +9,7 @@ using Tarynn.Dialogs;
 using Analytics;
 using TScript;
 using TScript.Exceptions;
-using TModules;
+using TModules.Core;
 
 namespace Tarynn.Core
 {
