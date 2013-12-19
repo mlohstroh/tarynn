@@ -19,6 +19,7 @@ namespace TModules.Core
         private SpeechHandler mSpeechHandler = new SpeechHandler();
 
         private List<string> _speechString = new List<string>();
+        EmbeddedServer _server = new EmbeddedServer();
 
         public ModuleManager()
         {
@@ -31,6 +32,9 @@ namespace TModules.Core
             RegisterModule(new UtilityModule(this));
             RegisterModule(new EventModule(this));
             RegisterModule(new UserManagement(this));
+
+            _server.Start();
+            _server.Run();
         }
 
         public string RespondTo(string message)

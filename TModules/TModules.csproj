@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\EmbeddedServer.cs" />
     <Compile Include="Core\ModuleManager.cs" />
     <Compile Include="Core\PacketManager.cs" />
     <Compile Include="Core\SpeechHandler.cs" />
