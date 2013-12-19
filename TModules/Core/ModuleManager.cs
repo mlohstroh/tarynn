@@ -18,6 +18,8 @@ namespace TModules.Core
 
         private SpeechHandler mSpeechHandler = new SpeechHandler();
 
+        private List<string> _speechString = new List<string>();
+
         public ModuleManager()
         {
             PacketManager p = new PacketManager();
@@ -86,15 +88,18 @@ namespace TModules.Core
 
         public void PushPacket(string moduleName, string jsonPacket)
         {
-            JsonData packet = new JsonData();
-            
-            JsonData data = JsonMapper.ToObject(jsonPacket);
+            JsonData speech = new JsonData(_speechString);
 
-            //PacketManager.SharedInstance.PushPacket(moduleName, 
+            JsonData packet = JsonMapper.ToObject(jsonPacket);
+            packet["speech"] = speech;
+
+            PacketManager.SharedInstance.PushPacket(moduleName, packet);
+            _speechString.Clear();
         }
 
         public void SpeakEventually(string message)
         {
+            _speechString.Add(message);
             mSpeechHandler.AddMessageToQueue(message);
         }
 
