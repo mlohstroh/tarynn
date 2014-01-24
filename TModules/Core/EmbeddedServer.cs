@@ -24,9 +24,11 @@ namespace TModules.Core
 
             foreach (var pair in Prefixes)
             {
-                listener.Prefixes.Add("http://*:1234" + pair.Key);
+                listener.Prefixes.Add("http://localhost:1234" + pair.Key);
             }
-            listener.Prefixes.Add("http://*:1234/index/");
+
+            listener.Prefixes.Add("http://localhost:1234/");
+
             listener.Start();
         }
 

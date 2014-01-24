@@ -9,6 +9,7 @@ using System.IO;
 using TModules.Users;
 using System.Diagnostics;
 using LitJson;
+using RestSharp;
 
 namespace TModules.Core
 {
@@ -32,6 +33,7 @@ namespace TModules.Core
             RegisterModule(new UtilityModule(this));
             RegisterModule(new EventModule(this));
             RegisterModule(new UserManagement(this));
+            RegisterModule(new JsonModule(this));
 
             _server.Start();
             _server.Run();
@@ -123,6 +125,16 @@ namespace TModules.Core
                     return m;
             }
 
+            return null;
+        }
+
+        public void AddServerCallback(string path, System.Action<JsonData> CallBack)
+        {
+
+        }
+
+        public JsonData GetRequest(string host, string path)
+        {
             return null;
         }
     }
