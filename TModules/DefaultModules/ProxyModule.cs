@@ -21,15 +21,35 @@ namespace TModules.DefaultModules
 
         public JsonData MakeGetRequest(string resourcePath)
         {
+
+
             return null;
         }
 
-        private RestRequest BuildRequest(string resource)
+        public JsonData MakePostRequest(string resource, string jsonPost, JsonData _data)
         {
-            RestRequest r = new RestRequest(resource, Method.GET);
+            JsonData data = new JsonData();
+
+            data["method"] = "POST";
+            data["resource"] = resource;
+            data["post_data"] = JsonMapper.ToObject(jsonPost);
+
+            return data;
+        }
+
+        private RestRequest BuildRequest(string resource, Method method = Method.GET)
+        {
+            RestRequest r = new RestRequest(resource, method);
             r.RequestFormat = DataFormat.Json;
             r.AddHeader("Content-Type", "application/json");
             return r;
+        }
+
+        public JsonData SetHost(string host, JsonData data)
+        {
+            _client = new RestClient(host);
+
+            return data;
         }
     }
 }

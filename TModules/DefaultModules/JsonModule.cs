@@ -26,6 +26,16 @@ namespace TModules.DefaultModules
 
         }
 
-        //public JsonData PluckKey
+        public JsonData PluckKey(string key, JsonData data)
+        {
+            return data[key];
+        }
+
+        public JsonData DeleteKey(string key, JsonData data)
+        {
+            data[key] = null;
+
+            return data;
+        }
     }
 }

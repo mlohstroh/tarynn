@@ -31,27 +31,36 @@ namespace TModules
             string line = Console.ReadLine();
 
 
-            JsonData data;
+            JsonData data = null;
             //I should probably move this out of the constructor... whatever for now
             while (line != "q")
             {
                 string[] response = ParseLine(line);
 
-                if (response.Length != 3)
+                if (response.Length < 2)
                 {
                     TConsole.Error("ERROR IN PARSING");
                     break;
                 }
-                Type module = _host.GetModuleByName(response[0]).GetType();
+                TModule module = _host.GetModuleByName(response[0]);
+                Type moduleType = module.GetType();
 
-                MethodInfo info = module.GetMethod(response[1]);
+                MethodInfo info = moduleType.GetMethod(response[1]);
                 if (info == null)
                 {
                     TConsole.Error(string.Format("No method {0} found on module {1}", response[1], response[0]));
                 }
                 else
                 {
-                    data = info.Invoke(this, new object[] { response[2] }) as JsonData;
+                    //rip out the parameters so we can pass along multiple params
+                    object[] _params = new object[response.Length - 1];
+
+                    for (int i = 2; i < response.Length; i++)
+                    {
+                        _params[i - 2] = response[i];
+                    }
+                    _params[_params.Length - 1] = data;
+                    data = info.Invoke(module, _params) as JsonData;
                 }
 
                 line = Console.ReadLine();
@@ -60,11 +69,36 @@ namespace TModules
 
         private string[] ParseLine(string line)
         {
-            string[] paramsParsed = line.Split(new char[] { '.', '(', ')' });
+            string[] dotParsed = line.Split(new char[] { '.', '(' });
+            Array.Resize<string>(ref dotParsed, dotParsed.Length - 1);
 
-            Array.Resize<string>(ref paramsParsed, paramsParsed.Length - 1);
+            //, '(', ')', ',' 
 
-            return paramsParsed;
+            string[] parameters = line.Split(new char[] { '(', ')', ',' });
+
+            for (int i = 0; i < parameters.Length - 1; i++)
+            {
+                parameters[i] = parameters[i + 1];
+            }
+
+            string[] mergedParameters = new string[parameters.Length - 2];
+
+            for (int i = 0; i < mergedParameters.Length; i++)
+            {
+                mergedParameters[i] = parameters[i];
+            }
+
+            string[] fullParsed = new string[2 + mergedParameters.Length];
+
+            fullParsed[0] = dotParsed[0];
+            fullParsed[1] = dotParsed[1];
+
+            for (int i = 2; i < fullParsed.Length; i++)
+            {
+                fullParsed[i] = mergedParameters[i - 2];
+            }
+
+            return fullParsed;
         }
     }
 }

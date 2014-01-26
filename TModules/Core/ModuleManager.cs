@@ -29,11 +29,12 @@ namespace TModules.Core
             RegisterModule(new ConfigModule(this));
             RegisterModule(new StorageModule(this));
             //RegisterModule(new SpotifyModule(this));
-            RegisterModule(new TaskModule(this));
+            //RegisterModule(new TaskModule(this));
             RegisterModule(new UtilityModule(this));
             RegisterModule(new EventModule(this));
             RegisterModule(new UserManagement(this));
             RegisterModule(new JsonModule(this));
+            RegisterModule(new ProxyModule(this));
 
             _server.Start();
             _server.Run();
@@ -121,7 +122,7 @@ namespace TModules.Core
         {
             foreach (TModule m in registeredModules)
             {
-                if (m.ModuleName == name)
+                if (m.ModuleName.ToLower() == name.ToLower())
                     return m;
             }
 
