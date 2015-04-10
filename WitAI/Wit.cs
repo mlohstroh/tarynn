@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
+using LitJson;
 using RestSharp;
 
 namespace WitAI
@@ -34,19 +36,35 @@ namespace WitAI
         /// Submit a query to wit and get a response
         /// </summary>
         /// <param name="query">The query to sumit</param>
+        /// <remarks>If an error occurs </remarks>
         /// <returns>A built wit response based on the JSON of the request</returns>
-        public WitResponse Query(string query)
+        public WitResponse Query(string query, dynamic context = null, string msgId = null, int numberOfOutcomes = 1)
         {
             var request = BuildWitRequest("/message", Method.GET);
             request.AddParameter("q", query, ParameterType.QueryString);
+            // Query is the only parameter required.
+            if (context != null)
+                request.AddParameter("context", context, ParameterType.QueryString);
+            if (!string.IsNullOrEmpty(msgId))
+                request.AddParameter("msg_id", msgId, ParameterType.QueryString);
+            if (numberOfOutcomes < 0)
+                request.AddParameter("n", numberOfOutcomes, ParameterType.QueryString);
 
             var response = _client.Execute(request);
-
-            if (response.StatusCode == HttpStatusCode.Accepted)
+            
+            if (response.ErrorException == null)
             {
-                Console.WriteLine("Awesome!");
+                JsonData data = JsonMapper.ToObject(response.Content);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    WitResponse res = new WitResponse(data, response.Content);
+                    return res;
+                }
+                else
+                    throw new WitException((string) data["error"]);
             }
-            Console.WriteLine(response.Content);
+            else
+                throw new WitException(string.Format("Something happened to the request. Error: {0}", response.ErrorMessage));
 
             return null;
         }
@@ -61,6 +79,7 @@ namespace WitAI
         {
             var request = new RestRequest("/message", Method.GET);
             request.AddHeader("Authorization", string.Format("Bearer {0}", AccessToken));
+            request.AddHeader("Accept", "application/json");
             request.AddParameter("v", WIT_VERSION, ParameterType.QueryString);
             return request;
         }

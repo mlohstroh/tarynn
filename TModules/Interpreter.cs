@@ -20,7 +20,8 @@ namespace TModules
         {
             Console.WriteLine("TModule CLI");
             Wit wit = new Wit("2JXL3QOZV4SH2HOCB74FVPJUKMS3ETOO");
-            wit.Query("check the weather for me");
+            var r = wit.Query("check the weather for me");
+            Console.WriteLine(r.RawContent);
 
             Interpreter inter = new Interpreter();
 

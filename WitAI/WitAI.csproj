@@ -45,10 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\WitEntity.cs" />
+    <Compile Include="Exceptions\WitException.cs" />
     <Compile Include="Wit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WitOutcome.cs" />
-    <Compile Include="WitResponse.cs" />
+    <Compile Include="Classes\WitOutcome.cs" />
+    <Compile Include="Classes\WitResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
