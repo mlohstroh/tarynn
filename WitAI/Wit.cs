@@ -61,10 +61,10 @@ namespace WitAI
                     return res;
                 }
                 else
-                    throw new WitException((string) data["error"]);
+                    throw new WitException((string) data["error"], response.StatusCode);
             }
             else
-                throw new WitException(string.Format("Something happened to the request. Error: {0}", response.ErrorMessage));
+                throw new WitException(string.Format("Something happened to the request. Error: {0}", response.ErrorMessage), response.StatusCode);
 
             return null;
         }

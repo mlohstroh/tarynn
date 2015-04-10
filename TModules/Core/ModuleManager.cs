@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Configuration;
+using Analytics;
 using TModules.Core;
 using TModules.DefaultModules;
 using System.IO;
@@ -10,6 +12,7 @@ using TModules.Users;
 using System.Diagnostics;
 using LitJson;
 using RestSharp;
+using WitAI;
 
 namespace TModules.Core
 {
@@ -22,8 +25,13 @@ namespace TModules.Core
         private List<string> _speechString = new List<string>();
         EmbeddedServer _server = new EmbeddedServer();
 
+        private Wit _wit = null;
+
         public ModuleManager()
         {
+            _wit = new Wit(RetrieveCachedFile("wit_api"));
+            TConsole.Info("WitAI Library is initialized");
+
             PacketManager p = new PacketManager();
 
             RegisterModule(new ConfigModule(this));
@@ -42,6 +50,25 @@ namespace TModules.Core
 
         public string RespondTo(string message)
         {
+            Profiler.SharedInstance.StartProfiling("wit");
+
+            WitResponse response = _wit.Query(message);
+
+            Console.WriteLine(response.RawContent);
+
+            TimeSpan span = Profiler.SharedInstance.GetTimeForKey("wit");
+
+            TConsole.Info("Wit Web Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
+
+            /*
+             * Hack to disable below code for now. All of the default modules need to be converted 
+             * to deal with wit.ai.
+             */
+
+            return "";
+
+            Profiler.SharedInstance.StartProfiling("responding");
+
             Stopwatch watch = new Stopwatch();
             watch.Start();
 
@@ -53,23 +80,17 @@ namespace TModules.Core
                 }
             }
 
-            watch.Stop();
-            TimeSpan ts = watch.Elapsed;
+            span = Profiler.SharedInstance.GetTimeForKey("responding");
 
-            // Format and display the TimeSpan value. 
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                ts.Hours, ts.Minutes, ts.Seconds,
-                ts.Milliseconds / 10);
+            TConsole.Info("Module Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
 
-            Console.WriteLine("Module Reponse Time: " + elapsedTime);
-
-            //SpeakEventually("I'm sorry, I don't know what you mean");
             return "";
         }
 
         public bool RegisterModule(TModule module)
         {
             registeredModules.Add(module);
+            TConsole.InfoFormat("Registered Module: {0}", module.ModuleName);
             return true;
         }
 
