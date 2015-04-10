@@ -113,8 +113,8 @@ namespace TScript
             //close the stream when done
             loader.CloseStream();
             //give whoever wants the result back
-            int time = Profiler.SharedInstance.GetTimeForKey("script_run");
-            TConsole.Debug("Time for running script was: " + time.ToString() + " ms");
+            //int time = Profiler.SharedInstance.GetTimeForKey("script_run");
+            //TConsole.Debug("Time for running script was: " + time.ToString() + " ms");
 
             return finalValue;
         }
