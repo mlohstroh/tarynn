@@ -118,6 +118,11 @@ namespace TModules.Core
             mSpeechHandler.StopSpeaking();
         }
 
+        /// <summary>
+        /// Returns a module by the specified name
+        /// </summary>
+        /// <param name="name">The name of the module. The compare will be case insensitive</param>
+        /// <returns>The module if it exists. Null if it doesn't</returns>
         public TModule GetModuleByName(string name)
         {
             foreach (TModule m in registeredModules)
@@ -129,13 +134,18 @@ namespace TModules.Core
             return null;
         }
 
-        public void AddServerCallback(string path, System.Action<JsonData> CallBack)
+        /// <summary>
+        /// Returns a module by the given type
+        /// </summary>
+        /// <typeparam name="T">The type of module that will be returned.</typeparam>
+        /// <returns>The module if it exists. Null if it doesn't</returns>
+        public T GetModule<T>() where T : TModule
         {
-
-        }
-
-        public JsonData GetRequest(string host, string path)
-        {
+            foreach (var m in registeredModules)
+            {
+                if (m is T)
+                    return (T)m;
+            }
             return null;
         }
     }

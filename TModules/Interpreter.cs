@@ -8,6 +8,7 @@ using TModules.DefaultModules;
 using System.Reflection;
 using LitJson;
 using Analytics;
+using WitAI;
 
 namespace TModules
 {
@@ -18,6 +19,8 @@ namespace TModules
         public static void Main(string[] args)
         {
             Console.WriteLine("TModule CLI");
+            Wit wit = new Wit("2JXL3QOZV4SH2HOCB74FVPJUKMS3ETOO");
+            wit.Query("check the weather for me");
 
             Interpreter inter = new Interpreter();
 

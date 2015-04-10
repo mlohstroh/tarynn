@@ -52,7 +52,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LitJson">
-      <HintPath>..\..\..\..\..\Downloads\litjson-0.7.0\litjson-0.7.0\bin\LitJson.dll</HintPath>
+      <HintPath>..\packages\LitJson.0.7.0\lib\LitJson.dll</HintPath>
     </Reference>
     <Reference Include="Matrix">
       <HintPath>..\packages\MatriX.1.5.4.4\lib\net45\Matrix.dll</HintPath>
@@ -117,6 +117,10 @@
     <ProjectReference Include="..\Analytics\Analytics.csproj">
       <Project>{834b2c32-13ce-4e59-b50a-9946c0d83bce}</Project>
       <Name>Analytics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WitAI\WitAI.csproj">
+      <Project>{57ce759c-9eb8-4a9d-9ebc-fc4b600b9233}</Project>
+      <Name>WitAI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
