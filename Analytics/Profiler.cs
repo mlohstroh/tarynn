@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,14 +31,14 @@ namespace Analytics
 
         #endregion
 
-        private Dictionary<string, int> timeValues;
+        private Dictionary<string, Stopwatch> timeValues;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public Profiler()
         {
-            timeValues = new Dictionary<string, int>();
+            timeValues = new Dictionary<string, Stopwatch>();
         }
 
         /// <summary>
@@ -48,7 +50,9 @@ namespace Analytics
             if (timeValues.ContainsKey(key))
                 timeValues.Remove(key);
 
-            timeValues.Add(key, Environment.TickCount);
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            timeValues.Add(key, watch);
         }
 
         /// <summary>
@@ -56,17 +60,21 @@ namespace Analytics
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public int GetTimeForKey(string key)
+        public TimeSpan GetTimeForKey(string key)
         {
-            int startedTime;
-            if (!timeValues.TryGetValue(key, out startedTime))
+            Stopwatch watch;
+            if (!timeValues.TryGetValue(key, out watch))
             {
-                return -1;
+                return default(TimeSpan);
             }
 
-            int lapsedTime = Environment.TickCount - startedTime;
+            watch.Stop();
+            return watch.Elapsed;
+        }
 
-            return lapsedTime;
+        public string FormattedTime(TimeSpan ts)
+        {
+            return ts.ToString("c");
         }
     }
 }

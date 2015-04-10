@@ -1,0 +1,11 @@
+Tarynn/bin/*
+Tarynn/obj/*
+packages/*
+TScript/bin/*
+TScript/obj/*
+Analytics/obj/*
+Analytics/bin/*
+*/bin*
+*/obj*
+/bin*
+/obj*

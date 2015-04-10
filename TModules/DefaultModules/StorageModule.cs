@@ -18,8 +18,6 @@ namespace TModules.DefaultModules
 
         private Dictionary<string, Dictionary<string, string>> storageValues = new Dictionary<string, Dictionary<string, string>>();
 
-        public string LastUpdatedValue { get; private set; }
-
         public StorageModule(ModuleManager host)
             : base("Storage", host)
         {
