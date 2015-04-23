@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
-#if __MONOCS
+#if !__MonoCS__
 using System.Speech.Synthesis;
+#endif
 using WitAI;
 
 namespace TModules.Core

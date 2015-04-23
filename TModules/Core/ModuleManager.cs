@@ -174,21 +174,6 @@ namespace TModules.Core
             return null;
         }
 
-        /// <summary>
-        /// Returns a module by the given type
-        /// </summary>
-        /// <typeparam name="T">The type of module that will be returned.</typeparam>
-        /// <returns>The module if it exists. Null if it doesn't</returns>
-        public T GetModule<T>() where T : TModule
-        {
-            foreach (var m in registeredModules)
-            {
-                if (m is T)
-                    return (T)m;
-            }
-            return null;
-        }
-
         public IMongoDatabase GetDatabase(string name)
         {
             return _client.GetDatabase(name);

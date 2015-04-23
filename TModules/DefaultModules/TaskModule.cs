@@ -30,7 +30,7 @@ namespace TModules.DefaultModules
                 {
                     TConsole.Info("Checking for tasks");
 
-                    var filtered = _allTasks.Where(x => x.Value.Done == false && x.Value.Type != "reoccurring").Where(x => x.Value.TimeToNotify < DateTime.Now);
+                    var filtered = _allTasks.Where(x => x.Value.Due < DateTime.Now);
 
                     foreach (var task in filtered)
                     {
@@ -47,20 +47,29 @@ namespace TModules.DefaultModules
 
         private void WitReminder(WitOutcome outcome)
         {
+            WitEntity reminder = null;
+            WitEntity datetime = null;
+
             foreach (var entity in outcome.Entities)
             {
-                TConsole.InfoFormat("Key: {0}", entity.Key);
-
-                foreach (var witEntity in entity.Value)
+                // we are looking for the reminder and datetime entities
+                if (entity.Key == "reminder")
                 {
-                    TConsole.InfoFormat("Entities: {0}", witEntity._data.ToJson());
+                    reminder = entity.Value.FirstOrDefault();
+                }
+
+                if (entity.Key == "datetime")
+                {
+                    // we don't care about other dates. Just pick the first one
+                    datetime = entity.Value.FirstOrDefault();
                 }
             }
-        }
 
-        private void BuildReoccurringTime(string message, ref ReoccurringTask t)
-        {
-            
+            DateTime due = DateTime.Parse(datetime.GetValue("value").ToString());
+            string task = reminder.GetValue("value").ToString();
+
+            TodoTask t = new TodoTask(task, due);
+
         }
 
         #region Callbacks
@@ -74,11 +83,11 @@ namespace TModules.DefaultModules
                 Match m = Regex.Match(pair.Value.Title, searchTerm);
                 if (m.Success)
                 {
-                    if (pair.Value.Type == "one_time" && !pair.Value.Done)
-                    {
-                        Host.SpeakEventually("Marking " + pair.Value.Title + " complete");
-                        pair.Value.Done = true;
-                    }
+                    //if (pair.Value.Type == "one_time" && !pair.Value.Done)
+                    //{
+                    //    Host.SpeakEventually("Marking " + pair.Value.Title + " complete");
+                    //    pair.Value.Done = true;
+                    //}
 
                 }
             }
@@ -88,11 +97,6 @@ namespace TModules.DefaultModules
         {
             string time = message.Groups[1].Value;
             string action = message.Groups[2].Value;
-
-            ReoccurringTask t = new ReoccurringTask();
-            BuildReoccurringTime(time, ref t);
-            t.Title = action;
-            t.Type = "reoccurring";
 
             Host.SpeakEventually("I will remind you to " + action + " in " + time);
         }
@@ -113,28 +117,28 @@ namespace TModules.DefaultModules
             {
                 TodoTask t;
                 _allTasks.TryGetValue(s, out t);
-                switch (t.Type)
-                {
-                    case "one_time":
-                        OneTimeTodoTask one = (OneTimeTodoTask)t;
-                        if (DateTime.Now.DayOfYear == one.Deadline.DayOfYear && !t.Done)
-                        {
-                            builder.Append(counter++ + " " + one.Title + ",");
-                            _todaysTasks.Add(s, one);
-                        }
+                //switch (t.Type)
+                //{
+                //    case "one_time":
+                //        OneTimeTodoTask one = (OneTimeTodoTask)t;
+                //        if (DateTime.Now.DayOfYear == one.Deadline.DayOfYear && !t.Done)
+                //        {
+                //            builder.Append(counter++ + " " + one.Title + ",");
+                //            _todaysTasks.Add(s, one);
+                //        }
 
-                        break;
-                    case "reoccurring":
-                        ReoccurringTask re = (ReoccurringTask)t;
-                        if (re.DaysToRepeat == null)    //bad fix
-                            re.DaysToRepeat = new List<int>();
-                        if (re.DaysToRepeat.IndexOf((int)DateTime.Now.DayOfWeek) != -1 && !t.Done)
-                        {
-                            builder.Append(counter++ + " " + re.Title + ",");
-                            _todaysTasks.Add(s, re);
-                        }
-                        break;
-                }
+                //        break;
+                //    case "reoccurring":
+                //        ReoccurringTask re = (ReoccurringTask)t;
+                //        if (re.DaysToRepeat == null)    //bad fix
+                //            re.DaysToRepeat = new List<int>();
+                //        if (re.DaysToRepeat.IndexOf((int)DateTime.Now.DayOfWeek) != -1 && !t.Done)
+                //        {
+                //            builder.Append(counter++ + " " + re.Title + ",");
+                //            _todaysTasks.Add(s, re);
+                //        }
+                //        break;
+                //}
             }
             if (builder.Length > 0)
                 return builder.ToString().TrimEnd(builder.ToString()[builder.Length - 1]);
@@ -146,11 +150,6 @@ namespace TModules.DefaultModules
         {
             string time = message.Groups[1].Value;
             string action = message.Groups[2].Value;
-
-            OneTimeTodoTask t = new OneTimeTodoTask();
-            t.Title = action;
-            t.Type = "one_time";
-            t.Done = false;
 
             Host.SpeakEventually("I will remind you to " + action + " in " + time);
             //});
