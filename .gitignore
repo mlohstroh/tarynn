@@ -7,3 +7,4 @@ Analytics/obj/*
 Analytics/bin/*
 */bin*
 */obj*
+*.userprefs

@@ -19,17 +19,20 @@ namespace TModules
         public static void Main(string[] args)
         {
             Console.WriteLine("TModule CLI");
-            Wit wit = new Wit("2JXL3QOZV4SH2HOCB74FVPJUKMS3ETOO");
 
             Interpreter inter = new Interpreter();
 
+            inter.Start ();
             Console.Read();
         }
 
         public Interpreter()
         {
             _host = new ModuleManager();
+        }
 
+        public void Start()
+        {
             string line = Console.ReadLine();
 
 

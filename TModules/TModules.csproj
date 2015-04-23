@@ -20,6 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,6 +39,8 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -46,9 +50,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LitJson">
@@ -115,11 +117,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Analytics\Analytics.csproj">
-      <Project>{834b2c32-13ce-4e59-b50a-9946c0d83bce}</Project>
+      <Project>{834B2C32-13CE-4E59-B50A-9946C0D83BCE}</Project>
       <Name>Analytics</Name>
     </ProjectReference>
     <ProjectReference Include="..\WitAI\WitAI.csproj">
-      <Project>{57ce759c-9eb8-4a9d-9ebc-fc4b600b9233}</Project>
+      <Project>{57CE759C-9EB8-4A9D-9EBC-FC4B600B9233}</Project>
       <Name>WitAI</Name>
     </ProjectReference>
   </ItemGroup>

@@ -3,6 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if __MonoCS__
+namespace TModules.Core
+{
+    public class SpeechHandler
+    {
+        private Queue<string> messageQueue = new Queue<string>();
+
+        public void AddMessageToQueue(string message)
+        {
+            if (messageQueue.Count == 0)
+                Console.WriteLine ("Speaking: " + message);
+            else
+                messageQueue.Enqueue(message);
+        }
+
+        public SpeechHandler()
+        {
+        }
+
+        public void StopSpeaking()
+        {
+            messageQueue.Clear(); //bummer :(
+        }
+    }
+}
+#else
+
 using System.Speech.Synthesis;
 
 namespace TModules.Core
@@ -42,3 +69,5 @@ namespace TModules.Core
         }
     }
 }
+
+#endif

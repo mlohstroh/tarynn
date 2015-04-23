@@ -40,6 +40,8 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -50,6 +52,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -142,15 +145,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Analytics\Analytics.csproj">
-      <Project>{834b2c32-13ce-4e59-b50a-9946c0d83bce}</Project>
+      <Project>{834B2C32-13CE-4E59-B50A-9946C0D83BCE}</Project>
       <Name>Analytics</Name>
     </ProjectReference>
     <ProjectReference Include="..\TModules\TModules.csproj">
-      <Project>{c5bad697-6792-4da4-adbf-734af9b63f27}</Project>
+      <Project>{C5BAD697-6792-4DA4-ADBF-734AF9B63F27}</Project>
       <Name>TModules</Name>
     </ProjectReference>
     <ProjectReference Include="..\TScript\TScript.csproj">
-      <Project>{ddf795f0-1387-451d-b244-514ee8369592}</Project>
+      <Project>{DDF795F0-1387-451D-B244-514EE8369592}</Project>
       <Name>TScript</Name>
     </ProjectReference>
   </ItemGroup>

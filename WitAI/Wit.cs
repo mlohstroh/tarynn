@@ -40,6 +40,8 @@ namespace WitAI
         /// <returns>A built wit response based on the JSON of the request</returns>
         public WitResponse Query(string query, dynamic context = null, string msgId = null, int numberOfOutcomes = 1)
         {
+            if (string.IsNullOrEmpty (query))
+                return null;
             var request = BuildWitRequest("/message", Method.GET);
             request.AddParameter("q", query, ParameterType.QueryString);
             // Query is the only parameter required.

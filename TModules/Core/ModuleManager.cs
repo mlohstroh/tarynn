@@ -101,15 +101,20 @@ namespace TModules.Core
         public void CacheFile(string filename, string contents)
         {
             string savePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
-            if (!Directory.Exists(savePath + "\\Tarynn"))
-                Directory.CreateDirectory(savePath + "\\Tarynn");
-            File.WriteAllText(savePath + "\\Tarynn\\" + filename, contents);
+            string dirPath = Path.Combine (savePath, "Tarynn");
+            if (!Directory.Exists(dirPath))
+                Directory.CreateDirectory(dirPath);
+            File.WriteAllText(Path.Combine(dirPath, filename), contents);
         }
 
         public string RetrieveCachedFile(string filename)
         {
             string savePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
-            return File.ReadAllText(savePath + "\\Tarynn\\" + filename);
+            string path = Path.Combine (Path.Combine (savePath, "Tarynn"), filename);
+            if (File.Exists (path))
+                return File.ReadAllText (path);
+            else
+                return "";
         }
 
         #endregion
