@@ -9,7 +9,7 @@ namespace WitAI
 {
     public class WitEntity
     {
-        private JsonData _data; 
+        public JsonData _data { get; private set; }
 
         public WitEntity(JsonData data)
         {

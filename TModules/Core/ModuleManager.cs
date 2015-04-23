@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Configuration;
 using Analytics;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using SpotiFire;
 using TModules.Core;
 using TModules.DefaultModules;
 using System.IO;
@@ -23,7 +26,10 @@ namespace TModules.Core
         private SpeechHandler mSpeechHandler = new SpeechHandler();
 
         private List<string> _speechString = new List<string>();
-        EmbeddedServer _server = new EmbeddedServer();
+
+        private EmbeddedServer _server = new EmbeddedServer();
+
+        private MongoClient _client = new MongoClient();
 
         private Wit _wit = null;
 
@@ -35,13 +41,11 @@ namespace TModules.Core
             PacketManager p = new PacketManager();
 
             RegisterModule(new ConfigModule(this));
-            RegisterModule(new StorageModule(this));
             //RegisterModule(new SpotifyModule(this));
-            //RegisterModule(new TaskModule(this));
+            RegisterModule(new TaskModule(this));
             RegisterModule(new UtilityModule(this));
             RegisterModule(new EventModule(this));
             RegisterModule(new UserManagement(this));
-            RegisterModule(new JsonModule(this));
             RegisterModule(new ProxyModule(this));
 
             _server.Start();
@@ -60,29 +64,24 @@ namespace TModules.Core
 
             TConsole.Info("Wit Web Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
 
-            /*
-             * Hack to disable below code for now. All of the default modules need to be converted 
-             * to deal with wit.ai.
-             */
-
-            return "";
-
-            Profiler.SharedInstance.StartProfiling("responding");
-
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-
-            foreach (TModule module in registeredModules)
+            if (response.Outcomes.Count > 0)
             {
-                if (module.RespondTo(message))
+                WitOutcome outcome = response.Outcomes.First();
+
+                Profiler.SharedInstance.StartProfiling("responding");
+
+                foreach (TModule module in registeredModules)
                 {
-                    break;
+                    if (module.RespondTo(outcome))
+                    {
+                        break;
+                    }
                 }
+
+                span = Profiler.SharedInstance.GetTimeForKey("responding");
+
+                TConsole.Info("Module Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
             }
-
-            span = Profiler.SharedInstance.GetTimeForKey("responding");
-
-            TConsole.Info("Module Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
 
             return "";
         }
@@ -173,6 +172,26 @@ namespace TModules.Core
                     return (T)m;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Returns a module by the given type
+        /// </summary>
+        /// <typeparam name="T">The type of module that will be returned.</typeparam>
+        /// <returns>The module if it exists. Null if it doesn't</returns>
+        public T GetModule<T>() where T : TModule
+        {
+            foreach (var m in registeredModules)
+            {
+                if (m is T)
+                    return (T)m;
+            }
+            return null;
+        }
+
+        public IMongoDatabase GetDatabase(string name)
+        {
+            return _client.GetDatabase(name);
         }
     }
 }
