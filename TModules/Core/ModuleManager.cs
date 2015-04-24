@@ -55,32 +55,39 @@ namespace TModules.Core
 
         public string RespondTo(string message)
         {
-            Profiler.SharedInstance.StartProfiling("wit");
-
-            WitResponse response = _wit.Query(message);
-
-            Console.WriteLine(response.RawContent);
-
-            TimeSpan span = Profiler.SharedInstance.GetTimeForKey("wit");
-
-            TConsole.Info("Wit Web Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
-
-            if (response.Outcomes.Count > 0)
+            try
             {
-                WitOutcome outcome = response.Outcomes.First();
+                Profiler.SharedInstance.StartProfiling("wit");
 
-                Profiler.SharedInstance.StartProfiling("responding");
+                WitResponse response = _wit.Query(message);
 
-                foreach (var kvp in _registeredModules)
+                Console.WriteLine(response.RawContent);
+
+                TimeSpan span = Profiler.SharedInstance.GetTimeForKey("wit");
+
+                TConsole.Info("Wit Web Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
+
+                if (response.Outcomes.Count > 0)
                 {
-                    // don't process anymore if someone wants to respond
-                    if (kvp.Value.RespondTo(outcome))
-                        break;
+                    WitOutcome outcome = response.Outcomes.First();
+
+                    Profiler.SharedInstance.StartProfiling("responding");
+
+                    foreach (var kvp in _registeredModules)
+                    {
+                        // don't process anymore if someone wants to respond
+                        if (kvp.Value.RespondTo(outcome))
+                            break;
+                    }
+
+                    span = Profiler.SharedInstance.GetTimeForKey("responding");
+
+                    TConsole.Info("Module Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
                 }
-
-                span = Profiler.SharedInstance.GetTimeForKey("responding");
-
-                TConsole.Info("Module Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
+            }
+            catch (Exception ex)
+            {
+                TConsole.ErrorFormat("Error executing query {0}. Exception {1}", message, ex);   
             }
 
             return "";

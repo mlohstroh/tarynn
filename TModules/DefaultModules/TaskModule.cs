@@ -68,7 +68,10 @@ namespace TModules.DefaultModules
                     foreach (var task in filtered)
                     {
                         if (task.Value.Title != null)
-                            Host.SpeakEventually("I'm supposed to remind you to " + task.Value.Title);
+                        {
+                            Host.SpeakEventually("I'm supposed to remind you about something.");
+                            Host.SpeakEventually(task.Value.Title);
+                        }
 
                         tmp.Add(task.Value.Id);
                     }
