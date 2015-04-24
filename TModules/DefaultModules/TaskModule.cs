@@ -79,7 +79,7 @@ namespace TModules.DefaultModules
                         _allTasks.Remove(objectId);
                     }
 
-                    //* 60
+                    //delay is in miliseconds
                     Task.Delay(1000 * 60).Wait();
                 }
             });
@@ -104,14 +104,20 @@ namespace TModules.DefaultModules
                     datetime = entity.Value.FirstOrDefault();
                 }
             }
+            if (reminder != null && datetime != null)
+            {
+                DateTime due = DateTime.Parse(datetime.GetValue("value").ToString());
+                string task = reminder.GetValue("value").ToString();
 
-            DateTime due = DateTime.Parse(datetime.GetValue("value").ToString());
-            string task = reminder.GetValue("value").ToString();
+                TodoTask t = new TodoTask(task, due);
 
-            TodoTask t = new TodoTask(task, due);
-
-            _collection.InsertOneAsync(t).Wait();
-            _allTasks.Add(t.Id, t);
+                _collection.InsertOneAsync(t).Wait();
+                _allTasks.Add(t.Id, t);
+            }
+            else
+            {
+                Host.SpeakEventually("I'm sorry, I wasn't able to get everything I needed from that. Please try again.");
+            }
         }
 
         #region Callbacks
