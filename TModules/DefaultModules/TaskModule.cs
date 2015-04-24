@@ -28,27 +28,6 @@ namespace TModules.DefaultModules
             : base("Tasks", manager)
         {
             Intents.Add("reminder", WitReminder);
-
-            Task t = Task.Run( () =>
-            {
-                while (true)
-                {
-                    TConsole.Info("Checking for tasks");
-
-                    var filtered = _allTasks.Where(x => x.Value.Due < DateTime.Now);
-
-                    TConsole.InfoFormat("Of the {0} tasks, {1} are being reported", _allTasks.Count, filtered.Count());
-
-                    foreach (var task in filtered)
-                    {
-                        if(task.Value.Title != null)
-                            Host.SpeakEventually("I'm supposed to remind you to " +  task.Value.Title);
-                    }
-
-                    //* 60
-                    Task.Delay(1000 * 60).Wait();
-                }
-            });
         }
 
         public override void Initialize()
@@ -71,6 +50,39 @@ namespace TModules.DefaultModules
 
             var ts = Profiler.SharedInstance.GetTimeForKey("task_mongo");
             TConsole.Info("Mongo Task Load Time: " + Profiler.SharedInstance.FormattedTime(ts));
+
+            StartChecking();
+        }
+
+        private void StartChecking()
+        {
+            Task t = Task.Run(() =>
+            {
+                while (true)
+                {
+                    TConsole.Info("Checking for tasks");
+
+                    var filtered = _allTasks.Where(x => x.Value.Due < DateTime.Now);
+                    List<ObjectId> tmp = new List<ObjectId>();
+
+                    foreach (var task in filtered)
+                    {
+                        if (task.Value.Title != null)
+                            Host.SpeakEventually("I'm supposed to remind you to " + task.Value.Title);
+
+                        tmp.Add(task.Value.Id);
+                    }
+
+                    foreach (var objectId in tmp)
+                    {
+                        _collection.DeleteOneAsync(x => x.Id == objectId).Wait();
+                        _allTasks.Remove(objectId);
+                    }
+
+                    //* 60
+                    Task.Delay(1000 * 60).Wait();
+                }
+            });
         }
 
         private void WitReminder(WitOutcome outcome)

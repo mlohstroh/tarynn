@@ -18,6 +18,7 @@ namespace TModules.DefaultModules.Tasks
         [BsonElement]
         public string Title { get; set; }
         [BsonElement]
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime Due { get; set; }
 
         public TodoTask(string name, DateTime due)

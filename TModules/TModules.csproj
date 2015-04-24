@@ -94,7 +94,6 @@
   <ItemGroup>
     <Compile Include="Core\EmbeddedServer.cs" />
     <Compile Include="Core\ModuleManager.cs" />
-    <Compile Include="Core\PacketManager.cs" />
     <Compile Include="Core\SpeechHandler.cs" />
     <Compile Include="DefaultModules\ConfigModule.cs" />
     <Compile Include="DefaultModules\Events\Event.cs" />
@@ -105,11 +104,9 @@
     <Compile Include="DefaultModules\EventModule.cs" />
     <Compile Include="DefaultModules\Tasks\TodoTask.cs" />
     <Compile Include="DefaultModules\UtilityModule.cs" />
-    <Compile Include="JSON\SharpCouch.cs" />
     <Compile Include="Interpreter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Users\User.cs" />
-    <Compile Include="Users\UserManagement.cs" />
     <Compile Include="DefaultModules\TModule.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -130,7 +127,9 @@
       <Name>WitAI</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="JSON\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

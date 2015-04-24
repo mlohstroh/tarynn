@@ -40,14 +40,11 @@ namespace TModules.Core
             _wit = new Wit(RetrieveCachedFile("wit_api"));
             TConsole.Info("WitAI Library is initialized");
 
-            PacketManager p = new PacketManager();
-
             RegisterModule(new ConfigModule(this));
             //RegisterModule(new SpotifyModule(this));
             RegisterModule(new TaskModule(this));
             RegisterModule(new UtilityModule(this));
             RegisterModule(new EventModule(this));
-            RegisterModule(new UserManagement(this));
             RegisterModule(new ProxyModule(this));
 
             InitModules();
@@ -138,7 +135,6 @@ namespace TModules.Core
             JsonData packet = JsonMapper.ToObject(jsonPacket);
             packet["speech"] = speech;
 
-            PacketManager.SharedInstance.PushPacket(moduleName, packet);
             _speechString.Clear();
         }
 
