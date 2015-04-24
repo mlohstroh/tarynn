@@ -18,8 +18,6 @@ namespace TModules.DefaultModules
 {
     public class TaskModule : TModule
     {
-        const string DB_NAME = "tarynn-tasks";
-
         private Dictionary<ObjectId, TodoTask> _allTasks = new Dictionary<ObjectId, TodoTask>();
 
         private IMongoCollection<TodoTask> _collection;
@@ -121,47 +119,6 @@ namespace TModules.DefaultModules
             {
                 Host.SpeakEventually("I'm sorry, I wasn't able to get everything I needed from that. Please try again.");
             }
-        }
-
-        #region Callbacks
-
-        private void MarkComplete(Match message)
-        {
-            string searchTerm = message.Groups[1].Value;
-
-            foreach (var pair in _allTasks)
-            {
-                Match m = Regex.Match(pair.Value.Title, searchTerm);
-                if (m.Success)
-                {
-                    //if (pair.Value.Type == "one_time" && !pair.Value.Done)
-                    //{
-                    //    Host.SpeakEventually("Marking " + pair.Value.Title + " complete");
-                    //    pair.Value.Done = true;
-                    //}
-
-                }
-            }
-        }
-
-        private void MakeReoccurringTask(Match message)
-        {
-            string time = message.Groups[1].Value;
-            string action = message.Groups[2].Value;
-
-            Host.SpeakEventually("I will remind you to " + action + " in " + time);
-        }
-
-        #endregion
-
-        private bool TaskExists(string action)
-        {
-            foreach (var pair in this._allTasks)
-            {
-                if (pair.Value.Title == action)
-                    return true;
-            }
-            return false;
         }
     }
 }
