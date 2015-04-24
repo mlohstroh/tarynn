@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Configuration;
@@ -21,7 +23,7 @@ namespace TModules.Core
 {
     public class ModuleManager
     {
-        private List<TModule> registeredModules = new List<TModule>();
+        private Dictionary<string, TModule> _registeredModules = new Dictionary<string, TModule>();
 
         private SpeechHandler mSpeechHandler = new SpeechHandler();
 
@@ -48,6 +50,8 @@ namespace TModules.Core
             RegisterModule(new UserManagement(this));
             RegisterModule(new ProxyModule(this));
 
+            InitModules();
+
             _server.Start();
             _server.Run();
         }
@@ -70,12 +74,11 @@ namespace TModules.Core
 
                 Profiler.SharedInstance.StartProfiling("responding");
 
-                foreach (TModule module in registeredModules)
+                foreach (var kvp in _registeredModules)
                 {
-                    if (module.RespondTo(outcome))
-                    {
+                    // don't process anymore if someone wants to respond
+                    if (kvp.Value.RespondTo(outcome))
                         break;
-                    }
                 }
 
                 span = Profiler.SharedInstance.GetTimeForKey("responding");
@@ -88,9 +91,19 @@ namespace TModules.Core
 
         public bool RegisterModule(TModule module)
         {
-            registeredModules.Add(module);
+            _registeredModules.Add(module.ModuleName, module);
+            module.SetDatabase(_client.GetDatabase(module.ModuleName));
+
             TConsole.InfoFormat("Registered Module: {0}", module.ModuleName);
             return true;
+        }
+
+        public void InitModules()
+        {
+            foreach (var kvp in _registeredModules)
+            {
+                kvp.Value.Initialize();
+            }
         }
 
         #region Caching
@@ -150,13 +163,11 @@ namespace TModules.Core
         /// <returns>The module if it exists. Null if it doesn't</returns>
         public TModule GetModuleByName(string name)
         {
-            foreach (TModule m in registeredModules)
-            {
-                if (m.ModuleName.ToLower() == name.ToLower())
-                    return m;
-            }
+            TModule retModule;
 
-            return null;
+            _registeredModules.TryGetValue(name, out retModule);
+
+            return retModule;
         }
 
         /// <summary>
@@ -166,17 +177,12 @@ namespace TModules.Core
         /// <returns>The module if it exists. Null if it doesn't</returns>
         public T GetModule<T>() where T : TModule
         {
-            foreach (var m in registeredModules)
+            foreach (var m in _registeredModules)
             {
-                if (m is T)
-                    return (T)m;
+                if (m.Value is T)
+                    return (T)m.Value;
             }
             return null;
-        }
-
-        public IMongoDatabase GetDatabase(string name)
-        {
-            return _client.GetDatabase(name);
         }
     }
 }

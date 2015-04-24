@@ -4,13 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LitJson;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace TModules.DefaultModules.Tasks
 {
+    [BsonIgnoreExtraElements]
     public class TodoTask
     {
-        public string Title { get; protected set; }
-        public DateTime Due { get; protected set; }
+        [BsonId]
+        public ObjectId Id { get; set; }
+
+        [BsonElement]
+        public string Title { get; set; }
+        [BsonElement]
+        public DateTime Due { get; set; }
 
         public TodoTask(string name, DateTime due)
         {

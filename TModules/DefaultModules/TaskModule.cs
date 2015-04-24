@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
+using MongoDB.Driver.Linq;
+using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
 using TModules.Core;
 using System.Text.RegularExpressions;
 using TModules.DefaultModules.Tasks;
@@ -16,8 +20,9 @@ namespace TModules.DefaultModules
     {
         const string DB_NAME = "tarynn-tasks";
 
-        private Dictionary<string, TodoTask> _allTasks = new Dictionary<string, TodoTask>();
-        private Dictionary<string, TodoTask> _todaysTasks;
+        private Dictionary<ObjectId, TodoTask> _allTasks = new Dictionary<ObjectId, TodoTask>();
+
+        private IMongoCollection<TodoTask> _collection;
 
         public TaskModule(ModuleManager manager)
             : base("Tasks", manager)
@@ -32,6 +37,8 @@ namespace TModules.DefaultModules
 
                     var filtered = _allTasks.Where(x => x.Value.Due < DateTime.Now);
 
+                    TConsole.InfoFormat("Of the {0} tasks, {1} are being reported", _allTasks.Count, filtered.Count());
+
                     foreach (var task in filtered)
                     {
                         if(task.Value.Title != null)
@@ -42,7 +49,28 @@ namespace TModules.DefaultModules
                     Task.Delay(1000 * 60).Wait();
                 }
             });
+        }
 
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            BsonClassMap.RegisterClassMap<TodoTask>(map =>
+            {
+                map.AutoMap();
+            });
+
+            Profiler.SharedInstance.StartProfiling("task_mongo");
+
+            // load all of them from the database
+            _collection = _database.GetCollection<TodoTask>("tasks");
+            IAsyncCursor<TodoTask> t = _collection.FindAsync(x => true).GetAwaiter().GetResult();
+            t.ForEachAsync(task => _allTasks.Add(task.Id, task)).Wait();
+
+            TConsole.DebugFormat("{0} documents were loaded...", _allTasks.Count);
+
+            var ts = Profiler.SharedInstance.GetTimeForKey("task_mongo");
+            TConsole.Info("Mongo Task Load Time: " + Profiler.SharedInstance.FormattedTime(ts));
         }
 
         private void WitReminder(WitOutcome outcome)
@@ -70,6 +98,8 @@ namespace TModules.DefaultModules
 
             TodoTask t = new TodoTask(task, due);
 
+            _collection.InsertOneAsync(t).Wait();
+            _allTasks.Add(t.Id, t);
         }
 
         #region Callbacks
@@ -99,60 +129,6 @@ namespace TModules.DefaultModules
             string action = message.Groups[2].Value;
 
             Host.SpeakEventually("I will remind you to " + action + " in " + time);
-        }
-
-        private void DueToday(Match message)
-        {
-            Host.SpeakEventually(LoadToday());
-        }
-
-        public string LoadToday()
-        {
-            StringBuilder builder = new StringBuilder();
-            int counter = 1;
-
-            _todaysTasks = new Dictionary<string, TodoTask>();
-
-            foreach (string s in _allTasks.Keys)
-            {
-                TodoTask t;
-                _allTasks.TryGetValue(s, out t);
-                //switch (t.Type)
-                //{
-                //    case "one_time":
-                //        OneTimeTodoTask one = (OneTimeTodoTask)t;
-                //        if (DateTime.Now.DayOfYear == one.Deadline.DayOfYear && !t.Done)
-                //        {
-                //            builder.Append(counter++ + " " + one.Title + ",");
-                //            _todaysTasks.Add(s, one);
-                //        }
-
-                //        break;
-                //    case "reoccurring":
-                //        ReoccurringTask re = (ReoccurringTask)t;
-                //        if (re.DaysToRepeat == null)    //bad fix
-                //            re.DaysToRepeat = new List<int>();
-                //        if (re.DaysToRepeat.IndexOf((int)DateTime.Now.DayOfWeek) != -1 && !t.Done)
-                //        {
-                //            builder.Append(counter++ + " " + re.Title + ",");
-                //            _todaysTasks.Add(s, re);
-                //        }
-                //        break;
-                //}
-            }
-            if (builder.Length > 0)
-                return builder.ToString().TrimEnd(builder.ToString()[builder.Length - 1]);
-            else
-                return "You have nothing for today";
-        }
-
-        private void Remind(Match message)
-        {
-            string time = message.Groups[1].Value;
-            string action = message.Groups[2].Value;
-
-            Host.SpeakEventually("I will remind you to " + action + " in " + time);
-            //});
         }
 
         #endregion

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using Analytics;
+using Microsoft.SqlServer.Server;
+using MongoDB.Driver;
 #if !__MonoCS__
 using System.Speech.Synthesis;
 #endif
@@ -18,14 +18,15 @@ namespace TModules.Core
         public delegate void Heard(Match message);
 
         private Dictionary<string, Heard> _allCallbacks = new Dictionary<string, Heard>();
+        protected IMongoDatabase _database = null;
 
         public string ModuleName { get; private set; }
         public ModuleManager Host;
 
         public TModule(string name, ModuleManager host)
         {
-            this.Host = host;
-            this.ModuleName = name;
+            Host = host;
+            ModuleName = name;
             Intents = new Dictionary<string, Action<WitOutcome>>();
         }
 
@@ -52,6 +53,19 @@ namespace TModules.Core
             }
             
             return false;
+        }
+
+        public void SetDatabase(IMongoDatabase database)
+        {
+            _database = database;
+        }
+
+        /// <summary>
+        /// Gets called after all the modules are loaded into the manager
+        /// </summary>
+        public virtual void Initialize()
+        {
+            TConsole.DebugFormat("Module {0} is being initialized", ModuleName);
         }
     }
 }
