@@ -131,10 +131,13 @@ namespace TModules.Core
         {
             string savePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
             string path = Path.Combine (Path.Combine (savePath, "Tarynn"), filename);
-            if (File.Exists (path))
-                return File.ReadAllText (path);
-            else
-                return "";
+            if (File.Exists(path))
+                return File.ReadAllText(path);
+
+            TConsole.InfoFormat("Please Enter the value for {0}. If this value is incorrect, Tarynn might not work correctly.", filename);
+            Console.Write("Value for {0}: ", filename);
+            string val = Console.ReadLine();
+            return val;
         }
 
         #endregion
