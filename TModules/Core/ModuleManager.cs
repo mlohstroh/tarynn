@@ -7,13 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Configuration;
 using Analytics;
+using Matrix.Xmpp.Register;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using SpotiFire;
 using TModules.Core;
 using TModules.DefaultModules;
 using System.IO;
-using TModules.Users;
 using System.Diagnostics;
 using LitJson;
 using RestSharp;
@@ -33,7 +33,7 @@ namespace TModules.Core
 
         private MongoClient _client = new MongoClient();
 
-        private PlatformManager _platformManager = new PlatformManager();
+        private PlatformManager _platformManager;
 
         private Wit _wit = null;
 
@@ -42,12 +42,15 @@ namespace TModules.Core
             _wit = new Wit(RetrieveCachedFile("wit_api"));
             TConsole.Info("WitAI Library is initialized");
 
+             _platformManager = new PlatformManager(this);
+
             RegisterModule(new ConfigModule(this));
             //RegisterModule(new SpotifyModule(this));
             RegisterModule(new TaskModule(this));
             RegisterModule(new UtilityModule(this));
             RegisterModule(new EventModule(this));
             RegisterModule(new ProxyModule(this));
+            RegisterModule(new QueryManager(this));
 
             InitModules();
 

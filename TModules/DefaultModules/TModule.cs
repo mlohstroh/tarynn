@@ -67,5 +67,10 @@ namespace TModules.Core
         {
             TConsole.DebugFormat("Module {0} is being initialized", ModuleName);
         }
+
+        protected void Fail()
+        {
+            Host.SpeakEventually("I'm sorry, I wasn't able to get everything I needed from that. Please try again.");
+        }
     }
 }
