@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -86,6 +87,7 @@ namespace TModules
             {
                 ResourceResponder responder = (ResourceResponder) assembly.CreateInstance(type.FullName);
 
+                Debug.Assert(responder != null, "responder != null");
                 var platform = PlatformForName(responder.PlatformName);
 
                 if (platform != null)
