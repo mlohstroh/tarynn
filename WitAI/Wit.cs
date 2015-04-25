@@ -35,6 +35,7 @@ namespace WitAI
         /// <summary>
         /// Submit a query to wit and get a response
         /// </summary>
+        /// <param name="context">The context that Wit will use</param>
         /// <param name="query">The query to sumit</param>
         /// <remarks>If an error occurs </remarks>
         /// <returns>A built wit response based on the JSON of the request</returns>
@@ -79,7 +80,7 @@ namespace WitAI
         /// <returns></returns>
         private RestRequest BuildWitRequest(string url, Method m)
         {
-            var request = new RestRequest("/message", Method.GET);
+            var request = new RestRequest(url, Method.GET);
             request.AddHeader("Authorization", string.Format("Bearer {0}", AccessToken));
             request.AddHeader("Accept", "application/json");
             request.AddParameter("v", WIT_VERSION, ParameterType.QueryString);

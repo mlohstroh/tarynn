@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\WitEntity.cs" />
+    <Compile Include="Classes\WitIntent.cs" />
     <Compile Include="Exceptions\WitException.cs" />
     <Compile Include="Wit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
