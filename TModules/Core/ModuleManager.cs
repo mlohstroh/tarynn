@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Configuration;
 using Analytics;
-using Matrix.Xmpp.Register;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using SpotiFire;

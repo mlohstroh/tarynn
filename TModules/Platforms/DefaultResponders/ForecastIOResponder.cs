@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Linq;
 using ForecastIO;
-using Matrix.Xmpp.XHtmlIM;
 using WitAI;
 using Analytics;
 

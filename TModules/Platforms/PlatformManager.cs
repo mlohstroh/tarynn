@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Matrix.Xmpp.XHtmlIM;
 using TModules.Core;
 using WitAI;
 using Analytics;
