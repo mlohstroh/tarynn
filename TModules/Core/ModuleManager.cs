@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -38,8 +39,10 @@ namespace TModules.Core
 
         public ModuleManager()
         {
+            CheckForMongo();
+
             _wit = new Wit(RetrieveCachedFile("wit_api"));
-            TConsole.Info("WitAI Library is initialized");
+            TConsole.Info("WitAI Library is initialized");   
 
              _platformManager = new PlatformManager(this);
 
@@ -55,6 +58,25 @@ namespace TModules.Core
 
             _server.Start();
             _server.Run();
+        }
+
+        private void CheckForMongo()
+        {
+            // This will only work in development with zero credentials
+            RestClient dummy = new RestClient("http://localhost:27017/");
+            IRestRequest req = new RestRequest("/");
+            var res = dummy.Get(req);
+            if (res.StatusCode != HttpStatusCode.OK)
+            {
+                TConsole.ErrorFormat("Mongo is not running! Tarynn will not function without mongodb");
+                Console.WriteLine("Press any key to exit...");
+                Console.ReadLine();
+                Environment.Exit(1);
+            }
+            else
+            {
+                TConsole.InfoFormat("Mongodb is up and running");
+            }
         }
 
         public string RespondTo(string message)
@@ -127,17 +149,24 @@ namespace TModules.Core
             File.WriteAllText(Path.Combine(dirPath, filename), contents);
         }
 
-        public string RetrieveCachedFile(string filename)
+        public string RetrieveCachedFile(string filename, string def = "")
         {
             string savePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create);
             string path = Path.Combine (Path.Combine (savePath, "Tarynn"), filename);
             if (File.Exists(path))
                 return File.ReadAllText(path);
 
-            TConsole.InfoFormat("Please Enter the value for {0}. If this value is incorrect, Tarynn might not work correctly.", filename);
-            Console.Write("Value for {0}: ", filename);
-            string val = Console.ReadLine();
-            return val;
+            if (string.IsNullOrEmpty(def))
+            {
+                TConsole.InfoFormat(
+                    "Please Enter the value for {0}. If this value is incorrect, Tarynn might not work correctly.",
+                    filename);
+                Console.Write("Value for {0}: ", filename);
+                string val = Console.ReadLine();
+                return val;
+            }
+            else
+                return def;
         }
 
         #endregion
