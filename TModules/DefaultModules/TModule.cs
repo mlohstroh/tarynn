@@ -23,7 +23,7 @@ namespace TModules.Core
         public string ModuleName { get; private set; }
         public ModuleManager Host;
 
-        public TModule(string name, ModuleManager host)
+        protected TModule(string name, ModuleManager host)
         {
             Host = host;
             ModuleName = name;
@@ -66,6 +66,11 @@ namespace TModules.Core
         public virtual void Initialize()
         {
             TConsole.DebugFormat("Module {0} is being initialized", ModuleName);
+        }
+
+        protected void Fail()
+        {
+            Host.SpeakEventually("I'm sorry, I wasn't able to get everything I needed from that. Please try again.");
         }
     }
 }

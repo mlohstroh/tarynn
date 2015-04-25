@@ -53,6 +53,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Forecast.io.45">
+      <HintPath>..\packages\Forecast.io.1.0.8\lib\net45\Forecast.io.45.dll</HintPath>
+    </Reference>
     <Reference Include="LitJson">
       <HintPath>..\packages\LitJson.0.7.0\lib\LitJson.dll</HintPath>
     </Reference>
@@ -99,15 +102,21 @@
     <Compile Include="DefaultModules\Events\Event.cs" />
     <Compile Include="DefaultModules\Events\EventInstance.cs" />
     <Compile Include="DefaultModules\ProxyModule.cs" />
+    <Compile Include="DefaultModules\QueryManager.cs" />
     <Compile Include="DefaultModules\SpotifyModule.cs" />
     <Compile Include="DefaultModules\TaskModule.cs" />
     <Compile Include="DefaultModules\EventModule.cs" />
     <Compile Include="DefaultModules\Tasks\TodoTask.cs" />
     <Compile Include="DefaultModules\UtilityModule.cs" />
     <Compile Include="Interpreter.cs" />
+    <Compile Include="Platforms\DefaultPlatforms\GenericPlatform.cs" />
+    <Compile Include="Platforms\DefaultResponders\ForecastIOResponder.cs" />
+    <Compile Include="Platforms\Platform.cs" />
+    <Compile Include="Platforms\PlatformManager.cs" />
+    <Compile Include="Platforms\ResourceResponder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Users\User.cs" />
     <Compile Include="DefaultModules\TModule.cs" />
+    <Compile Include="Utils\Exceptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -127,9 +136,7 @@
       <Name>WitAI</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="JSON\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

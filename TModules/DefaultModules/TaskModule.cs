@@ -117,7 +117,7 @@ namespace TModules.DefaultModules
             }
             else
             {
-                Host.SpeakEventually("I'm sorry, I wasn't able to get everything I needed from that. Please try again.");
+                Fail();
             }
         }
     }
