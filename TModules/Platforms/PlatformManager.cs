@@ -55,9 +55,7 @@ namespace TModules
             Type[] constructorTypes = new Type[1] { typeof(PlatformManager) };
 
             foreach (var type in platformTypeList)
-            {
-                var list = type.GetConstructors();
-                
+            {   
                 var properConstructor = type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, CallingConventions.HasThis,
                     constructorTypes, null);
                 if (properConstructor != null)
