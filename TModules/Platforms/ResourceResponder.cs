@@ -9,7 +9,13 @@ namespace TModules
 {
     public class ResourceResponder
     {
-        public string Resource { get; private set; }
+        public virtual string PlatformName { get { return "generic"; } }
+
+        /// <summary>
+        /// This needs to be implemented, otherwise exceptions will be thrown
+        /// </summary>
+        public virtual string Resource { get { return null; } }
+
         public Platform Platform { get; private set; }
 
         public void SetPlatform(Platform p)

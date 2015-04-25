@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using TModules.Core;
-using TModules.Platforms.DefaultResponders;
 using WitAI;
 
 namespace TModules.DefaultModules
@@ -26,10 +25,7 @@ namespace TModules.DefaultModules
 
             _platformManager = new PlatformManager(Host);
 
-            GenericPlatform g = new GenericPlatform(_platformManager);
-            _platformManager.RegisterPlatform(g);
-            g.AddResponder("weather", new ForecastIOResponder());
-            // we can do autoloading of dlls after here
+            _platformManager.Init();
         }
 
         private void CheckForResponse(WitOutcome outcome)
