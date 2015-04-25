@@ -33,6 +33,8 @@ namespace TModules.Core
 
         private MongoClient _client = new MongoClient();
 
+        private PlatformManager _platformManager = new PlatformManager();
+
         private Wit _wit = null;
 
         public ModuleManager()

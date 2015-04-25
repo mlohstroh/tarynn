@@ -12,10 +12,6 @@ namespace TModules.DefaultModules
 {
     public class EventModule : TModule
     {
-
-        const string SERVER_ADDRESS = "http://127.0.0.1:5984";
-        const string DB_NAME = "tarynn-events";
-
         private Dictionary<string, Dictionary<string, Event>> _allEvents = new Dictionary<string, Dictionary<string, Event>>();
 
         public EventModule(ModuleManager manager)
@@ -37,7 +33,6 @@ namespace TModules.DefaultModules
                 var pair = result.First();
                 e = (Event)pair.Value;
                 e.Count += 1;
-                //_couch.DeleteDocument(SERVER_ADDRESS, DB_NAME, pair.Key);
             }
             else
             {

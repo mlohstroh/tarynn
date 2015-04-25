@@ -23,7 +23,7 @@ namespace TModules.Core
         public string ModuleName { get; private set; }
         public ModuleManager Host;
 
-        public TModule(string name, ModuleManager host)
+        protected TModule(string name, ModuleManager host)
         {
             Host = host;
             ModuleName = name;
