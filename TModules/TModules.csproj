@@ -116,7 +116,9 @@
     <Compile Include="Platforms\ResourceResponder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DefaultModules\TModule.cs" />
+    <Compile Include="Utils\Enums.cs" />
     <Compile Include="Utils\Exceptions.cs" />
+    <Compile Include="Utils\Extensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
