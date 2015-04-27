@@ -9,6 +9,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using TModules.Core;
+using TModules.DefaultModules;
 using TModules.DefaultModules.Tasks;
 using WitAI;
 
@@ -23,32 +24,6 @@ namespace TModules
             base("Alarm", host)
         {
             Intents.Add("alarm_set", AddAlarm);
-        }
-
-        private void AddAlarm(WitOutcome outcome)
-        {
-            WitEntity date = null;
-
-            foreach (var entity in outcome.Entities)
-            {
-                if (entity.Key == "datetime")
-                {
-                    date = entity.Value.FirstOrDefault();
-                    break;
-                }
-            }
-
-            if (date != null)
-            {
-                DateTime alarmTime = DateTime.Parse(date.GetValue("value").ToString());
-                
-                Alarm a = new Alarm(alarmTime);
-                _collection.InsertOneAsync(a).Wait();
-                _alarms.Add(a.Id, a);
-
-                Host.SpeakEventually("Ok, Alarm set!");
-                TConsole.InfoFormat("Alarm set for {0}", alarmTime.ToString("g"));
-            }
         }
 
         public override void Initialize()
@@ -84,7 +59,13 @@ namespace TModules
                     foreach (var task in filtered)
                     {
                         // wake them up by playing spotify
+                        SpotifyModule mod = Host.GetModule<SpotifyModule>();
+                        Host.BlockingSpeak("It's time to get up! You had me set an alarm for right now.");
 
+                        if (mod != null)
+                        {
+                            mod.PlayRandomTrack();
+                        }
                         tmp.Add(task.Value.Id);
                     }
 
@@ -98,6 +79,32 @@ namespace TModules
                     Task.Delay(1000 * 60).Wait();
                 }
             });
+        }
+
+        private void AddAlarm(WitOutcome outcome)
+        {
+            WitEntity date = null;
+
+            foreach (var entity in outcome.Entities)
+            {
+                if (entity.Key == "datetime")
+                {
+                    date = entity.Value.FirstOrDefault();
+                    break;
+                }
+            }
+
+            if (date != null)
+            {
+                DateTime alarmTime = DateTime.Parse(date.GetValue("value").ToString());
+
+                Alarm a = new Alarm(alarmTime);
+                _collection.InsertOneAsync(a).Wait();
+                _alarms.Add(a.Id, a);
+
+                Host.SpeakEventually("Ok, Alarm set!");
+                TConsole.InfoFormat("Alarm set for {0}", alarmTime.ToString("g"));
+            }
         }
     }
 }

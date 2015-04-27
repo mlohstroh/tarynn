@@ -47,6 +47,12 @@ namespace TModules.Core
                 messageQueue.Enqueue(message);
         }
 
+        public void SpeakNowAndBlock(string message)
+        {
+            StopSpeaking();
+            mSynth.Speak(message);
+        }
+
         public SpeechHandler()
         {
             mSynth.SelectVoiceByHints(VoiceGender.Female);

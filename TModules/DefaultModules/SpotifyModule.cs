@@ -45,6 +45,8 @@ namespace TModules.DefaultModules
 
         private Track mTrackToPlay;
 
+        private bool _initialized = false;
+
         public SpotifyModule(ModuleManager manager)
             : base("Spotify", manager)
         {
@@ -80,7 +82,7 @@ namespace TModules.DefaultModules
             _currentContainer = await session.PlaylistContainer;
 
             Intents.Add("spotify", PlaySpotify);
-
+            _initialized = true;
             TConsole.InfoFormat("Spotify Module ready to go...");
         }
 
@@ -114,13 +116,30 @@ namespace TModules.DefaultModules
             }
         }
 
+        public void PlayRandomTrack()
+        {
+            if (!_initialized)
+                return;
+
+            var track = RandomTrack().GetAwaiter().GetResult();
+            var name = track.Artists.FirstOrDefault().Name ?? "Someone";
+
+            Host.BlockingSpeak(string.Format("Playing track: {0} by {1}", track.Name, name));
+            PlayTrack(track);            
+        }
+
         private void PlaySpotify(WitOutcome outcome)
         {
-            var track = RandomTrack().GetAwaiter().GetResult();
-            mCurrentSession.PlayerLoad(track);
-            mCurrentSession.PlayerPlay();
+            if (!_initialized)
+                return;
 
-            var name = track.Artists.FirstOrDefault().Name ?? "";
+            var track = RandomTrack().GetAwaiter().GetResult();
+            var name = track.Artists.FirstOrDefault().Name ?? "Someone";
+
+            Host.BlockingSpeak(string.Format("Playing track: {0} by {1}", track.Name, name));
+
+            PlayTrack(track);
+
             TConsole.InfoFormat("Playing track: {0} by {1}", track.Name, name);
         }
 
@@ -133,6 +152,12 @@ namespace TModules.DefaultModules
             int trackCounts = playlist.Tracks.Count;
             randomIndex = new Random().Next(trackCounts);
             return await playlist.Tracks[randomIndex];
+        }
+
+        private void PlayTrack(Track t)
+        {
+            mCurrentSession.PlayerLoad(t);
+            mCurrentSession.PlayerPlay();
         }
     }
 }

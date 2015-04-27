@@ -27,8 +27,6 @@ namespace TModules.Core
 
         private SpeechHandler mSpeechHandler = new SpeechHandler();
 
-        private List<string> _speechString = new List<string>();
-
         private EmbeddedServer _server = new EmbeddedServer();
 
         private MongoClient _client = new MongoClient();
@@ -172,19 +170,8 @@ namespace TModules.Core
 
         #endregion
 
-        public void PushPacket(string moduleName, string jsonPacket)
-        {
-            JsonData speech = new JsonData(_speechString);
-
-            JsonData packet = JsonMapper.ToObject(jsonPacket);
-            packet["speech"] = speech;
-
-            _speechString.Clear();
-        }
-
         public void SpeakEventually(string message)
         {
-            _speechString.Add(message);
             mSpeechHandler.AddMessageToQueue(message);
         }
 
@@ -194,6 +181,16 @@ namespace TModules.Core
         public void InterruptSpeech()
         {
             mSpeechHandler.StopSpeaking();
+        }
+
+
+        /// <summary>
+        /// Rudly interrupts anything talking and blocks whatever thread is speaking
+        /// </summary>
+        /// <param name="message">The message for the handler to speak</param>
+        public void BlockingSpeak(string message)
+        {
+            mSpeechHandler.SpeakNowAndBlock(message);
         }
 
         /// <summary>
