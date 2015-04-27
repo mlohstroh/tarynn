@@ -26,6 +26,12 @@ namespace TModules.Core
         {
             messageQueue.Clear(); //bummer :(
         }
+
+        public void SpeakNowAndBlock(string message)
+        {
+            StopSpeaking();
+            Console.WriteLine (message);
+        }
     }
 }
 #else

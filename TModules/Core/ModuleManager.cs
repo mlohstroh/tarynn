@@ -45,7 +45,9 @@ namespace TModules.Core
              _platformManager = new PlatformManager(this);
 
             RegisterModule(new ConfigModule(this));
+            #if !__MonoCS__
             RegisterModule(new SpotifyModule(this));
+            #endif
             RegisterModule(new TaskModule(this));
             RegisterModule(new UtilityModule(this));
             RegisterModule(new EventModule(this));
