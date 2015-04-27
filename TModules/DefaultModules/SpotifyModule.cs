@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using SpotiFire;
 using Analytics;
 using System.Media;
+using WitAI;
 
 namespace TModules.DefaultModules
 {
@@ -40,15 +41,23 @@ namespace TModules.DefaultModules
         };
 
         private Session mCurrentSession;
+        private PlaylistContainer _currentContainer;
 
         private Track mTrackToPlay;
+
+        private bool _initialized = false;
 
         public SpotifyModule(ModuleManager manager)
             : base("Spotify", manager)
         {
-            AddCallback("spotify play", PlaySpotify);
-            AddCallback("spotify list playlists", ListPlaylists);
+            
+        }
 
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            SetupSpotify();
         }
 
         async Task SetupSpotify()
@@ -70,10 +79,11 @@ namespace TModules.DefaultModules
                 await Task.Delay(TimeSpan.FromSeconds(2));
             }
 
-            var playlist = await session.PlaylistContainer.Playlists[0];
+            _currentContainer = await session.PlaylistContainer;
 
-            mTrackToPlay = await playlist.Tracks[0];
-            TConsole.Debug("Track has loaded");
+            Intents.Add("spotify", PlaySpotify);
+            _initialized = true;
+            TConsole.InfoFormat("Spotify Module ready to go...");
         }
 
         void session_MusicDelivered(Session sender, MusicDeliveryEventArgs e)
@@ -98,7 +108,7 @@ namespace TModules.DefaultModules
             }
         }
 
-        private void ListPlaylists(Match message)
+        private void ListPlaylists(WitOutcome outcome)
         {
             foreach (Playlist p in mCurrentSession.PlaylistContainer.Playlists)
             {
@@ -106,14 +116,48 @@ namespace TModules.DefaultModules
             }
         }
 
-        private void PlaySpotify(Match message)
+        public void PlayRandomTrack()
         {
-            if (mTrackToPlay != null)
-            {
-                TConsole.Debug("Playing track");
-                mCurrentSession.PlayerLoad(mTrackToPlay);
-                mCurrentSession.PlayerPlay();
-            }
+            if (!_initialized)
+                return;
+
+            var track = RandomTrack().GetAwaiter().GetResult();
+            var name = track.Artists.FirstOrDefault().Name ?? "Someone";
+
+            Host.BlockingSpeak(string.Format("Playing track: {0} by {1}", track.Name, name));
+            PlayTrack(track);            
+        }
+
+        private void PlaySpotify(WitOutcome outcome)
+        {
+            if (!_initialized)
+                return;
+
+            var track = RandomTrack().GetAwaiter().GetResult();
+            var name = track.Artists.FirstOrDefault().Name ?? "Someone";
+
+            Host.BlockingSpeak(string.Format("Playing track: {0} by {1}", track.Name, name));
+
+            PlayTrack(track);
+
+            TConsole.InfoFormat("Playing track: {0} by {1}", track.Name, name);
+        }
+
+        private async Task<Track> RandomTrack()
+        {
+            int playListCounts = _currentContainer.Playlists.Count;
+            int randomIndex = new Random().Next(playListCounts);
+            var playlist = _currentContainer.Playlists[randomIndex];
+
+            int trackCounts = playlist.Tracks.Count;
+            randomIndex = new Random().Next(trackCounts);
+            return await playlist.Tracks[randomIndex];
+        }
+
+        private void PlayTrack(Track t)
+        {
+            mCurrentSession.PlayerLoad(t);
+            mCurrentSession.PlayerPlay();
         }
     }
 }

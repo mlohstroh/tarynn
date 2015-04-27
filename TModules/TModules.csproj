@@ -98,6 +98,8 @@
     <Compile Include="Core\EmbeddedServer.cs" />
     <Compile Include="Core\ModuleManager.cs" />
     <Compile Include="Core\SpeechHandler.cs" />
+    <Compile Include="DefaultModules\AlarmModule.cs" />
+    <Compile Include="DefaultModules\Alarms\Alarm.cs" />
     <Compile Include="DefaultModules\ConfigModule.cs" />
     <Compile Include="DefaultModules\Events\Event.cs" />
     <Compile Include="DefaultModules\Events\EventInstance.cs" />
