@@ -164,6 +164,7 @@ namespace TModules.Core
                     filename);
                 Console.Write("Value for {0}: ", filename);
                 string val = Console.ReadLine();
+                CacheFile (filename, val);
                 return val;
             }
             else
