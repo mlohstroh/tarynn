@@ -53,6 +53,7 @@ namespace TModules.Core
             RegisterModule(new EventModule(this));
             RegisterModule(new ProxyModule(this));
             RegisterModule(new QueryManager(this));
+            RegisterModule(new AlarmModule(this));
 
             InitModules();
 
