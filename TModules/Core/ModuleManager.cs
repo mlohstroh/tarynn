@@ -47,7 +47,7 @@ namespace TModules.Core
              _platformManager = new PlatformManager(this);
 
             RegisterModule(new ConfigModule(this));
-            //RegisterModule(new SpotifyModule(this));
+            RegisterModule(new SpotifyModule(this));
             RegisterModule(new TaskModule(this));
             RegisterModule(new UtilityModule(this));
             RegisterModule(new EventModule(this));
