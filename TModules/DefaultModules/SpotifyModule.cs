@@ -116,10 +116,12 @@ namespace TModules.DefaultModules
 
         private void PlaySpotify(WitOutcome outcome)
         {
-            TConsole.Debug("Playing track");
             var track = RandomTrack().GetAwaiter().GetResult();
             mCurrentSession.PlayerLoad(track);
             mCurrentSession.PlayerPlay();
+
+            var name = track.Artists.FirstOrDefault().Name ?? "";
+            TConsole.InfoFormat("Playing track: {0} by {1}", track.Name, name);
         }
 
         private async Task<Track> RandomTrack()
