@@ -6,36 +6,58 @@ using System.Threading.Tasks;
 
 namespace Analytics
 {
-    public static class TConsole
+    public class TConsole
     {
-        public static void Info(string info)
+        private string _name;
+
+        public TConsole(Type t)
         {
-            Console.WriteLine("[INFO]: " + info);
+            _name = t.Name;
         }
 
-        public static void InfoFormat(string info, params object[] args)
+        public TConsole(string loggerName)
         {
-            Console.WriteLine("[INFO]: " + info, args);
+            _name = loggerName;
         }
 
-        public static void Error(string err)
+        public void Info(string info)
         {
-            Console.WriteLine("[ERROR]: " + err);
+            Console.WriteLine (Message (info), "INFO");
         }
 
-        public static void ErrorFormat(string info, params object[] args)
+        public void InfoFormat(string info, params object[] args)
         {
-            Console.WriteLine("[ERROR]: " + info, args);
+            Console.WriteLine (Message (string.Format(info, args)), "INFO");
         }
 
-        public static void Debug(string debug)
+        public void Error(string err)
         {
-            Console.WriteLine("[DEBUG]: " + debug);
+            Console.WriteLine (Message (err), "ERROR");
         }
 
-        public static void DebugFormat(string info, params object[] args)
+        public void ErrorFormat(string info, params object[] args)
         {
-            Console.WriteLine("[DEBUG]: " + info, args);
+            Console.WriteLine (Message (string.Format(info, args)), "ERROR");
+        }
+
+        public void Debug(string debug)
+        {
+            Console.WriteLine (Message (debug), "DEBUG");
+        }
+
+        public void DebugFormat(string info, params object[] args)
+        {
+            Console.WriteLine (Message (string.Format(info, args)), "DEBUG");
+        }
+
+        private string PrettyDate()
+        {
+            return DateTime.Now.ToString ("u");
+        }
+
+        private string Message(string message, string level = "DEBUG")
+        {
+            return string.Format ("{0} {1} [{2}] {3}", PrettyDate(), _name, level, message);
         }
     }
 }

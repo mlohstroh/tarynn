@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Analytics;
 using WitAI;
 
 namespace TModules
@@ -17,6 +18,8 @@ namespace TModules
         public virtual string Resource { get { return null; } }
 
         public Platform Platform { get; private set; }
+
+        protected TConsole _logger;
 
         public void SetPlatform(Platform p)
         {

@@ -13,6 +13,8 @@ namespace TModules.Core
 {
     public abstract class TModule
     {
+        protected TConsole _logger;
+
         public Dictionary<string, Action<WitOutcome>> Intents { get; protected set;  } 
 
         public delegate void Heard(Match message);
@@ -28,6 +30,7 @@ namespace TModules.Core
             Host = host;
             ModuleName = name;
             Intents = new Dictionary<string, Action<WitOutcome>>();
+            _logger = new TConsole (this.GetType ());
         }
 
         protected void AddCallback(string pattern, Heard callback)

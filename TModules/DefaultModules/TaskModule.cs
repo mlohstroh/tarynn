@@ -44,10 +44,10 @@ namespace TModules.DefaultModules
             IAsyncCursor<TodoTask> t = _collection.FindAsync(x => true).GetAwaiter().GetResult();
             t.ForEachAsync(task => _allTasks.Add(task.Id, task)).Wait();
 
-            TConsole.DebugFormat("{0} documents were loaded...", _allTasks.Count);
+            _logger.DebugFormat("{0} documents were loaded...", _allTasks.Count);
 
             var ts = Profiler.SharedInstance.GetTimeForKey("task_mongo");
-            TConsole.Info("Mongo Task Load Time: " + Profiler.SharedInstance.FormattedTime(ts));
+            _logger.Info("Mongo Task Load Time: " + Profiler.SharedInstance.FormattedTime(ts));
 
             StartChecking();
         }
@@ -58,7 +58,7 @@ namespace TModules.DefaultModules
             {
                 while (true)
                 {
-                    TConsole.Info("Checking for tasks");
+                    _logger.Info("Checking for tasks");
 
                     var filtered = _allTasks.Where(x => x.Value.Due < DateTime.Now);
                     List<ObjectId> tmp = new List<ObjectId>();

@@ -37,10 +37,10 @@ namespace TModules
             IAsyncCursor<Alarm> t = _collection.FindAsync(x => true).GetAwaiter().GetResult();
             t.ForEachAsync(task => _alarms.Add(task.Id, task)).Wait();
 
-            TConsole.DebugFormat("{0} alarms were loaded...", _alarms.Count);
+            _logger.DebugFormat("{0} alarms were loaded...", _alarms.Count);
 
             var ts = Profiler.SharedInstance.GetTimeForKey("alarm_mongo");
-            TConsole.Info("Mongo Alarm Load Time: " + Profiler.SharedInstance.FormattedTime(ts));
+            _logger.Info("Mongo Alarm Load Time: " + Profiler.SharedInstance.FormattedTime(ts));
 
             StartChecking();
         }
@@ -51,7 +51,7 @@ namespace TModules
             {
                 while (true)
                 {
-                    TConsole.Info("Checking for tasks");
+                    _logger.Info("Checking for alarms");
 
                     var filtered = _alarms.Where(x => x.Value.Time < DateTime.Now);
                     List<ObjectId> tmp = new List<ObjectId>();
@@ -103,7 +103,7 @@ namespace TModules
                 _alarms.Add(a.Id, a);
 
                 Host.SpeakEventually("Ok, Alarm set!");
-                TConsole.InfoFormat("Alarm set for {0}", alarmTime.ToString("g"));
+                _logger.InfoFormat("Alarm set for {0}", alarmTime.ToString("g"));
             }
         }
     }
