@@ -30,24 +30,22 @@ namespace TModules
         {
             BsonClassMap.RegisterClassMap<Alarm>(map => map.AutoMap());
 
-            Profiler.SharedInstance.StartProfiling("task_mongo");
+            using (Profiler.SharedInstance.ProfileBlock ("Alarm Mongo Load"))
+            {
+                // load all of them from the database
+                _collection = _database.GetCollection<Alarm> ("alarm");
+                IAsyncCursor<Alarm> t = _collection.FindAsync (x => true).GetAwaiter ().GetResult ();
+                t.ForEachAsync (task => _alarms.Add (task.Id, task)).Wait ();
 
-            // load all of them from the database
-            _collection = _database.GetCollection<Alarm>("alarm");
-            IAsyncCursor<Alarm> t = _collection.FindAsync(x => true).GetAwaiter().GetResult();
-            t.ForEachAsync(task => _alarms.Add(task.Id, task)).Wait();
-
-            _logger.DebugFormat("{0} alarms were loaded...", _alarms.Count);
-
-            var ts = Profiler.SharedInstance.GetTimeForKey("alarm_mongo");
-            _logger.Info("Mongo Alarm Load Time: " + Profiler.SharedInstance.FormattedTime(ts));
+                _logger.DebugFormat ("{0} alarms were loaded...", _alarms.Count);
+            }
 
             StartChecking();
         }
 
         private void StartChecking()
         {
-            Task t = Task.Run(() =>
+            Task.Run(() =>
             {
                 while (true)
                 {

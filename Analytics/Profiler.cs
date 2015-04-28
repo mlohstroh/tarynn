@@ -72,9 +72,14 @@ namespace Analytics
             return watch.Elapsed;
         }
 
+        public ProfileTag ProfileBlock(string blockName)
+        {
+            return new ProfileTag (blockName);
+        }
+
         public string FormattedTime(TimeSpan ts)
         {
-            return ts.ToString("c");
+            return ts.ToString("G");
         }
     }
 }

@@ -37,24 +37,21 @@ namespace TModules.DefaultModules
                 map.AutoMap();
             });
 
-            Profiler.SharedInstance.StartProfiling("task_mongo");
+            using (Profiler.SharedInstance.ProfileBlock ("Task Mongo Load"))
+            {
+                // load all of them from the database
+                _collection = _database.GetCollection<TodoTask> ("tasks");
+                IAsyncCursor<TodoTask> t = _collection.FindAsync (x => true).GetAwaiter ().GetResult ();
+                t.ForEachAsync (task => _allTasks.Add (task.Id, task)).Wait ();
 
-            // load all of them from the database
-            _collection = _database.GetCollection<TodoTask>("tasks");
-            IAsyncCursor<TodoTask> t = _collection.FindAsync(x => true).GetAwaiter().GetResult();
-            t.ForEachAsync(task => _allTasks.Add(task.Id, task)).Wait();
-
-            _logger.DebugFormat("{0} documents were loaded...", _allTasks.Count);
-
-            var ts = Profiler.SharedInstance.GetTimeForKey("task_mongo");
-            _logger.Info("Mongo Task Load Time: " + Profiler.SharedInstance.FormattedTime(ts));
-
+                _logger.DebugFormat ("{0} documents were loaded...", _allTasks.Count);
+            }
             StartChecking();
         }
 
         private void StartChecking()
         {
-            Task t = Task.Run(() =>
+            Task.Run(() =>
             {
                 while (true)
                 {

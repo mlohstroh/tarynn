@@ -29,7 +29,7 @@ namespace TModules.Core
         {
             Host = host;
             ModuleName = name;
-            Intents = new Dictionary<string, Action<WitOutcome>>();
+            Intents = new Dictionary<string, Action<WitOutcome>> ();
             _logger = new TConsole (this.GetType ());
         }
 

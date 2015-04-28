@@ -35,8 +35,6 @@ namespace TModules
         {
             string line = Console.ReadLine();
 
-
-            JsonData data = null;
             //I should probably move this out of the constructor... whatever for now
             while (line != "q")
             {

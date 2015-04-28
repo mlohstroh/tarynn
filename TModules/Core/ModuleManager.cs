@@ -85,32 +85,27 @@ namespace TModules.Core
         {
             try
             {
-                Profiler.SharedInstance.StartProfiling("wit");
-
-                WitResponse response = _wit.Query(message);
-
-                Console.WriteLine(response.RawContent);
-
-                TimeSpan span = Profiler.SharedInstance.GetTimeForKey("wit");
-
-                _logger.Info("Wit Web Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
+                WitResponse response;
+                using (Profiler.SharedInstance.ProfileBlock ("Wit Response Time"))
+                {
+                    response = _wit.Query(message);
+                    
+                    Console.WriteLine(response.RawContent);
+                }
 
                 if (response.Outcomes.Count > 0)
                 {
                     WitOutcome outcome = response.Outcomes.First();
 
-                    Profiler.SharedInstance.StartProfiling("responding");
-
-                    foreach (var kvp in _registeredModules)
+                    using(Profiler.SharedInstance.ProfileBlock("Module Response Time"))
                     {
-                        // don't process anymore if someone wants to respond
-                        if (kvp.Value.RespondTo(outcome))
-                            break;
+                        foreach (var kvp in _registeredModules)
+                        {
+                            // don't process anymore if someone wants to respond
+                            if (kvp.Value.RespondTo(outcome))
+                                break;
+                        }
                     }
-
-                    span = Profiler.SharedInstance.GetTimeForKey("responding");
-
-                    _logger.Info("Module Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
                 }
             }
             catch (Exception ex)

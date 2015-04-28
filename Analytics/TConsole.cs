@@ -57,7 +57,7 @@ namespace Analytics
 
         private string Message(string message, string level = "DEBUG")
         {
-            return string.Format ("{0} {1} [{2}] {3}", PrettyDate(), _name, level, message);
+            return string.Format ("{0} {1} [{2}] {3}", PrettyDate(), level, _name, message);
         }
     }
 }
