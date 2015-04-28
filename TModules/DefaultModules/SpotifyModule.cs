@@ -68,7 +68,7 @@ namespace TModules.DefaultModules
             session.MusicDelivered += session_MusicDelivered;
             if (err != Error.OK)
             {
-                TConsole.Debug(err.Message());
+                _logger.Debug(err.Message());
             }
             mCurrentSession = session;
 
@@ -83,7 +83,7 @@ namespace TModules.DefaultModules
 
             Intents.Add("spotify", PlaySpotify);
             _initialized = true;
-            TConsole.InfoFormat("Spotify Module ready to go...");
+            _logger.InfoFormat("Spotify Module ready to go...");
         }
 
         void session_MusicDelivered(Session sender, MusicDeliveryEventArgs e)
@@ -140,7 +140,7 @@ namespace TModules.DefaultModules
 
             PlayTrack(track);
 
-            TConsole.InfoFormat("Playing track: {0} by {1}", track.Name, name);
+            _logger.InfoFormat("Playing track: {0} by {1}", track.Name, name);
         }
 
         private async Task<Track> RandomTrack()

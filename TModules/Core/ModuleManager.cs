@@ -23,6 +23,7 @@ namespace TModules.Core
 {
     public class ModuleManager
     {
+        private TConsole _logger = new TConsole (typeof(ModuleManager));
         private Dictionary<string, TModule> _registeredModules = new Dictionary<string, TModule>();
 
         private SpeechHandler mSpeechHandler = new SpeechHandler();
@@ -40,7 +41,7 @@ namespace TModules.Core
             CheckForMongo();
 
             _wit = new Wit(RetrieveCachedFile("wit_api"));
-            TConsole.Info("WitAI Library is initialized");   
+            _logger.Info("WitAI Library is initialized");   
 
              _platformManager = new PlatformManager(this);
 
@@ -69,14 +70,14 @@ namespace TModules.Core
             var res = dummy.Get(req);
             if (res.StatusCode != HttpStatusCode.OK)
             {
-                TConsole.ErrorFormat("Mongo is not running! Tarynn will not function without mongodb");
+                _logger.ErrorFormat("Mongo is not running! Tarynn will not function without mongodb");
                 Console.WriteLine("Press any key to exit...");
                 Console.ReadLine();
                 Environment.Exit(1);
             }
             else
             {
-                TConsole.InfoFormat("Mongodb is up and running");
+                _logger.InfoFormat("Mongodb is up and running");
             }
         }
 
@@ -92,7 +93,7 @@ namespace TModules.Core
 
                 TimeSpan span = Profiler.SharedInstance.GetTimeForKey("wit");
 
-                TConsole.Info("Wit Web Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
+                _logger.Info("Wit Web Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
 
                 if (response.Outcomes.Count > 0)
                 {
@@ -109,12 +110,12 @@ namespace TModules.Core
 
                     span = Profiler.SharedInstance.GetTimeForKey("responding");
 
-                    TConsole.Info("Module Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
+                    _logger.Info("Module Reponse Time: " + Profiler.SharedInstance.FormattedTime(span));
                 }
             }
             catch (Exception ex)
             {
-                TConsole.ErrorFormat("Error executing query {0}. Exception {1}", message, ex);   
+                _logger.ErrorFormat("Error executing query {0}. Exception {1}", message, ex);   
             }
 
             return "";
@@ -125,7 +126,7 @@ namespace TModules.Core
             _registeredModules.Add(module.ModuleName, module);
             module.SetDatabase(_client.GetDatabase(module.ModuleName));
 
-            TConsole.InfoFormat("Registered Module: {0}", module.ModuleName);
+            _logger.InfoFormat("Registered Module: {0}", module.ModuleName);
             return true;
         }
 
@@ -159,7 +160,7 @@ namespace TModules.Core
 
             if (string.IsNullOrEmpty(def))
             {
-                TConsole.InfoFormat(
+                _logger.InfoFormat(
                     "Please Enter the value for {0}. If this value is incorrect, Tarynn might not work correctly.",
                     filename);
                 Console.Write("Value for {0}: ", filename);

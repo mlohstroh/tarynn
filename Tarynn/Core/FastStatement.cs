@@ -11,6 +11,7 @@ namespace Tarynn.Core
 {
     public class FastStatement
     {
+        private TConsole _logger = new TConsole(typeof(FastStatement));
         private Dictionary<char, Dictionary<string, Statement>> allStatements;
 
         public FastStatement()
@@ -26,12 +27,12 @@ namespace Tarynn.Core
             {
                 Sql.SqlManager.SharedInstance.Connection.UpdateAll(d.Values);
             }
-            TConsole.Debug(string.Format("Total Time for saving statements: {0}ms", Profiler.SharedInstance.GetTimeForKey("db_save")));
+            _logger.Debug(string.Format("Total Time for saving statements: {0}ms", Profiler.SharedInstance.GetTimeForKey("db_save")));
         }
 
         private void LoadDictionaries()
         {
-            TConsole.Info("Loading statements");
+            _logger.Info("Loading statements");
             int timeLapse = Environment.TickCount;
             Statement[] statements;
             TableQuery<Statement> query = Sql.SqlManager.SharedInstance.Connection.Table<Statement>();
@@ -53,8 +54,8 @@ namespace Tarynn.Core
                 }
                 nestedDict.Add(key, s);
             }
-            TConsole.Info("Loaded all statements");
-            TConsole.Debug(string.Format("Total Time for {0} elements: {1}ms", statements.Length, Environment.TickCount - timeLapse));
+            _logger.Info("Loaded all statements");
+            _logger.Debug(string.Format("Total Time for {0} elements: {1}ms", statements.Length, Environment.TickCount - timeLapse));
         }
 
 
@@ -124,7 +125,7 @@ namespace Tarynn.Core
             }
             else
             {
-                TConsole.Error("Inserting statement that already exists");
+                _logger.Error("Inserting statement that already exists");
             }
         }
     }

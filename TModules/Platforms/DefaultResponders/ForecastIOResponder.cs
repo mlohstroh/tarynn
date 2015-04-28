@@ -38,7 +38,7 @@ namespace TModules
             }
 
             // dallas 33.0347,-96.8134
-            TConsole.InfoFormat("Time for Forecast: {0}", time.ToString("R"));
+            _logger.InfoFormat("Time for Forecast: {0}", time.ToString("R"));
 
             ForecastIORequest req = new ForecastIORequest(_apiKey, 32.7767f, -96.8134f, time, Unit.us);
             var res = req.Get();
@@ -70,13 +70,13 @@ namespace TModules
 
         private string DailyForecast(DailyForecast forecast)
         {
-            TConsole.InfoFormat("Daily Forecast {0}", forecast.summary);
+            _logger.InfoFormat("Daily Forecast {0}", forecast.summary);
             return string.Format("{0}, with a high of {1} and a low of {2}", forecast.summary, forecast.temperatureMax, forecast.temperatureMin);
         }
 
         private string HourlyForecast(HourForecast forecast)
         {
-            TConsole.InfoFormat("Hourly Forecast {0}", forecast.summary);
+            _logger.InfoFormat("Hourly Forecast {0}", forecast.summary);
             return string.Format("{0}, with a temperature of {1}", forecast.summary, forecast.temperature);
         }
     }

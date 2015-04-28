@@ -13,6 +13,7 @@ namespace TModules
 {
     public class PlatformManager
     {
+        private TConsole _logger = new TConsole(typeof(PlatformManager));
         private Dictionary<string, Platform> _platforms = new Dictionary<string, Platform>();
         public ModuleManager Host { get; private set; }
 
@@ -65,18 +66,18 @@ namespace TModules
                         if (p != null)
                         {
                             RegisterPlatform(p);
-                            TConsole.InfoFormat("Platform {0} autoloaded.", p);
+                            _logger.InfoFormat("Platform {0} autoloaded.", p);
                         }
                     }
                     catch (DuplicatePlatformException)
                     {
-                        TConsole.ErrorFormat("There is already a platform named {0}. Cannot auto register.", p.Name);
+                        _logger.ErrorFormat("There is already a platform named {0}. Cannot auto register.", p.Name);
                     }
 
                 }
                 else
                 {
-                    TConsole.ErrorFormat("Type {0} does not have the appropriate constuctor and will not be created", type);
+                    _logger.ErrorFormat("Type {0} does not have the appropriate constuctor and will not be created", type);
                 }
             }
 
@@ -92,20 +93,20 @@ namespace TModules
                     try
                     {
                         platform.AddResponder(responder.Resource, responder);
-                        TConsole.InfoFormat("Responder {0} for resource {1} autoloaded.", responder, responder.Resource);
+                        _logger.InfoFormat("Responder {0} for resource {1} autoloaded.", responder, responder.Resource);
                     }
                     catch (DuplicateResourceResponderException)
                     {
-                        TConsole.ErrorFormat("Duplicate responder for resource {0}", responder.Resource);
+                        _logger.ErrorFormat("Duplicate responder for resource {0}", responder.Resource);
                     }
                     catch (Exception ex)
                     {
-                        TConsole.ErrorFormat("An unknown exception was thrown for responder {0}. Exception: {1}", type, ex);
+                        _logger.ErrorFormat("An unknown exception was thrown for responder {0}. Exception: {1}", type, ex);
                     }   
                 }
                 else
                 {
-                    TConsole.ErrorFormat("The responder {0} was trying to register for platform {1}, but that platform did not exist.", 
+                    _logger.ErrorFormat("The responder {0} was trying to register for platform {1}, but that platform did not exist.", 
                         type, responder.PlatformName);
                 }
 

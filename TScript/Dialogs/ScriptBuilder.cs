@@ -15,6 +15,7 @@ namespace TScript.Dialogs
 {
     public partial class ScriptBuilder : Form
     {
+        private TConsole _logger = new TConsole(typeof(ScriptBuilder));
         bool scriptVerified = false;
         bool latestSaved;
         public string FileName { get; set; }
@@ -105,7 +106,7 @@ namespace TScript.Dialogs
             }
             catch(IOException ex)
             {
-                TConsole.Error(ex.Message);
+                _logger.Error(ex.Message);
             }
         }
 

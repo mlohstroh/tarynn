@@ -13,6 +13,8 @@ namespace TModules.Core
     //http://www.codehosting.net/blog/BlogEngine/post/Simple-C-Web-Server.aspx
     class EmbeddedServer
     {
+        private TConsole _logger = new TConsole (typeof(EmbeddedServer));
+
         HttpListener listener = new HttpListener();
 
         public Dictionary<string, Action<LitJson.JsonData>> Prefixes = new Dictionary<string, Action<LitJson.JsonData>>();
@@ -45,7 +47,7 @@ namespace TModules.Core
         {
             ThreadPool.QueueUserWorkItem((o) =>
             {
-                TConsole.Debug("Starting console");
+                _logger.Debug("Starting console");
                 try
                 {
                     while (listener.IsListening)
@@ -55,7 +57,7 @@ namespace TModules.Core
                             var ctx = c as HttpListenerContext;
                             try
                             {
-                                TConsole.Debug(ctx.Request.Url.AbsoluteUri);
+                                _logger.Debug(ctx.Request.Url.AbsoluteUri);
                                 string response = "Hello world!";
                                 byte[] b = System.Text.ASCIIEncoding.ASCII.GetBytes(response);
 

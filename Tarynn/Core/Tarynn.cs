@@ -15,6 +15,7 @@ namespace Tarynn.Core
 {
     public class Tarynn
     {
+        private TConsole _logger = new TConsole(typeof(Tarynn));
         Dictionary<string, SpecialResponse> specialResponses = new Dictionary<string, SpecialResponse>();
         FastStatement allStatements;
 
@@ -44,7 +45,7 @@ namespace Tarynn.Core
 
         public Query RelateQuery(Query q)
         {
-            TConsole.Info("Relaing Query");
+            _logger.Info("Relaing Query");
             TarynnEchoEventArgs e = new TarynnEchoEventArgs("What do you mean when you say, '" + q.OriginalText + "' ?\n");
             OnTarynnEcho(e);
 
@@ -53,7 +54,7 @@ namespace Tarynn.Core
 
             q = d.FinalQuery;
 
-            TConsole.Info("Inserting new statement");
+            _logger.Info("Inserting new statement");
             //attach
             allStatements.InsertStatement(q.AttachedStatement);
 
@@ -90,11 +91,11 @@ namespace Tarynn.Core
                 mInterpreter = new Interpreter(name);
                 if (mInterpreter.Validate())
                 {
-                    TConsole.Info("Script was validated properly");
+                    _logger.Info("Script was validated properly");
                 }
                 else
                 {
-                    TConsole.Error("Script failed validation");
+                    _logger.Error("Script failed validation");
                     return mInterpreter.GetErrors();
                 }
                 return mInterpreter.GetFinalText();
@@ -107,7 +108,7 @@ namespace Tarynn.Core
 
         private void SetInitialGreeting()
         {
-            TConsole.Info("Setting initial greeting");
+            _logger.Info("Setting initial greeting");
             SpecialResponse r = new SpecialResponse();
             r.Key = "greeting";
             r.Value = "Hello Mark";
@@ -117,13 +118,13 @@ namespace Tarynn.Core
 
         private void LoadDatabase()
         {
-            TConsole.Info("Initializing Database");
+            _logger.Info("Initializing Database");
             SqlManager.SharedInstance.PerformNecessaryMigrations();
         }
 
         private void LoadSpecialResponses()
         {
-            TConsole.Info("Loading special responses");
+            _logger.Info("Loading special responses");
             SpecialResponse[] responses = (SpecialResponse[])SpecialResponse.All();
             foreach(SpecialResponse r in responses)
             {
@@ -137,7 +138,7 @@ namespace Tarynn.Core
 
         private void OnTarynnEcho(TarynnEchoEventArgs e)
         {
-            TConsole.Info("Echoing back to client");
+            _logger.Info("Echoing back to client");
             Echo newEcho = EchoEvent;
             if (newEcho != null)
             {
