@@ -12,6 +12,7 @@ namespace TScript
 {
     public class Interpreter
     {
+        private TConsole _logger = new TConsole(typeof(Interpreter));
         ScriptLoader loader;
         private List<string> mErrors = new List<string>();
         private Dictionary<string, TObject> scriptObjects = new Dictionary<string, TObject>(20);
@@ -45,9 +46,9 @@ namespace TScript
         {
             //clear objects before running more
             scriptObjects.Clear();
-            TConsole.Info("Running script");
+            _logger.Info("Running script");
 
-            TConsole.Debug("Starting time");
+            _logger.Debug("Starting time");
             Profiler.SharedInstance.StartProfiling("script_run");
             //this is required so we can start reading
             loader.OpenStream();
@@ -66,7 +67,7 @@ namespace TScript
                 {
                     case "use":
                         //absoutely nothing
-                        TConsole.Debug("Using lib " + argNames[0]);
+                        _logger.Debug("Using lib " + argNames[0]);
                         break;
                     case "new":
                         HandleMethodNew(argNames);

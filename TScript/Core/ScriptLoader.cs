@@ -16,6 +16,7 @@ namespace TScript
     /// </summary>
     public class ScriptLoader
     {
+        private TConsole _logger = new TConsole(typeof(ScriptLoader));
         private string mName;
 
         private StreamReader mReader;
@@ -49,7 +50,7 @@ namespace TScript
             {
                 bool validScript = true;
                 Profiler.SharedInstance.StartProfiling("script_validate");
-                TConsole.Info("Validating Script");
+                _logger.Info("Validating Script");
                 string line;
                 int lineNumber = 0;
                 bool doesEnd = false;
@@ -122,8 +123,8 @@ namespace TScript
                     Lines.Add(line);
                     lineNumber++;
                 }
-                TConsole.Info("Done validating script");
-                TConsole.Debug("Elapsed time for script validation: " + Profiler.SharedInstance.GetTimeForKey("script_validate"));
+                _logger.Info("Done validating script");
+                _logger.Debug("Elapsed time for script validation: " + Profiler.SharedInstance.GetTimeForKey("script_validate"));
 
                 if (!doesEnd)
                 {
@@ -135,7 +136,7 @@ namespace TScript
             }
             catch (Exception ex)
             {
-                TConsole.Error(ex.Message);
+                _logger.Error(ex.Message);
                 return false;
             }
             finally

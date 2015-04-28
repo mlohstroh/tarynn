@@ -12,6 +12,8 @@ namespace Tarynn.Sql
 {
     class SqlManager
     {
+        private TConsole _logger = new TConsole(typeof(SqlManager));
+
         private static SqlManager instance;
 
         //connection that stays open until the close command
@@ -24,12 +26,12 @@ namespace Tarynn.Sql
 
         public void Open()
         {
-            TConsole.Info("Checking for database");
+            _logger.Info("Checking for database");
             if (!CheckForDatabase())
                 CreateDatabase();
 
             connection = new SQLiteConnection("database.db");
-            TConsole.Info("Connected to database");
+            _logger.Info("Connected to database");
         }
 
         /// <summary>
@@ -37,7 +39,7 @@ namespace Tarynn.Sql
         /// </summary>
         public void PerformNecessaryMigrations()
         {
-            TConsole.Info("Checking for new migrations");
+            _logger.Info("Checking for new migrations");
             //include every class that needs a migration
             connection.CreateTable<Statement>();
             connection.CreateTable<SpecialResponse>();
@@ -57,7 +59,7 @@ namespace Tarynn.Sql
         /// </summary>
         private void CreateDatabase()
         {
-            TConsole.Info("Database did not exist. Creating one");
+            _logger.Info("Database did not exist. Creating one");
             File.Create("database.db");
         }
 

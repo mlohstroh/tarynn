@@ -68,7 +68,7 @@ namespace TModules.Core
         /// </summary>
         public virtual void Initialize()
         {
-            TConsole.DebugFormat("Module {0} is being initialized", ModuleName);
+            _logger.DebugFormat("Module {0} is being initialized", ModuleName);
         }
 
         protected void Fail()
