@@ -109,6 +109,7 @@ namespace TModules.DefaultModules
 
                 TodoTask t = new TodoTask(task, due);
 
+                Host.SpeakEventually ("Ok, I've added that to your task list");
                 _collection.InsertOneAsync(t).Wait();
                 _allTasks.Add(t.Id, t);
             }
