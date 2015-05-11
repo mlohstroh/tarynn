@@ -23,6 +23,7 @@ namespace TModules
 
         public void SetPlatform(Platform p)
         {
+            _logger = new TConsole(Resource);
             Platform = p;
         }
 
