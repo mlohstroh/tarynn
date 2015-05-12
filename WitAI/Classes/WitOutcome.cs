@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using LitJson;
 
@@ -35,6 +36,16 @@ namespace WitAI
                     Entities.Add(node.Key, entities);
                 }
             }
+        }
+
+        public WitEntity GetFirstEntityOfType(string type)
+        {
+            foreach (var entity in Entities)
+            {
+                if (string.Compare (type, entity.Key, true) == 0)
+                    return entity.Value.FirstOrDefault ();
+            }
+            return null;
         }
     }
 }

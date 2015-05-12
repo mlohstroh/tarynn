@@ -71,20 +71,8 @@
     <Reference Include="MongoDB.Driver.Core">
       <HintPath>..\packages\MongoDB.Driver.Core.2.0.0\lib\net45\MongoDB.Driver.Core.dll</HintPath>
     </Reference>
-    <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
-    </Reference>
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.2.0.1.2\lib\net45\NLog.dll</HintPath>
-    </Reference>
-    <Reference Include="RestSharp, Version=105.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="SpotiFire, Version=0.1.52.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SpotiFire.0.1.52.0\lib\net45\SpotiFire.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -96,6 +84,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="NAudio">
+      <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SpotiFire">
+      <HintPath>..\packages\SpotiFire.0.1.52.0\lib\net45\SpotiFire.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\EmbeddedServer.cs" />
@@ -111,7 +108,6 @@
     <Compile Include="DefaultModules\SpotifyModule.cs" />
     <Compile Include="DefaultModules\TaskModule.cs" />
     <Compile Include="DefaultModules\EventModule.cs" />
-    <Compile Include="DefaultModules\Tasks\TodoTask.cs" />
     <Compile Include="DefaultModules\UtilityModule.cs" />
     <Compile Include="Interpreter.cs" />
     <Compile Include="Platforms\DefaultPlatforms\GenericPlatform.cs" />
@@ -124,6 +120,8 @@
     <Compile Include="Utils\Enums.cs" />
     <Compile Include="Utils\Exceptions.cs" />
     <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="DefaultModules\Tasks\Reminder.cs" />
+    <Compile Include="DefaultModules\Tasks\TaskList.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

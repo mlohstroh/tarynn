@@ -18,33 +18,47 @@ namespace TModules.DefaultModules
 {
     public class TaskModule : TModule
     {
-        private Dictionary<ObjectId, TodoTask> _allTasks = new Dictionary<ObjectId, TodoTask>();
+        private Dictionary<ObjectId, Reminder> _allReminders = new Dictionary<ObjectId, Reminder>();
+        private Dictionary<ObjectId, TaskList> _allLists = new Dictionary<ObjectId, TaskList>();
 
-        private IMongoCollection<TodoTask> _collection;
+        private IMongoCollection<Reminder> _reminderCollection;
+        private IMongoCollection<TaskList> _tasksCollection;
 
         public TaskModule(ModuleManager manager)
             : base("Tasks", manager)
         {
             Intents.Add("reminder", WitReminder);
+            Intents.Add("add_to_list", AddItemToList);
+            Intents.Add ("display_list", DisplayList);
+            Intents.Add ("remove_from_list", RemoveFromList);
         }
 
         public override void Initialize()
         {
             base.Initialize();
 
-            BsonClassMap.RegisterClassMap<TodoTask>(map =>
+            BsonClassMap.RegisterClassMap<Reminder>(map =>
             {
                 map.AutoMap();
             });
 
-            using (Profiler.SharedInstance.ProfileBlock ("Task Mongo Load"))
+            BsonClassMap.RegisterClassMap<TaskList> (map =>
+            {
+                map.AutoMap();
+            });
+
+            using (Profiler.SharedInstance.ProfileBlock ("Reminder Mongo Load"))
             {
                 // load all of them from the database
-                _collection = _database.GetCollection<TodoTask> ("tasks");
-                IAsyncCursor<TodoTask> t = _collection.FindAsync (x => true).GetAwaiter ().GetResult ();
-                t.ForEachAsync (task => _allTasks.Add (task.Id, task)).Wait ();
+                _reminderCollection = _database.GetCollection<Reminder> ("reminders");
+                IAsyncCursor<Reminder> t = _reminderCollection.FindAsync (x => true).GetAwaiter ().GetResult ();
+                t.ForEachAsync (task => _allReminders.Add (task.Id, task)).Wait ();
 
-                _logger.DebugFormat ("{0} documents were loaded...", _allTasks.Count);
+                _tasksCollection = _database.GetCollection<TaskList> ("tasks");
+                IAsyncCursor<TaskList> list = _tasksCollection.FindAsync (x => true).GetAwaiter ().GetResult ();
+                list.ForEachAsync (task => _allLists.Add (task.Id, task)).Wait ();
+
+                _logger.DebugFormat ("{0} documents were loaded...", _allReminders.Count + _allLists.Count);
             }
             StartChecking();
         }
@@ -55,9 +69,9 @@ namespace TModules.DefaultModules
             {
                 while (true)
                 {
-                    _logger.Info("Checking for tasks");
+                    _logger.Info("Checking for reminders");
 
-                    var filtered = _allTasks.Where(x => x.Value.Due < DateTime.Now);
+                    var filtered = _allReminders.Where(x => x.Value.Due < DateTime.Now);
                     List<ObjectId> tmp = new List<ObjectId>();
 
                     foreach (var task in filtered)
@@ -73,8 +87,8 @@ namespace TModules.DefaultModules
 
                     foreach (var objectId in tmp)
                     {
-                        _collection.DeleteOneAsync(x => x.Id == objectId).Wait();
-                        _allTasks.Remove(objectId);
+                        _reminderCollection.DeleteOneAsync(x => x.Id == objectId).Wait();
+                        _allReminders.Remove(objectId);
                     }
 
                     //delay is in miliseconds
@@ -107,15 +121,108 @@ namespace TModules.DefaultModules
                 DateTime due = DateTime.Parse(datetime.GetValue("value").ToString());
                 string task = reminder.GetValue("value").ToString();
 
-                TodoTask t = new TodoTask(task, due);
+                Reminder t = new Reminder(task, due);
 
                 Host.SpeakEventually ("Ok, I've added that to your task list");
-                _collection.InsertOneAsync(t).Wait();
-                _allTasks.Add(t.Id, t);
+                _reminderCollection.InsertOneAsync(t).Wait();
+                _allReminders.Add(t.Id, t);
             }
             else
             {
                 Fail();
+            }
+        }
+
+        private TaskList GetListForTitle(string title)
+        {
+            return _allLists.Where (x => string.Compare (x.Value.ListTitle, title, true) == 0).FirstOrDefault().Value;
+        }
+
+        private void AddItemToList(WitOutcome outcome)
+        {
+            WitEntity list_item = outcome.GetFirstEntityOfType("list_item");
+            WitEntity todolist = outcome.GetFirstEntityOfType("todolist");
+
+            if (list_item != null && todolist != null)
+            {
+                string listName = todolist.GetValue ("value").ToString ();
+                string itemName = list_item.GetValue ("value").ToString ();
+
+                TaskList foundList = GetListForTitle (listName);
+                if (foundList != null)
+                {
+                    foundList.Items.Add (itemName);
+                    _tasksCollection.ReplaceOneAsync (x => x.Id == foundList.Id, foundList);
+                } 
+                else
+                {
+                    foundList = new TaskList (listName, new List<string> () { itemName });
+                    _tasksCollection.InsertOneAsync (foundList);
+                }
+
+                Host.SpeakEventually (string.Format("Ok, I've added {0} to your list", itemName));
+            } 
+            else
+            {
+                Fail ();
+            }
+
+        }
+
+        private void DisplayList(WitOutcome outcome)
+        {
+            WitEntity witList = outcome.GetFirstEntityOfType ("todolist");
+            string listName = "things to do";
+
+            if (witList != null)
+            {
+                listName = witList.GetValue ("value").ToString();
+            }
+
+            TaskList list = GetListForTitle (listName);
+            if (list != null)
+            {
+                Host.SpeakEventually ("Here are the things on your list");
+                foreach (string item in list.Items)
+                {
+                    Host.SpeakEventually (item);
+                }
+            }
+            else
+            {
+                Host.SpeakEventually ("No such list exists. You might want to make one.");
+            }
+        }
+
+        private void RemoveFromList(WitOutcome outcome)
+        {
+            WitEntity witList = outcome.GetFirstEntityOfType ("todolist");
+            string listName = "things to do";
+
+            if (witList != null)
+            {
+                listName = witList.GetValue ("value").ToString();
+            }
+
+            TaskList list = GetListForTitle (listName);
+            WitEntity witItem = outcome.GetFirstEntityOfType ("list_item");
+            if (witItem != null && list != null)
+            {
+                string fuzzyValue = witItem.GetValue ("value").ToString();
+                int count = list.Items.RemoveAll (x => x.Contains (fuzzyValue));
+                if (count > 0)
+                {
+                    Host.SpeakEventually(string.Format("I removed {0} items from your list", count));
+                    _tasksCollection.ReplaceOneAsync (x => x.Id == list.Id, list);
+                }
+                else
+                {
+                    Host.SpeakEventually ("Nothing matched your search query...");
+                }
+            } 
+            else
+            {
+                Host.SpeakEventually ("You need to specify something to remove");    
             }
         }
     }
