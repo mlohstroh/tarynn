@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Analytics;
 using Microsoft.SqlServer.Server;
 using MongoDB.Driver;
+using Nancy;
 #if !__MonoCS__
 using System.Speech.Synthesis;
 #endif
@@ -11,7 +12,7 @@ using WitAI;
 
 namespace TModules.Core
 {
-    public abstract class TModule
+    public abstract class TModule : NancyModule
     {
         protected TConsole _logger;
 
@@ -23,14 +24,18 @@ namespace TModules.Core
         protected IMongoDatabase _database = null;
 
         public string ModuleName { get; private set; }
-        public ModuleManager Host;
 
-        protected TModule(string name, ModuleManager host)
+        protected TModule(string name) : base(name.ToLower())
         {
-            Host = host;
             ModuleName = name;
             Intents = new Dictionary<string, Action<WitOutcome>> ();
             _logger = new TConsole (this.GetType ());
+            ModuleManager.Instance.RegisterModule(this);
+
+            Get["/"] = _ =>
+            {
+                return "Welcome to tasks!";
+            };
         }
 
         protected void AddCallback(string pattern, Heard callback)
@@ -73,7 +78,7 @@ namespace TModules.Core
 
         protected void Fail()
         {
-            Host.SpeakEventually("I'm sorry, I wasn't able to get everything I needed from that. Please try again.");
+            ModuleManager.Instance.SpeakEventually("I'm sorry, I wasn't able to get everything I needed from that. Please try again.");
         }
     }
 }

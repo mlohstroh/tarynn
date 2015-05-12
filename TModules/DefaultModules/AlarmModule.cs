@@ -20,8 +20,8 @@ namespace TModules
         private IMongoCollection<Alarm> _collection;
         private Dictionary<ObjectId, Alarm> _alarms = new Dictionary<ObjectId, Alarm>();
 
-        public AlarmModule(ModuleManager host) :
-            base("Alarm", host)
+        public AlarmModule() :
+            base("Alarm")
         {
             Intents.Add("alarm_set", AddAlarm);
         }
@@ -57,8 +57,8 @@ namespace TModules
                     foreach (var task in filtered)
                     {
                         // wake them up by playing spotify
-                        SpotifyModule mod = Host.GetModule<SpotifyModule>();
-                        Host.BlockingSpeak("It's time to get up! You had me set an alarm for right now.");
+                        SpotifyModule mod = ModuleManager.Instance.GetModule<SpotifyModule>();
+                        ModuleManager.Instance.BlockingSpeak("It's time to get up! You had me set an alarm for right now.");
 
                         if (mod != null)
                         {
@@ -100,7 +100,7 @@ namespace TModules
                 _collection.InsertOneAsync(a).Wait();
                 _alarms.Add(a.Id, a);
 
-                Host.SpeakEventually("Ok, Alarm set!");
+                ModuleManager.Instance.SpeakEventually("Ok, Alarm set!");
                 _logger.InfoFormat("Alarm set for {0}", alarmTime.ToString("g"));
             }
         }

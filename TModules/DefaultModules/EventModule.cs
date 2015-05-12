@@ -14,8 +14,8 @@ namespace TModules.DefaultModules
     {
         private Dictionary<string, Dictionary<string, Event>> _allEvents = new Dictionary<string, Dictionary<string, Event>>();
 
-        public EventModule(ModuleManager manager)
-            : base("Events", manager)
+        public EventModule()
+            : base("Events")
         {
             AddCallback("I just (.*)", EventHappened);
             AddCallback("Count of events with the phrase (.*)", CountEvents);
@@ -72,12 +72,12 @@ namespace TModules.DefaultModules
                     {
                         endingPhrase = " time.";
                     }
-                    Host.SpeakEventually(e.Name + " has happened " + e.Count + endingPhrase);
+                    ModuleManager.Instance.SpeakEventually(e.Name + " has happened " + e.Count + endingPhrase);
                 }
             }
             else
             {
-                Host.SpeakEventually("No matching events were found.");
+                ModuleManager.Instance.SpeakEventually("No matching events were found.");
             }
         }
     }

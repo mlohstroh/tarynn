@@ -61,6 +61,10 @@
     <Reference Include="LitJson">
       <HintPath>..\packages\LitJson.0.7.0\lib\LitJson.dll</HintPath>
     </Reference>
+    <Reference Include="Nancy, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Nancy.1.2.0\lib\net40\Nancy.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite">
