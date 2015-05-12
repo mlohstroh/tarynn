@@ -18,8 +18,8 @@ namespace TModules.DefaultModules
 
         public string LastUpdatedValue { get; private set; }
 
-        public ConfigModule()
-            : base("Config")
+        public ConfigModule(ModuleManager host)
+            : base("Config", host)
         {
             InitDatabase();
         }

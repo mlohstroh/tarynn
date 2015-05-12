@@ -13,8 +13,8 @@ namespace TModules.DefaultModules
         private DateTime _startTime;
         private TimeSpan _lastTimeSpan = TimeSpan.Zero;
 
-        public UtilityModule()
-            : base("Utilities")
+        public UtilityModule(ModuleManager host)
+            : base("Utilities", host)
         {
             AddCallback("start timer", StartTimer);
             AddCallback("stop timer", (Match message) =>
@@ -22,14 +22,17 @@ namespace TModules.DefaultModules
                 _lastTimeSpan = (DateTime.Now - _startTime);
             });
             AddCallback("last time in (minutes|seconds|hours)", SpeakLastTime);
-            AddCallback("stop talking", (Match message) => ModuleManager.Instance.InterruptSpeech());
+            AddCallback("stop talking", (Match message) =>
+            {
+                Host.InterruptSpeech();
+            });
             AddCallback("(\\d) (plus|\\+|minus|-|times|\\*|over|\\/) (\\d)", Calculate);
         }
 
         private void StartTimer(Match message)
         {
             _startTime = DateTime.Now;
-            ModuleManager.Instance.SpeakEventually("Timer started!");
+            Host.SpeakEventually("Timer started!");
         }
 
         private void Calculate(Match message)
@@ -43,19 +46,19 @@ namespace TModules.DefaultModules
         {
             if (_lastTimeSpan == TimeSpan.Zero)
             {
-                ModuleManager.Instance.SpeakEventually("I don't have a last time stored");
+                Host.SpeakEventually("I don't have a last time stored");
                 return;
             }
             switch (message.Groups[1].Value)
             {
                 case "minutes":
-                    ModuleManager.Instance.SpeakEventually("Last time took " + _lastTimeSpan.Minutes + " minutes");
+                    Host.SpeakEventually("Last time took " + _lastTimeSpan.Minutes + " minutes");
                     break;
                 case "seconds":
-                    ModuleManager.Instance.SpeakEventually("Last time took " + _lastTimeSpan.Seconds + " seconds");
+                    Host.SpeakEventually("Last time took " + _lastTimeSpan.Seconds + " seconds");
                     break;
                 case "hours":
-                    ModuleManager.Instance.SpeakEventually("Last time took " + _lastTimeSpan.Hours + " hours");
+                    Host.SpeakEventually("Last time took " + _lastTimeSpan.Hours + " hours");
                     break;
             }
         }

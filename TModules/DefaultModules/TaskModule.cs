@@ -7,7 +7,6 @@ using MongoDB.Bson;
 using MongoDB.Driver.Linq;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using Nancy.Diagnostics.Modules;
 using TModules.Core;
 using System.Text.RegularExpressions;
 using TModules.DefaultModules.Tasks;
@@ -23,13 +22,10 @@ namespace TModules.DefaultModules
 
         private IMongoCollection<TodoTask> _collection;
 
-        public TaskModule()
-            : base("Tasks")
+        public TaskModule(ModuleManager manager)
+            : base("Tasks", manager)
         {
             Intents.Add("reminder", WitReminder);
-
-            
-            _logger.Error("hey");
         }
 
         public override void Initialize()
@@ -68,8 +64,8 @@ namespace TModules.DefaultModules
                     {
                         if (task.Value.Title != null)
                         {
-                            ModuleManager.Instance.SpeakEventually("I'm supposed to remind you about something.");
-                            ModuleManager.Instance.SpeakEventually(task.Value.Title);
+                            Host.SpeakEventually("I'm supposed to remind you about something.");
+                            Host.SpeakEventually(task.Value.Title);
                         }
 
                         tmp.Add(task.Value.Id);
@@ -113,7 +109,7 @@ namespace TModules.DefaultModules
 
                 TodoTask t = new TodoTask(task, due);
 
-                ModuleManager.Instance.SpeakEventually("Ok, I've added that to your task list");
+                Host.SpeakEventually ("Ok, I've added that to your task list");
                 _collection.InsertOneAsync(t).Wait();
                 _allTasks.Add(t.Id, t);
             }

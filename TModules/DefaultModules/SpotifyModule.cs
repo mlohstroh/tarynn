@@ -47,8 +47,8 @@ namespace TModules.DefaultModules
 
         private bool _initialized = false;
 
-        public SpotifyModule()
-            : base("Spotify")
+        public SpotifyModule(ModuleManager manager)
+            : base("Spotify", manager)
         {
             
         }
@@ -63,7 +63,7 @@ namespace TModules.DefaultModules
         async Task SetupSpotify()
         {
             Session session = await Spotify.CreateSession(appkey, "C:\\temp\\libspotify", "C:\\temp\\libspotify", "Tarynn");
-            Error err = await session.Login(ModuleManager.Instance.RetrieveCachedFile("email"), ModuleManager.Instance.RetrieveCachedFile("password"), true);
+            Error err = await session.Login(Host.RetrieveCachedFile("email"), Host.RetrieveCachedFile("password"), true);
             session.PreferredBitrate = BitRate.Bitrate320k;
             session.MusicDelivered += session_MusicDelivered;
             if (err != Error.OK)
@@ -112,7 +112,7 @@ namespace TModules.DefaultModules
         {
             foreach (Playlist p in mCurrentSession.PlaylistContainer.Playlists)
             {
-                ModuleManager.Instance.SpeakEventually(p.Name);
+                Host.SpeakEventually(p.Name);
             }
         }
 
@@ -124,7 +124,7 @@ namespace TModules.DefaultModules
             var track = RandomTrack().GetAwaiter().GetResult();
             var name = track.Artists.FirstOrDefault().Name ?? "Someone";
 
-            ModuleManager.Instance.BlockingSpeak(string.Format("Playing track: {0} by {1}", track.Name, name));
+            Host.BlockingSpeak(string.Format("Playing track: {0} by {1}", track.Name, name));
             PlayTrack(track);            
         }
 
@@ -136,7 +136,7 @@ namespace TModules.DefaultModules
             var track = RandomTrack().GetAwaiter().GetResult();
             var name = track.Artists.FirstOrDefault().Name ?? "Someone";
 
-            ModuleManager.Instance.BlockingSpeak(string.Format("Playing track: {0} by {1}", track.Name, name));
+            Host.BlockingSpeak(string.Format("Playing track: {0} by {1}", track.Name, name));
 
             PlayTrack(track);
 

@@ -13,8 +13,8 @@ namespace TModules.DefaultModules
     {
         private PlatformManager _platformManager;
 
-        public QueryManager() 
-            : base("Query")
+        public QueryManager(ModuleManager host) 
+            : base("Query", host)
         {
             Intents.Add("query", CheckForResponse);
         }
@@ -22,7 +22,8 @@ namespace TModules.DefaultModules
         public override void Initialize()
         {
             base.Initialize();
-            _platformManager = new PlatformManager(ModuleManager.Instance);
+
+            _platformManager = new PlatformManager(Host);
 
             _platformManager.Init();
         }
@@ -56,9 +57,9 @@ namespace TModules.DefaultModules
             {
                 string response = _platformManager.Respond(platform, resource, outcome);
                 if(!string.IsNullOrEmpty(response))
-                    ModuleManager.Instance.SpeakEventually(response);
+                    Host.SpeakEventually(response);
                 else
-                    ModuleManager.Instance.SpeakEventually("None of your installed resource responders were able to handle your query...");
+                    Host.SpeakEventually("None of your installed resource responders were able to handle your query...");
             }
             else
                 Fail();

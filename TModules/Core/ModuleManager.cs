@@ -23,8 +23,6 @@ namespace TModules.Core
 {
     public class ModuleManager
     {
-        public static ModuleManager Instance { get; private set; }
-
         private TConsole _logger = new TConsole (typeof(ModuleManager));
         private Dictionary<string, TModule> _registeredModules = new Dictionary<string, TModule>();
 
@@ -40,17 +38,28 @@ namespace TModules.Core
 
         public ModuleManager()
         {
-            Instance = this;
             CheckForMongo();
 
             _wit = new Wit(RetrieveCachedFile("wit_api"));
-            _logger.Info("WitAI Library is initialized");
+            _logger.Info("WitAI Library is initialized");   
 
              _platformManager = new PlatformManager(this);
 
-            _server.Start();
+            RegisterModule(new ConfigModule(this));
+            #if !__MonoCS__
+            RegisterModule(new SpotifyModule(this));
+            #endif
+            RegisterModule(new TaskModule(this));
+            RegisterModule(new UtilityModule(this));
+            RegisterModule(new EventModule(this));
+            RegisterModule(new ProxyModule(this));
+            RegisterModule(new QueryManager(this));
+            RegisterModule(new AlarmModule(this));
 
             InitModules();
+
+            _server.Start();
+            _server.Run();
         }
 
         private void CheckForMongo()
