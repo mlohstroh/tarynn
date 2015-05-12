@@ -13,8 +13,8 @@ namespace TModules.DefaultModules
     {
         private PlatformManager _platformManager;
 
-        public QueryManager(ModuleManager host) 
-            : base("Query", host)
+        public QueryManager() 
+            : base("Query")
         {
             Intents.Add("query", CheckForResponse);
         }

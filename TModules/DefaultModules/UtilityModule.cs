@@ -13,8 +13,8 @@ namespace TModules.DefaultModules
         private DateTime _startTime;
         private TimeSpan _lastTimeSpan = TimeSpan.Zero;
 
-        public UtilityModule(ModuleManager host)
-            : base("Utilities", host)
+        public UtilityModule()
+            : base("Utilities")
         {
             AddCallback("start timer", StartTimer);
             AddCallback("stop timer", (Match message) =>

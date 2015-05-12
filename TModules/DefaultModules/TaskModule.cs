@@ -22,9 +22,14 @@ namespace TModules.DefaultModules
 
         private IMongoCollection<TodoTask> _collection;
 
-        public TaskModule(ModuleManager manager)
-            : base("Tasks", manager)
+        public TaskModule()
+            : base("Tasks")
         {
+            Get ["/"] = _ =>
+            {
+                return "Hello Tasks";
+            };
+
             Intents.Add("reminder", WitReminder);
         }
 

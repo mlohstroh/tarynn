@@ -47,8 +47,8 @@ namespace TModules.DefaultModules
 
         private bool _initialized = false;
 
-        public SpotifyModule(ModuleManager manager)
-            : base("Spotify", manager)
+        public SpotifyModule()
+            : base("Spotify")
         {
             
         }

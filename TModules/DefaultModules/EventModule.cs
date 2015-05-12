@@ -14,8 +14,8 @@ namespace TModules.DefaultModules
     {
         private Dictionary<string, Dictionary<string, Event>> _allEvents = new Dictionary<string, Dictionary<string, Event>>();
 
-        public EventModule(ModuleManager manager)
-            : base("Events", manager)
+        public EventModule()
+            : base("Events")
         {
             AddCallback("I just (.*)", EventHappened);
             AddCallback("Count of events with the phrase (.*)", CountEvents);

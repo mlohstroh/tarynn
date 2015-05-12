@@ -20,8 +20,8 @@ namespace TModules
         private IMongoCollection<Alarm> _collection;
         private Dictionary<ObjectId, Alarm> _alarms = new Dictionary<ObjectId, Alarm>();
 
-        public AlarmModule(ModuleManager host) :
-            base("Alarm", host)
+        public AlarmModule() :
+            base("Alarm")
         {
             Intents.Add("alarm_set", AddAlarm);
         }

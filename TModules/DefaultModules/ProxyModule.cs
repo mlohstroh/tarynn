@@ -13,8 +13,8 @@ namespace TModules.DefaultModules
     {
         private RestClient _client;
 
-        public ProxyModule(ModuleManager host)
-            : base("Proxy", host)
+        public ProxyModule()
+            : base("Proxy")
         {
             _client = new RestClient();
         }

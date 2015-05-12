@@ -11,7 +11,7 @@ using WitAI;
 
 namespace TModules.Core
 {
-    public abstract class TModule
+    public abstract class TModule : Nancy.NancyModule
     {
         protected TConsole _logger;
 
@@ -25,12 +25,23 @@ namespace TModules.Core
         public string ModuleName { get; private set; }
         public ModuleManager Host;
 
-        protected TModule(string name, ModuleManager host)
+        protected TModule (string name) : base (name.ToLower ())
         {
-            Host = host;
+            Host = ModuleManager.Instance;
             ModuleName = name;
             Intents = new Dictionary<string, Action<WitOutcome>> ();
             _logger = new TConsole (this.GetType ());
+            Host.RegisterModule (this);
+
+            Get ["/test"] = _ =>
+            {
+                return "Test endpoint";
+            };
+
+            foreach (var kvp in Routes)
+            {
+                _logger.Error (kvp.Description.Path);
+            }
         }
 
         protected void AddCallback(string pattern, Heard callback)
