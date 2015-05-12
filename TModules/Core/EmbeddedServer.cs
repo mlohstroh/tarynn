@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
 using Analytics;
+using Nancy.Hosting.Self;
 
 namespace TModules.Core
 {
@@ -15,64 +16,72 @@ namespace TModules.Core
     {
         private TConsole _logger = new TConsole (typeof(EmbeddedServer));
 
-        HttpListener listener = new HttpListener();
+        //HttpListener listener = new HttpListener();
 
-        public Dictionary<string, Action<LitJson.JsonData>> Prefixes = new Dictionary<string, Action<LitJson.JsonData>>();
+        //public Dictionary<string, Action<LitJson.JsonData>> Prefixes = new Dictionary<string, Action<LitJson.JsonData>>();
+
+        private NancyHost _host;
 
         public void Start()
         {
-            if (listener.IsListening)
-                Stop();
+            _host = new NancyHost(new Uri("http://localhost:1234"));
+            _host.Start();
+            _logger.InfoFormat("Nancy Host is listening!");
 
-            foreach (var pair in Prefixes)
-            {
-                listener.Prefixes.Add("http://localhost:1234" + pair.Key);
-            }
+            //if (listener.IsListening)
+            //    Stop();
 
-            listener.Prefixes.Add("http://localhost:1234/");
+            //foreach (var pair in Prefixes)
+            //{
+            //    listener.Prefixes.Add("http://localhost:1234" + pair.Key);
+            //}
 
-            listener.Start();
+            //listener.Prefixes.Add("http://localhost:1234/");
+
+            //listener.Start();
         }
 
         public void Stop()
         {
-            if (listener.IsListening)
-            {
-                listener.Stop();
-                listener.Close();
-            }
+            if(_host != null)
+                _host.Stop();
+            //if (listener.IsListening)
+            //{
+            //    listener.Stop();
+            //    listener.Close();
+            //}
         }
 
         public void Run()
         {
             ThreadPool.QueueUserWorkItem((o) =>
             {
-                _logger.Debug("Starting console");
-                try
-                {
-                    while (listener.IsListening)
-                    {
-                        ThreadPool.QueueUserWorkItem((c) =>
-                        {
-                            var ctx = c as HttpListenerContext;
-                            try
-                            {
-                                _logger.Debug(ctx.Request.Url.AbsoluteUri);
-                                string response = "Hello world!";
-                                byte[] b = System.Text.ASCIIEncoding.ASCII.GetBytes(response);
+                //_logger.Debug("Starting console");
+                //try
+                //{
+                //    while (listener.IsListening)
+                //    {
+                //        ThreadPool.QueueUserWorkItem((c) =>
+                //        {
+                //            var ctx = c as HttpListenerContext;
+                //            try
+                //            {
+                //                _logger.Debug(ctx.Request.Url.AbsoluteUri);
+                //                string response = "Hello world!";
+                //                byte[] b = System.Text.ASCIIEncoding.ASCII.GetBytes(response);
 
-                                ctx.Response.ContentLength64 = b.Length;
-                                ctx.Response.OutputStream.Write(b, 0, b.Length);
-                            }
-                            catch { }
-                            finally
-                            {
-                                ctx.Response.OutputStream.Close();
-                            }
-                        }, listener.GetContext());
-                    }
-                }
-                catch { }
+                //                ctx.Response.ContentLength64 = b.Length;
+                //                ctx.Response.OutputStream.Write(b, 0, b.Length);
+                //            }
+                //            catch { }
+                //            finally
+                //            {
+                //                ctx.Response.OutputStream.Close();
+                //            }
+                //        }, listener.GetContext());
+                //    }
+                //}
+                //catch { }
             });
         }
     }

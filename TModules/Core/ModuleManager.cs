@@ -59,7 +59,6 @@ namespace TModules.Core
             InitModules();
 
             _server.Start();
-            _server.Run();
         }
 
         private void CheckForMongo()
