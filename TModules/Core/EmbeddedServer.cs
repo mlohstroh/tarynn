@@ -17,17 +17,10 @@ namespace TModules.Core
 
         HttpListener listener = new HttpListener();
 
-        public Dictionary<string, Action<LitJson.JsonData>> Prefixes = new Dictionary<string, Action<LitJson.JsonData>>();
-
         public void Start()
         {
             if (listener.IsListening)
                 Stop();
-
-            foreach (var pair in Prefixes)
-            {
-                listener.Prefixes.Add("http://localhost:1234" + pair.Key);
-            }
 
             listener.Prefixes.Add("http://localhost:1234/");
 

@@ -82,6 +82,9 @@ Global
 		{DDF795F0-1387-451D-B244-514EE8369592}.Release|x86.ActiveCfg = Release|x86
 		{DDF795F0-1387-451D-B244-514EE8369592}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = TModules\TModules.csproj
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
