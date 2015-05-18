@@ -121,6 +121,9 @@
     <Compile Include="Utils\Enums.cs" />
     <Compile Include="Utils\Exceptions.cs" />
     <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="Router\Router.cs" />
+    <Compile Include="Router\Route.cs" />
+    <Compile Include="Router\ParameterString.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

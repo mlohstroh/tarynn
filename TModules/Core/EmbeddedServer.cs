@@ -51,7 +51,7 @@ namespace TModules.Core
                             try
                             {
                                 _logger.Debug(ctx.Request.Url.AbsoluteUri);
-                                string response = "Hello world!";
+                                string response = ctx.Request.RawUrl;
                                 byte[] b = System.Text.ASCIIEncoding.ASCII.GetBytes(response);
 
                                 ctx.Response.ContentLength64 = b.Length;
