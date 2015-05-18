@@ -44,6 +44,8 @@
     <Compile Include="Router\ParameterString.cs" />
     <Compile Include="Router\Route.cs" />
     <Compile Include="Router\Router.cs" />
+    <Compile Include="Router\TRequest.cs" />
+    <Compile Include="Router\TResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Analytics\Analytics.csproj">
