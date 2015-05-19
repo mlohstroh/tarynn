@@ -74,12 +74,19 @@ namespace TRouter
         public int StatusCode { get; set; }
 
         /// <summary>
+        /// Set this string to write to the stream
+        /// </summary>
+        public string ResponseBody { get; set; }
+
+        /// <summary>
         /// Init the response class from a http response
         /// </summary>
         /// <param name="res"></param>
         public TResponse(HttpListenerResponse res)
         {
             ContentEncoding = res.ContentEncoding;
+            if (ContentEncoding == null)
+                ContentEncoding = Encoding.ASCII;
             ContentType = res.ContentType;
             Headers = res.Headers;
             StatusCode = res.StatusCode;

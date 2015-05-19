@@ -18,6 +18,7 @@ using System.Diagnostics;
 using LitJson;
 using RestSharp;
 using WitAI;
+using TRouter;
 
 namespace TModules.Core
 {
@@ -29,6 +30,8 @@ namespace TModules.Core
         private SpeechHandler mSpeechHandler = new SpeechHandler();
 
         private EmbeddedServer _server = new EmbeddedServer();
+
+        public Router Router = new Router();
 
         private MongoClient _client = new MongoClient();
 
@@ -58,7 +61,8 @@ namespace TModules.Core
 
             InitModules();
 
-            _server.Start();
+
+            _server.Start(Router);
             _server.Run();
         }
 

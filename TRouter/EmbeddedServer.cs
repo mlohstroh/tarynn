@@ -5,20 +5,26 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
+using System.Xml.Linq;
 using Analytics;
+using TRouter;
 
 namespace TModules.Core
 {
 
     //http://www.codehosting.net/blog/BlogEngine/post/Simple-C-Web-Server.aspx
-    class EmbeddedServer
+    public class EmbeddedServer
     {
         private TConsole _logger = new TConsole (typeof(EmbeddedServer));
 
         HttpListener listener = new HttpListener();
 
-        public void Start()
+        private Router _router;
+
+        public void Start(Router r)
         {
+            _router = r;
+
             if (listener.IsListening)
                 Stop();
 
@@ -50,13 +56,43 @@ namespace TModules.Core
                             var ctx = c as HttpListenerContext;
                             try
                             {
-                                _logger.Debug(ctx.Request.Url.AbsoluteUri);
-                                string response = ctx.Request.RawUrl;
-                                byte[] b = Encoding.ASCII.GetBytes(response);
-                                ctx.Response.ContentLength64 = b.Length;
-                                ctx.Response.OutputStream.Write(b, 0, b.Length);
+                                TResponse res = _router.MatchRoute(ctx.Request.Url.AbsolutePath, new TRequest(ctx.Request), 
+                                    ctx.Response);
+
+                                // a response will be issued if there was a route for it
+                                if (res != null)
+                                {
+                                    if (!string.IsNullOrEmpty(res.RedirectURL))
+                                    {
+                                        // handle redirect
+                                        ctx.Response.Redirect(res.RedirectURL);
+                                    }
+                                    else
+                                    {
+                                        // write the response
+                                        byte[] bytes = res.ContentEncoding.GetBytes(res.ResponseBody);
+                                        ctx.Response.StatusCode = res.StatusCode;
+                                        ctx.Response.Headers = res.Headers;
+                                        ctx.Response.ContentType = res.ContentType;
+                                        ctx.Response.ContentEncoding = res.ContentEncoding;
+
+                                        ctx.Response.ContentLength64 = bytes.Length;
+                                        ctx.Response.OutputStream.Write(bytes, 0, bytes.Length);
+                                    }
+                                }
+                                else
+                                {
+                                    ctx.Response.StatusCode = 404;
+                                    ctx.Response.ContentType = "application/text";
+                                    byte[] bytes = ctx.Response.ContentEncoding.GetBytes("404 Not Found");
+                                    ctx.Response.ContentLength64 = bytes.Length;
+                                    ctx.Response.OutputStream.Write(bytes, 0, bytes.Length);
+                                }
                             }
-                            catch { }
+                            catch (Exception ex)
+                            {
+                                _logger.ErrorFormat("Exception: {0}. {1}", ex.Message, ex.StackTrace);
+                            }
                             finally
                             {
                                 ctx.Response.OutputStream.Close();

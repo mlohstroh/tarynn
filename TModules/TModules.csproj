@@ -77,6 +77,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -95,7 +96,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\EmbeddedServer.cs" />
     <Compile Include="Core\ModuleManager.cs" />
     <Compile Include="Core\SpeechHandler.cs" />
     <Compile Include="DefaultModules\AlarmModule.cs" />
@@ -121,9 +121,6 @@
     <Compile Include="Utils\Enums.cs" />
     <Compile Include="Utils\Exceptions.cs" />
     <Compile Include="Utils\Extensions.cs" />
-    <Compile Include="Router\Router.cs" />
-    <Compile Include="Router\Route.cs" />
-    <Compile Include="Router\ParameterString.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -132,6 +129,10 @@
     <ProjectReference Include="..\Analytics\Analytics.csproj">
       <Project>{834B2C32-13CE-4E59-B50A-9946C0D83BCE}</Project>
       <Name>Analytics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TRouter\TRouter.csproj">
+      <Project>{b0c74482-8aea-46b5-b1f8-0cc5a7576bbf}</Project>
+      <Name>TRouter</Name>
     </ProjectReference>
     <ProjectReference Include="..\WitAI\WitAI.csproj">
       <Project>{57CE759C-9EB8-4A9D-9EBC-FC4B600B9233}</Project>
@@ -152,6 +153,6 @@
   </Target>
   -->
   <ItemGroup>
-    <Folder Include="Router\" />
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
 </Project>

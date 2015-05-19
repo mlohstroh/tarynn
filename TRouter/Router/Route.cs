@@ -1,17 +1,24 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
 
 namespace TRouter
 {
     public class Route
     {
         public ParameterString ParameterString { get; private set; }
-        public Func<HttpListenerRequest, TResponse, TResponse> DelegateFunction { get; private set; }
+        public Action<TRequest, TResponse> DelegateFunction { get; private set; }
 
-        public Route(string url, Func<HttpListenerRequest, TResponse, TResponse> func)
+        public HttpVerb Method { get; private set; }
+
+        public string RawUrl { get; private set; }
+
+        public Route(HttpVerb method, string url, Action<TRequest, TResponse> func)
         {
+            Method = method;
             ParameterString = new ParameterString(url);
             DelegateFunction = func;
+            RawUrl = url;
         }
 
         public bool DoesMatch(string url)
@@ -22,16 +29,24 @@ namespace TRouter
             return ParameterString.DoesMatch(url);
         }
 
-        public HttpListenerResponse TryExecute(HttpListenerRequest req, HttpListenerResponse res, string url)
-        {
-            TResponse proxy = new TResponse(res);
+        public TResponse TryExecute(TRequest req, HttpListenerResponse res, string url)
+        {            
+            TResponse proxyRes = new TResponse(res);
 
             if (DoesMatch(url))
             {
-                
+                DelegateFunction(req, proxyRes);
             }
 
-            return null;
+            return proxyRes;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Route)
+                return (obj as Route).RawUrl == RawUrl && (obj as Route).Method == Method;
+            else
+                return base.Equals(obj);
         }
     }
 }
