@@ -46,7 +46,7 @@ namespace TModules.Core
         {
             ThreadPool.QueueUserWorkItem((o) =>
             {
-                _logger.Debug("Starting console");
+                _logger.Debug("Starting http server");
                 try
                 {
                     while (listener.IsListening)
@@ -56,38 +56,8 @@ namespace TModules.Core
                             var ctx = c as HttpListenerContext;
                             try
                             {
-                                TResponse res = _router.MatchRoute(ctx.Request.Url.AbsolutePath, new TRequest(ctx.Request), 
-                                    ctx.Response);
-
-                                // a response will be issued if there was a route for it
-                                if (res != null)
-                                {
-                                    if (!string.IsNullOrEmpty(res.RedirectURL))
-                                    {
-                                        // handle redirect
-                                        ctx.Response.Redirect(res.RedirectURL);
-                                    }
-                                    else
-                                    {
-                                        // write the response
-                                        byte[] bytes = res.ContentEncoding.GetBytes(res.ResponseBody);
-                                        ctx.Response.StatusCode = res.StatusCode;
-                                        ctx.Response.Headers = res.Headers;
-                                        ctx.Response.ContentType = res.ContentType;
-                                        ctx.Response.ContentEncoding = res.ContentEncoding;
-
-                                        ctx.Response.ContentLength64 = bytes.Length;
-                                        ctx.Response.OutputStream.Write(bytes, 0, bytes.Length);
-                                    }
-                                }
-                                else
-                                {
-                                    ctx.Response.StatusCode = 404;
-                                    ctx.Response.ContentType = "application/text";
-                                    byte[] bytes = ctx.Response.ContentEncoding.GetBytes("404 Not Found");
-                                    ctx.Response.ContentLength64 = bytes.Length;
-                                    ctx.Response.OutputStream.Write(bytes, 0, bytes.Length);
-                                }
+                                ProcessRequest(ctx);
+                                LogResponse(ctx);
                             }
                             catch (Exception ex)
                             {
@@ -102,6 +72,54 @@ namespace TModules.Core
                 }
                 catch { }
             });
+        }
+
+        private void ProcessRequest(HttpListenerContext ctx)
+        {
+            TResponse res = _router.MatchRoute(ctx.Request.Url.AbsolutePath, new TRequest(ctx.Request),
+                                    ctx.Response);
+
+            // a response will be issued if there was a route for it
+            if (res != null)
+            {
+                if (!string.IsNullOrEmpty(res.RedirectURL))
+                {
+                    // handle redirect
+                    ctx.Response.Redirect(res.RedirectURL);
+                }
+                else
+                {
+                    // write the response
+                    byte[] bytes = res.ContentEncoding.GetBytes(res.ResponseBody);
+                    ctx.Response.StatusCode = res.StatusCode;
+                    ctx.Response.Headers = res.Headers;
+                    ctx.Response.ContentType = res.ContentType;
+                    ctx.Response.ContentEncoding = res.ContentEncoding;
+
+                    WriteResponse(ctx.Response, bytes);
+                }
+            }
+            else
+            {
+                ctx.Response.StatusCode = 404;
+                ctx.Response.ContentType = "application/text";
+                if (ctx.Response.ContentEncoding == null)
+                    ctx.Response.ContentEncoding = Encoding.ASCII;
+
+                byte[] bytes = ctx.Response.ContentEncoding.GetBytes("404 Not Found");
+                WriteResponse(ctx.Response, bytes);
+            }
+        }
+
+        private void WriteResponse(HttpListenerResponse res, byte[] body)
+        {
+            res.ContentLength64 = body.Length;
+            res.OutputStream.Write(body, 0, body.Length);
+        }
+
+        private void LogResponse(HttpListenerContext ctx)
+        {
+            _logger.InfoFormat("{0} Status: {1} {2}", ctx.Request.HttpMethod, ctx.Response.StatusCode, ctx.Request.Url.AbsolutePath);
         }
     }
 }

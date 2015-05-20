@@ -31,15 +31,16 @@ namespace TModules.DefaultModules
             : base("Tasks", manager)
         {
             Intents.Add("reminder", WitReminder);
-            Host.Router.AddRoute(new Route(HttpVerb.Get, "/test", (request, response) =>
+
+            Get("/test", (request, response) =>
             {
                 response.ResponseBody = "I somehow got this working!";
-            }));
+            });
 
-            Host.Router.AddRoute(new Route(HttpVerb.Post, "/test", (request, response) =>
+            Post("/test", (request, response) =>
             {
                 response.ResponseBody = request.RawBody;
-            }));
+            });
         }
 
         public override void Initialize()

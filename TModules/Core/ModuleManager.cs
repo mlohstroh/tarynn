@@ -31,13 +31,13 @@ namespace TModules.Core
 
         private EmbeddedServer _server = new EmbeddedServer();
 
-        public Router Router = new Router();
-
         private MongoClient _client = new MongoClient();
 
         private PlatformManager _platformManager;
 
         private Wit _wit = null;
+
+        private Router _router = new Router();
 
         public ModuleManager()
         {
@@ -60,9 +60,17 @@ namespace TModules.Core
             RegisterModule(new AlarmModule(this));
 
             InitModules();
+            SetupAndRunServer();
+        }
 
+        private void SetupAndRunServer()
+        {
+            foreach (var registeredModule in _registeredModules)
+            {
+                _router.AddRoutes(registeredModule.Value.Routes);
+            }
 
-            _server.Start(Router);
+            _server.Start(_router);
             _server.Run();
         }
 

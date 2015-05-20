@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Analytics;
 using Microsoft.SqlServer.Server;
 using MongoDB.Driver;
+using TRouter;
 #if !__MonoCS__
 using System.Speech.Synthesis;
 #endif
@@ -25,12 +26,15 @@ namespace TModules.Core
         public string ModuleName { get; private set; }
         public ModuleManager Host;
 
+        public List<Route> Routes { get; private set; }
+
         protected TModule(string name, ModuleManager host)
         {
             Host = host;
             ModuleName = name;
             Intents = new Dictionary<string, Action<WitOutcome>> ();
-            _logger = new TConsole (this.GetType ());
+            _logger = new TConsole (GetType ());
+            Routes =new List<Route>();
         }
 
         protected void AddCallback(string pattern, Heard callback)
@@ -74,6 +78,31 @@ namespace TModules.Core
         protected void Fail()
         {
             Host.SpeakEventually("I'm sorry, I wasn't able to get everything I needed from that. Please try again.");
+        }
+
+        private void AddRoute(HttpVerb verb, string url, Action<TRequest, TResponse> callback)
+        {
+            Routes.Add(new Route(verb, string.Format("/{0}/{1}", ModuleName.ToLower(), url), callback));
+        }
+
+        protected void Get(string url, Action<TRequest, TResponse> callback)
+        {
+            AddRoute(HttpVerb.Get, url, callback);
+        }
+
+        protected void Post(string url, Action<TRequest, TResponse> callback)
+        {
+            AddRoute(HttpVerb.Post, url, callback);
+        }
+
+        protected void Delete(string url, Action<TRequest, TResponse> callback)
+        {
+            AddRoute(HttpVerb.Delete, url, callback);
+        }
+
+        protected void Patch(string url, Action<TRequest, TResponse> callback)
+        {
+            AddRoute(HttpVerb.Patch, url, callback);
         }
     }
 }

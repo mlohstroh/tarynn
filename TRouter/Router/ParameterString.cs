@@ -35,8 +35,11 @@ namespace TRouter
             // start regex
             builder.Append(@"\A");
 
-            for (int i = 1; i < split.Length; i++)
+            for (int i = 0; i < split.Length; i++)
             {
+                if(string.IsNullOrEmpty(split[i]))
+                    continue;
+
                 builder.Append(@"/");
                 string segment = split[i];
 
