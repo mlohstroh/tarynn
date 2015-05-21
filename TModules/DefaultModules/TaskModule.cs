@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Routing;
 using MongoDB.Bson;
+using MongoDB.Bson.IO;
 using MongoDB.Driver.Linq;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
@@ -32,14 +33,27 @@ namespace TModules.DefaultModules
         {
             Intents.Add("reminder", WitReminder);
 
-            Get("/test", (request, response) =>
-            {
-                response.ResponseBody = "I somehow got this working!";
+            Get("/", (request, response) =>
+            {   
+                JsonWriterSettings settings = new JsonWriterSettings { OutputMode = JsonOutputMode.Strict };
+                response.ResponseBody = _allTasks.Values.ToJson(settings);
             });
 
-            Post("/test", (request, response) =>
+            Get("/:id", (request, response) =>
             {
-                response.ResponseBody = request.RawBody;
+                ObjectId id = new ObjectId(request.Params.Parameters["id"]);
+
+                TodoTask outVal = null;
+                if (_allTasks.TryGetValue(id, out outVal))
+                {
+                    JsonWriterSettings settings = new JsonWriterSettings { OutputMode = JsonOutputMode.Strict };
+                    response.ResponseBody = outVal.ToJson(settings);
+                }
+                else
+                {
+                    response.ResponseBody = "Not found";
+                    response.StatusCode = 404;
+                }
             });
         }
 
@@ -132,6 +146,19 @@ namespace TModules.DefaultModules
             {
                 Fail();
             }
+        }
+
+        private JsonData TasksAsJson()
+        {
+            lock (_allTasks)
+            {
+                JsonArray a = new JsonArray(_allTasks.Count);
+                foreach (var todoTask in _allTasks)
+                {
+                    
+                }
+            }
+            return null;
         }
     }
 }

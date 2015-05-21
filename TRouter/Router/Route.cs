@@ -35,6 +35,7 @@ namespace TRouter
 
             if (DoesMatch(url))
             {
+                req.Params = ParameterString;
                 DelegateFunction(req, proxyRes);
             }
 

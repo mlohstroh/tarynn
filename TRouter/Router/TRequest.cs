@@ -47,6 +47,9 @@ namespace TRouter
         public string RawBody { get; private set; }
 
         public HttpVerb Method { get; private set; }
+
+        public ParameterString Params { get; internal set; }
+
         public TRequest(HttpListenerRequest req)
         {
             Url = req.Url;
