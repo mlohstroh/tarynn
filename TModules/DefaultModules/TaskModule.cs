@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Routing;
 using MongoDB.Bson;
 using MongoDB.Driver.Linq;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using RestSharp;
 using TModules.Core;
 using System.Text.RegularExpressions;
 using TModules.DefaultModules.Tasks;
 using LitJson;
 using Analytics;
+using TRouter;
 using WitAI;
+using Route = TRouter.Route;
 
 namespace TModules.DefaultModules
 {
@@ -26,6 +31,16 @@ namespace TModules.DefaultModules
             : base("Tasks", manager)
         {
             Intents.Add("reminder", WitReminder);
+
+            Get("/test", (request, response) =>
+            {
+                response.ResponseBody = "I somehow got this working!";
+            });
+
+            Post("/test", (request, response) =>
+            {
+                response.ResponseBody = request.RawBody;
+            });
         }
 
         public override void Initialize()

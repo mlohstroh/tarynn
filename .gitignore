@@ -8,3 +8,5 @@ Analytics/bin/*
 */bin*
 */obj*
 *.userprefs
+TRouter/bin/*
+TRouter/obj/*

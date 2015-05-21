@@ -18,6 +18,7 @@ using System.Diagnostics;
 using LitJson;
 using RestSharp;
 using WitAI;
+using TRouter;
 
 namespace TModules.Core
 {
@@ -35,6 +36,8 @@ namespace TModules.Core
         private PlatformManager _platformManager;
 
         private Wit _wit = null;
+
+        private Router _router = new Router();
 
         public ModuleManager()
         {
@@ -57,8 +60,17 @@ namespace TModules.Core
             RegisterModule(new AlarmModule(this));
 
             InitModules();
+            SetupAndRunServer();
+        }
 
-            _server.Start();
+        private void SetupAndRunServer()
+        {
+            foreach (var registeredModule in _registeredModules)
+            {
+                _router.AddRoutes(registeredModule.Value.Routes);
+            }
+
+            _server.Start(_router);
             _server.Run();
         }
 
